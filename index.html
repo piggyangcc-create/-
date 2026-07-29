@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Piggy Ang - Creative Designer & Frontend Developer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Piggy Ang | Creative Designer & Playable Mario Portfolio V3 Ultimate</title>
   
-  <!-- SEO & Social Meta Tags -->
-  <meta name="description" content="Portfolio of Piggy Ang - Creative Designer & Frontend Developer blending Nintendo retro charm with modern Apple-grade UI/UX.">
-  <meta property="og:title" content="Piggy Ang - Creative Portfolio">
-  <meta property="og:description" content="Interactive Mario-themed portfolio with Case Studies, Interactive Experience, and Pixel Art dynamics.">
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Playable Mario-themed interactive portfolio of Piggy Ang - Senior UX/UI Designer & Creative Director. Integrated 2D Physics Engine, Web Audio, RPG Skill Tree, Case Studies, and Achievements.">
+  <meta property="og:title" content="Piggy Ang - Playable Interactive Portfolio">
+  <meta property="og:description" content="Explore a Nintendo x Apple grade portfolio as an interactive Mario game. Control Mario, collect coins, unlock achievements, and view deep case studies.">
   <meta property="og:type" content="website">
 
   <!-- Fonts -->
@@ -16,100 +16,148 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
   
-  <!-- FontAwesome Icons -->
+  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     /* ==========================================================================
-       1. CORE DESIGN SYSTEM & VARIABLES (Nintendo x Apple Palette)
+       1. CORE DESIGN SYSTEM & ENGINE VARIABLES
        ========================================================================== */
     :root {
-      /* Colors: Restricted to <= 6 main brand anchors */
+      /* Theme Colors */
       --mario-red: #E52521;
       --mario-blue: #002395;
       --mario-yellow: #FBD000;
       --mario-green: #43B047;
+      --mario-brick: #C84C0C;
       --apple-dark: #121214;
-      --apple-card-bg: rgba(255, 255, 255, 0.75);
-      --apple-card-dark: rgba(26, 26, 30, 0.75);
-      --glass-border: rgba(255, 255, 255, 0.3);
-      --text-main: #1D1D1F;
-      --text-muted: #6E6E73;
-      --text-light: #F5F5F7;
+      --apple-card-bg: rgba(255, 255, 255, 0.85);
+      --apple-card-dark: rgba(24, 24, 28, 0.88);
+      --glass-border: rgba(255, 255, 255, 0.22);
       
-      /* World Themes */
-      --sky-bg: #5C94FC;
-      --underground-bg: #140C1C;
-      --castle-bg: #2B0D0D;
+      /* World Canvas Backgrounds */
+      --world-sky: #5C94FC;
+      --world-underground: #100A1A;
+      --world-castle: #260808;
       
-      /* Typography */
+      /* Fonts & Radii */
       --font-pixel: 'Press Start 2P', monospace;
       --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-
-      /* Radii & Shadows */
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
-      --shadow-apple: 0 10px 30px -10px rgba(0, 0, 0, 0.12);
-      --shadow-pixel: 4px 4px 0px #000;
       
-      /* Transition */
+      /* Dynamic Night Mode Filters */
+      --night-overlay: rgba(0, 0, 15, 0.45);
       --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Reset & Global Base */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
-    html {
-      scroll-behavior: smooth;
-      font-size: 16px;
-      text-rendering: optimizeLegibility;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body {
-      font-family: var(--font-body);
-      color: var(--text-main);
-      background-color: var(--sky-bg);
+    html, body {
+      width: 100%;
+      height: 100%;
       overflow-x: hidden;
-      line-height: 1.6;
+      font-family: var(--font-body);
+      background-color: var(--world-sky);
+      color: #1D1D1F;
       transition: background-color 0.8s var(--ease-apple);
+      touch-action: manipulation;
     }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #111;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--mario-red);
-      border-radius: 5px;
-    }
-
-    /* Utility Typography Classes */
+    /* Pixel typography util */
     .pixel-text {
       font-family: var(--font-pixel);
       letter-spacing: -0.5px;
     }
 
-    h1, h2, h3, h4 {
-      font-weight: 700;
-      line-height: 1.2;
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: var(--mario-red); border-radius: 4px; }
+
+    /* ==========================================================================
+       2. START MENU & NINTENDO LOADING SCREEN
+       ========================================================================== */
+    #startMenuModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #FFF;
+      text-align: center;
+      padding: 20px;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
+    #startMenuModal.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .start-logo {
+      font-family: var(--font-pixel);
+      font-size: 2.5rem;
+      color: var(--mario-red);
+      text-shadow: 4px 4px 0px var(--mario-yellow), -2px -2px 0px #FFF;
+      margin-bottom: 20px;
+      animation: logoPulse 2s infinite alternate;
+    }
+
+    @keyframes logoPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+
+    .start-menu-options {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 30px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .menu-btn {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      padding: 16px 24px;
+      background: #222;
+      color: #FFF;
+      border: 3px solid #FFF;
+      box-shadow: 4px 4px 0px var(--mario-red);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .menu-btn:hover {
+      background: var(--mario-yellow);
+      color: #000;
+      border-color: #000;
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #FFF;
     }
 
     /* ==========================================================================
-       2. TOP HUD & GLASS NAVIGATION
+       3. TOP HUD, AUDIO TOGGLES & DAY/NIGHT CONTROL
        ========================================================================== */
     .hud-bar {
       position: fixed;
@@ -120,392 +168,211 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 40px;
-      background: rgba(255, 255, 255, 0.15);
+      padding: 12px 30px;
+      background: rgba(0, 0, 0, 0.4);
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--glass-border);
-      transition: all 0.4s var(--ease-apple);
-    }
-
-    .hud-bar.scrolled {
-      background: rgba(18, 18, 20, 0.82);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-light);
-    }
-
-    /* Mario Game Stats HUD */
-    .mario-stats {
-      display: flex;
-      gap: 24px;
-      align-items: center;
+      color: #FFF;
       font-family: var(--font-pixel);
       font-size: 0.75rem;
     }
 
-    .stat-item {
+    .hud-stats {
       display: flex;
+      gap: 20px;
       align-items: center;
-      gap: 8px;
     }
 
     .coin-icon {
-      width: 16px;
-      height: 20px;
+      width: 14px;
+      height: 18px;
       background: var(--mario-yellow);
       border-radius: 50%;
       border: 2px solid #000;
       display: inline-block;
-      animation: coinRotate 1.2s steps(4) infinite;
+      animation: coinSpin 1.2s steps(4) infinite;
     }
 
-    @keyframes coinRotate {
+    @keyframes coinSpin {
       0% { transform: scaleX(1); }
-      50% { transform: scaleX(0.2); }
+      50% { transform: scaleX(0.15); }
       100% { transform: scaleX(1); }
     }
 
-    .nav-links {
+    .hud-controls {
       display: flex;
-      gap: 32px;
-      list-style: none;
       align-items: center;
+      gap: 16px;
     }
 
-    .nav-links a {
-      font-weight: 500;
-      font-size: 0.95rem;
-      position: relative;
-      padding: 6px 0;
-      transition: color 0.3s ease;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 0%;
-      height: 2px;
-      background: var(--mario-red);
-      transition: width 0.3s var(--ease-apple);
-    }
-
-    .nav-links a:hover::after,
-    .nav-links a.active::after {
-      width: 100%;
-    }
-
-    .nav-links a:hover .nav-coin {
-      opacity: 1;
-      transform: translateY(-50%) scale(1);
-    }
-
-    .nav-coin {
-      position: absolute;
-      left: -18px;
-      top: 50%;
-      transform: translateY(-50%) scale(0);
-      opacity: 0;
-      transition: all 0.2s var(--ease-apple);
-    }
-
-    /* Mobile Menu Toggle */
-    .mobile-toggle {
-      display: none;
-      font-size: 1.5rem;
+    .icon-toggle-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #FFF;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .icon-toggle-btn:hover {
+      background: var(--mario-yellow);
+      color: #000;
+      transform: scale(1.1);
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      color: #FFF;
+      text-decoration: none;
+      font-size: 0.7rem;
+      transition: color 0.3s;
+    }
+
+    .nav-menu a:hover {
+      color: var(--mario-yellow);
     }
 
     /* ==========================================================================
-       3. BUTTONS & UI COMPONENTS
+       4. HERO CANVASES & PLAYABLE 2D PHYSICS STAGE
        ========================================================================== */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 28px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-      border: none;
-      outline: none;
-      transition: all 0.3s var(--ease-apple);
+    .hero-container {
       position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 80px;
+      background: linear-gradient(180deg, #5C94FC 0%, #87B5FF 100%);
       overflow: hidden;
-      box-shadow: var(--shadow-apple);
     }
 
-    .btn-primary {
-      background: var(--mario-red);
-      color: #FFF;
+    .hero-text-overlay {
+      position: absolute;
+      top: 120px;
+      left: 8%;
+      z-index: 10;
+      max-width: 580px;
+      pointer-events: none;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 14px 28px rgba(229, 37, 33, 0.35);
-      background: #f42c28;
-    }
-
-    .btn-primary:active {
-      transform: translateY(1px) scale(0.98);
-    }
-
-    .btn-pixel {
-      font-family: var(--font-pixel);
-      font-size: 0.75rem;
-      background: var(--mario-yellow);
-      color: #000;
-      border: 3px solid #000;
-      box-shadow: var(--shadow-pixel);
-      border-radius: 0;
-    }
-
-    .btn-pixel:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0px #000;
-      background: #ffe033;
-    }
-
-    .btn-pixel:active {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0px #000;
-    }
-
-    .badge-open {
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 6px 14px;
-      background: rgba(67, 176, 71, 0.15);
+      background: rgba(67, 176, 71, 0.2);
       border: 1px solid var(--mario-green);
-      color: #125415;
+      color: #114214;
       border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      backdrop-filter: blur(4px);
-    }
-
-    .badge-open .dot {
-      width: 8px;
-      height: 8px;
-      background: var(--mario-green);
-      border-radius: 50%;
-      animation: pulse 1.8s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(67, 176, 71, 0.6); }
-      70% { box-shadow: 0 0 0 8px rgba(67, 176, 71, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(67, 176, 71, 0); }
-    }
-
-    /* ==========================================================================
-       4. HERO SECTION (Nintendo x Apple Split Layout)
-       ========================================================================== */
-    .hero-section {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 120px 8% 60px;
-      position: relative;
-      background: linear-gradient(180deg, #6097ff 0%, #a2c4ff 100%);
-      overflow: hidden;
-    }
-
-    .hero-container {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 40px;
-      align-items: center;
-      width: 100%;
-      max-width: 1300px;
-      margin: 0 auto;
-      z-index: 2;
-    }
-
-    .hero-content {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 20px;
-    }
-
-    .hero-title-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .hero-subtitle {
-      font-family: var(--font-pixel);
-      font-size: 0.9rem;
-      color: var(--mario-blue);
-      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      backdrop-filter: blur(8px);
+      pointer-events: auto;
     }
 
     .hero-name {
       font-size: 3.8rem;
       font-weight: 800;
-      letter-spacing: -1px;
-      color: var(--text-main);
       line-height: 1.1;
+      color: #FFF;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      margin-bottom: 12px;
     }
 
-    .hero-role {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--text-muted);
+    .hero-subtitle {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      color: var(--mario-yellow);
+      text-shadow: 2px 2px 0px #000;
+      margin-bottom: 16px;
     }
 
     .hero-bio {
-      font-size: 1.1rem;
-      color: #333;
-      max-width: 520px;
-      line-height: 1.7;
+      font-size: 1.05rem;
+      color: #FFF;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+      line-height: 1.6;
+      margin-bottom: 24px;
     }
 
-    .hero-cta {
+    .hero-actions {
       display: flex;
       gap: 16px;
-      margin-top: 10px;
-      flex-wrap: wrap;
+      pointer-events: auto;
     }
 
-    /* Interactive Game Canvas / Stage */
-    .hero-game-stage {
-      position: relative;
-      width: 100%;
-      height: 420px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-    }
-
-    .pixel-scene {
+    .game-instructions {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-    }
-
-    /* Animated Clouds & Parallax Elements */
-    .cloud {
-      position: absolute;
-      background: #FFF;
-      border-radius: 50px;
-      opacity: 0.85;
-      animation: floatCloud linear infinite;
-    }
-    .cloud-1 { width: 90px; height: 30px; top: 15%; animation-duration: 22s; }
-    .cloud-2 { width: 140px; height: 45px; top: 30%; animation-duration: 35s; animation-delay: -10s; }
-
-    @keyframes floatCloud {
-      from { transform: translateX(500px); }
-      to { transform: translateX(-200px); }
-    }
-
-    /* Mario Interactive Character Placeholder */
-    .mario-character {
-      position: absolute;
-      bottom: 60px;
-      left: 20%;
-      width: 48px;
-      height: 48px;
-      background: var(--mario-red);
-      border: 3px solid #000;
-      box-shadow: var(--shadow-pixel);
-      cursor: pointer;
-      transition: transform 0.1s ease;
-    }
-
-    .mario-character::before {
-      content: 'M';
-      font-family: var(--font-pixel);
+      top: 120px;
+      right: 8%;
+      background: rgba(0, 0, 0, 0.65);
+      border: 2px solid var(--mario-yellow);
+      border-radius: var(--radius-md);
+      padding: 16px;
       color: #FFF;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      font-size: 1.2rem;
-    }
-
-    .mario-character.jump {
-      animation: marioJump 0.5s ease;
-    }
-
-    @keyframes marioJump {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-120px); }
-      100% { transform: translateY(0); }
-    }
-
-    .interactive-block {
-      position: absolute;
-      bottom: 200px;
-      left: 20%;
-      width: 44px;
-      height: 44px;
-      background: var(--mario-yellow);
-      border: 3px solid #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-pixel);
-      font-size: 1.2rem;
-      box-shadow: var(--shadow-pixel);
-      cursor: pointer;
-    }
-
-    .pixel-ground {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 60px;
-      background: #C84C0C;
-      border-top: 4px solid #000;
-      background-image: radial-gradient(#802A00 20%, transparent 20%);
-      background-size: 16px 16px;
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
       font-family: var(--font-pixel);
       font-size: 0.65rem;
-      color: var(--text-main);
-      opacity: 0.8;
-      animation: bounce 2s infinite;
+      line-height: 1.8;
+      z-index: 10;
+      backdrop-filter: blur(8px);
     }
 
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
-      40% { transform: translate(-50%, -10px); }
-      60% { transform: translate(-50%, -5px); }
+    /* 2D Physics Canvas Element */
+    #gameCanvas {
+      width: 100%;
+      height: 480px;
+      display: block;
+      z-index: 5;
+    }
+
+    /* Weather FX Canvas Overlay */
+    #weatherCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Night Overlay */
+    .night-filter {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--night-overlay);
+      pointer-events: none;
+      z-index: 900;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .night-filter.active {
+      opacity: 1;
     }
 
     /* ==========================================================================
-       5. SECTION GENERAL STRUCTURE & TRANSITIONS
+       5. CONTENT SECTIONS (EDUCATION, EXPERIENCE, PROJECTS, SKILLS, ABOUT, CONTACT)
        ========================================================================== */
     section {
-      padding: 100px 8%;
       position: relative;
-      transition: background 0.8s ease;
+      padding: 100px 8%;
+      z-index: 10;
     }
 
     .section-title-wrap {
@@ -520,999 +387,996 @@
       background: #000;
       padding: 6px 12px;
       display: inline-block;
+      box-shadow: 4px 4px 0px #FFF;
       margin-bottom: 12px;
-      box-shadow: var(--shadow-pixel);
     }
 
     .section-title {
       font-size: 2.8rem;
       font-weight: 800;
       color: #FFF;
-      letter-spacing: -0.5px;
     }
 
-    /* Reveal Animation Class */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: all 0.8s var(--ease-apple);
+    /* EDUCATION SCHOOL GATE */
+    #education {
+      background: var(--world-sky);
+      border-top: 6px solid #000;
     }
 
-    .reveal.active {
-      opacity: 1;
-      transform: translateY(0);
+    .school-gate-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.9);
+      border: 4px solid #000;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
-    /* ==========================================================================
-       6. WORK EXPERIENCE TIMELINE (Interactive Apple Cards)
-       ========================================================================== */
+    .school-gate-container:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    }
+
+    .school-icon {
+      font-size: 3.5rem;
+      color: var(--mario-red);
+      margin-bottom: 16px;
+    }
+
+    /* EXPERIENCE TIMELINE MAP */
     #experience {
-      background: var(--underground-bg);
-      color: var(--text-light);
+      background: var(--world-underground);
+      color: #FFF;
     }
 
-    .timeline {
+    .timeline-map {
       max-width: 900px;
       margin: 0 auto;
       position: relative;
     }
 
-    .timeline::before {
+    .timeline-map::before {
       content: '';
       position: absolute;
       left: 50%;
       top: 0;
       width: 4px;
       height: 100%;
-      background: rgba(255, 255, 255, 0.15);
+      background: var(--mario-yellow);
       transform: translateX(-50%);
     }
 
-    .timeline-item {
-      margin-bottom: 50px;
+    .timeline-node {
+      margin-bottom: 60px;
       position: relative;
       width: 50%;
     }
 
-    .timeline-item:nth-child(odd) {
-      left: 0;
-      padding-right: 40px;
-      text-align: right;
-    }
+    .timeline-node:nth-child(odd) { left: 0; padding-right: 40px; text-align: right; }
+    .timeline-node:nth-child(even) { left: 50%; padding-left: 40px; text-align: left; }
 
-    .timeline-item:nth-child(even) {
-      left: 50%;
-      padding-left: 40px;
-    }
-
-    .timeline-dot {
+    .node-flag {
       position: absolute;
-      top: 20px;
-      width: 20px;
-      height: 20px;
-      background: var(--mario-yellow);
-      border: 3px solid #000;
+      top: 15px;
+      width: 24px;
+      height: 24px;
+      background: var(--mario-red);
+      border: 3px solid #FFF;
       border-radius: 50%;
-      z-index: 10;
+      z-index: 5;
     }
 
-    .timeline-item:nth-child(odd) .timeline-dot {
-      right: -10px;
-    }
+    .timeline-node:nth-child(odd) .node-flag { right: -12px; }
+    .timeline-node:nth-child(even) .node-flag { left: -12px; }
 
-    .timeline-item:nth-child(even) .timeline-dot {
-      left: -10px;
-    }
-
-    .timeline-card {
+    .node-card {
       background: var(--apple-card-dark);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-md);
-      padding: 28px;
+      padding: 24px;
       backdrop-filter: blur(12px);
-      transition: all 0.4s var(--ease-apple);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      text-align: left;
+      transition: all 0.3s var(--ease-apple);
     }
 
-    .timeline-card:hover {
+    .node-card:hover {
       transform: translateY(-5px);
       border-color: var(--mario-yellow);
-      box-shadow: 0 15px 35px rgba(251, 208, 0, 0.15);
     }
 
-    .role-year {
-      font-family: var(--font-pixel);
-      font-size: 0.65rem;
-      color: var(--mario-yellow);
-      margin-bottom: 8px;
-    }
-
-    .role-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-      color: #FFF;
-    }
-
-    .role-company {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .role-desc {
-      font-size: 0.9rem;
-      color: #AAA;
-      line-height: 1.6;
-    }
-
-    /* ==========================================================================
-       7. FEATURED PROJECTS (Case Study Cards & Detail Modal)
-       ========================================================================== */
+    /* PROJECTS LEVELS */
     #projects {
-      background: #19191E;
+      background: #18181C;
       color: #FFF;
     }
 
-    .projects-grid {
+    .level-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-      gap: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 30px;
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    .project-card {
-      background: rgba(32, 32, 38, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .level-card {
+      background: rgba(35, 35, 42, 0.9);
+      border: 2px solid rgba(255, 255, 255, 0.1);
       border-radius: var(--radius-md);
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.4s var(--ease-apple);
       cursor: pointer;
-      position: relative;
+      transition: all 0.3s var(--ease-apple);
     }
 
-    .project-card:hover {
-      transform: translateY(-8px) scale(1.01);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-      border-color: rgba(255, 255, 255, 0.25);
+    .level-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--mario-yellow);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
 
-    .project-cover {
-      width: 100%;
-      height: 220px;
-      background: #25252B;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .project-cover-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #2a2d3d 0%, #15161d 100%);
+    .level-header {
+      background: linear-gradient(135deg, var(--mario-red) 0%, #900 100%);
+      padding: 16px;
       font-family: var(--font-pixel);
-      font-size: 0.8rem;
-      color: var(--mario-yellow);
-      transition: transform 0.5s var(--ease-apple);
-    }
-
-    .project-card:hover .project-cover-placeholder {
-      transform: scale(1.08);
-    }
-
-    .project-info {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-    }
-
-    .project-meta {
+      font-size: 0.75rem;
+      color: #FFF;
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 8px;
     }
 
-    .project-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: #FFF;
+    .level-body {
+      padding: 24px;
     }
 
-    .project-desc {
-      font-size: 0.9rem;
-      color: #AAA;
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: auto;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      padding: 4px 10px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.06);
-      color: #DDD;
-    }
-
-    /* Case Study Overlay Modal */
-    .case-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(20px);
-      z-index: 2000;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-      opacity: 0;
-      transition: opacity 0.4s var(--ease-apple);
-    }
-
-    .case-modal.active {
-      display: flex;
-      opacity: 1;
-    }
-
-    .case-modal-content {
-      background: #1C1C1E;
-      width: 100%;
-      max-width: 900px;
-      max-height: 85vh;
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      overflow-y: auto;
-      padding: 40px;
-      color: #FFF;
-      position: relative;
-    }
-
-    .close-modal {
-      position: absolute;
-      top: 20px;
-      right: 24px;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: color 0.2s ease;
-    }
-
-    .close-modal:hover {
-      color: #FFF;
-    }
-
-    .case-study-section {
-      margin-top: 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 20px;
-    }
-
-    .case-study-section h4 {
-      color: var(--mario-yellow);
-      margin-bottom: 8px;
-    }
-
-    /* ==========================================================================
-       8. SKILLS (Interactive Icon Grid)
-       ========================================================================== */
+    /* SKILLS RPG TREE */
     #skills {
-      background: var(--castle-bg);
+      background: var(--world-castle);
       color: #FFF;
     }
 
-    .skills-grid {
+    .skill-tree-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 20px;
       max-width: 1000px;
       margin: 0 auto;
     }
 
-    .skill-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .skill-tree-node {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: var(--radius-md);
-      padding: 24px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      transition: all 0.3s var(--ease-apple);
-      position: relative;
-      cursor: pointer;
-    }
-
-    .skill-card i {
-      font-size: 2.2rem;
-      transition: transform 0.4s var(--ease-apple);
-    }
-
-    .skill-card:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: translateY(-5px);
-      border-color: var(--mario-yellow);
-      box-shadow: 0 10px 20px rgba(251, 208, 0, 0.2);
-    }
-
-    .skill-card:hover i {
-      transform: rotate(10deg) scale(1.15);
-      color: var(--mario-yellow);
-    }
-
-    .skill-name {
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    /* Tooltip */
-    .skill-card::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: -35px;
-      background: #000;
-      color: #FFF;
-      font-size: 0.7rem;
-      padding: 4px 8px;
-      border-radius: 4px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-      white-space: nowrap;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .skill-card:hover::after {
-      opacity: 1;
-    }
-
-    /* ==========================================================================
-       9. CONTACT & MARIO ENDING
-       ========================================================================== */
-    #contact {
-      background: linear-gradient(180deg, var(--castle-bg) 0%, #000 100%);
-      color: #FFF;
+      padding: 20px;
       text-align: center;
-      padding-bottom: 60px;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
-    .ending-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-      border-radius: var(--radius-lg);
+    .skill-tree-node:hover {
+      background: rgba(251, 208, 0, 0.15);
+      border-color: var(--mario-yellow);
+      transform: scale(1.05);
+    }
+
+    .star-rating {
+      color: var(--mario-yellow);
+      margin-top: 8px;
+      font-size: 0.9rem;
+    }
+
+    /* ABOUT ME NPC DIALOGUE */
+    #about {
+      background: #141416;
+      color: #FFF;
+    }
+
+    .npc-dialogue-box {
       max-width: 800px;
       margin: 0 auto;
+      background: #000;
+      border: 4px solid #FFF;
+      border-radius: var(--radius-sm);
+      padding: 30px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      box-shadow: var(--shadow-pixel);
+    }
+
+    .npc-avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--mario-red);
+      border: 3px solid #FFF;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-pixel);
+      font-size: 2rem;
+      color: #FFF;
+    }
+
+    /* CONTACT CASTLE ENDING */
+    #contact {
+      background: #0A0A0C;
+      color: #FFF;
+      text-align: center;
+    }
+
+    .castle-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px dashed var(--mario-yellow);
+      border-radius: var(--radius-lg);
       padding: 50px 30px;
-      position: relative;
     }
 
-    .ending-title {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .ending-subtitle {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      margin-bottom: 32px;
-    }
-
-    .contact-links {
+    .contact-buttons {
       display: flex;
       justify-content: center;
       gap: 16px;
       flex-wrap: wrap;
+      margin-top: 30px;
     }
 
-    .contact-btn {
-      display: flex;
+    .btn-action {
+      display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 24px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 14px 28px;
       border-radius: 30px;
-      font-weight: 500;
+      font-weight: 600;
+      background: var(--mario-red);
+      color: #FFF;
+      border: none;
+      cursor: pointer;
       transition: all 0.3s var(--ease-apple);
+      text-decoration: none;
     }
 
-    .contact-btn:hover {
-      background: var(--mario-red);
-      border-color: var(--mario-red);
+    .btn-action:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 20px rgba(229, 37, 33, 0.4);
     }
 
-    .achievement-banner {
-      margin-top: 40px;
-      display: inline-flex;
+    /* ==========================================================================
+       6. SETTINGS MODAL & ACHIEVEMENTS PANEL
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 5000;
+      display: none;
+      justify-content: center;
       align-items: center;
-      gap: 12px;
-      padding: 12px 24px;
-      background: rgba(251, 208, 0, 0.1);
-      border: 1px solid var(--mario-yellow);
-      border-radius: var(--radius-md);
-      font-family: var(--font-pixel);
-      font-size: 0.7rem;
-      color: var(--mario-yellow);
+      padding: 20px;
     }
 
-    /* ==========================================================================
-       10. FOOTER
-       ========================================================================== */
-    footer {
-      background: #000;
-      padding: 30px 8%;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    .modal-overlay.active { display: flex; }
+
+    .settings-card {
+      background: #1C1C1E;
+      color: #FFF;
+      width: 100%;
+      max-width: 500px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--glass-border);
+      padding: 30px;
+      font-family: var(--font-body);
+    }
+
+    .setting-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
-    .back-to-top {
-      background: rgba(255, 255, 255, 0.1);
-      color: #FFF;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s var(--ease-apple);
-    }
-
-    .back-to-top:hover {
-      background: var(--mario-red);
-      transform: translateY(-4px);
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     /* ==========================================================================
-       11. RESPONSIVE DESIGN (Mobile GameBoy UI Polish)
+       7. MOBILE VIRTUAL CONTROLLER
        ========================================================================== */
-    @media (max-width: 900px) {
-      .hero-container {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-      .hero-content {
-        align-items: center;
-      }
-      .hero-name {
-        font-size: 2.8rem;
-      }
-      .timeline::before {
-        left: 20px;
-      }
-      .timeline-item {
-        width: 100%;
-        padding-left: 50px !important;
-        padding-right: 0 !important;
-        text-align: left !important;
-      }
-      .timeline-item:nth-child(odd) .timeline-dot,
-      .timeline-item:nth-child(even) .timeline-dot {
-        left: 10px;
-      }
-      .mobile-toggle {
-        display: block;
-      }
-      .nav-links {
-        position: fixed;
-        top: 60px;
-        right: -100%;
-        width: 100%;
-        height: calc(100vh - 60px);
-        background: rgba(18, 18, 20, 0.95);
-        backdrop-filter: blur(20px);
-        flex-direction: column;
-        justify-content: center;
-        transition: right 0.4s var(--ease-apple);
-      }
-      .nav-links.active {
-        right: 0;
-      }
+    .mobile-controls {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      padding: 0 24px;
+      z-index: 2000;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    @media (max-width: 850px) {
+      .mobile-controls { display: flex; }
+      .game-instructions { display: none; }
+      .hero-name { font-size: 2.8rem; }
+    }
+
+    .d-pad, .action-pad {
+      pointer-events: auto;
+      display: flex;
+      gap: 12px;
+    }
+
+    .touch-btn {
+      width: 58px;
+      height: 58px;
+      background: rgba(255, 255, 255, 0.25);
+      border: 2px solid #FFF;
+      border-radius: 50%;
+      backdrop-filter: blur(8px);
+      color: #FFF;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+    }
+
+    .touch-btn:active {
+      background: var(--mario-yellow);
+      color: #000;
     }
   </style>
 </head>
 <body>
 
-  <!-- ==========================================================================
-       HUD / GLASS NAVIGATION
-       ========================================================================== -->
-  <nav class="hud-bar" id="hudBar">
-    <div class="mario-stats">
-      <div class="stat-item">
-        <span class="coin-icon"></span>
-        <span>COIN x<span id="coinCount">0</span></span>
-      </div>
-      <div class="stat-item">
-        <span>WORLD <span id="worldState">1-1</span></span>
+  <!-- NIGHT OVERLAY -->
+  <div class="night-filter" id="nightFilter"></div>
+
+  <!-- START MENU / LOADING SCREEN -->
+  <div id="startMenuModal">
+    <div class="start-logo">PIGGY ANG V3</div>
+    <p class="pixel-text" style="font-size: 0.75rem; color: var(--mario-yellow);">MARIO x APPLE EDITION</p>
+    <div class="start-menu-options">
+      <button class="menu-btn" onclick="startGameEngine()"><i class="fas fa-play"></i> PRESS START</button>
+      <button class="menu-btn" onclick="openSettings()"><i class="fas fa-cog"></i> SETTINGS</button>
+    </div>
+  </div>
+
+  <!-- TOP HUD BAR -->
+  <header class="hud-bar">
+    <div class="hud-stats">
+      <div><span class="coin-icon"></span> x<span id="hudCoinCount">0</span></div>
+      <div>WORLD <span id="hudWorld">1-1</span></div>
+      <div>SCORE <span id="hudScore">000000</span></div>
+    </div>
+
+    <div class="hud-controls">
+      <button class="icon-toggle-btn" id="bgmToggleBtn" onclick="toggleBGM()" title="Toggle Music">
+        <i class="fas fa-music"></i>
+      </button>
+      <button class="icon-toggle-btn" id="sfxToggleBtn" onclick="toggleSFX()" title="Toggle Sound FX">
+        <i class="fas fa-volume-up"></i>
+      </button>
+      <button class="icon-toggle-btn" onclick="toggleNightMode()" title="Toggle Day/Night">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="icon-toggle-btn" onclick="openSettings()" title="Settings">
+        <i class="fas fa-sliders-h"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION WITH PLAYABLE 2D PHYSICS ENGINE -->
+  <section class="hero-container" id="hero">
+    <canvas id="weatherCanvas"></canvas>
+
+    <div class="hero-text-overlay">
+      <div class="hero-badge"><span style="width:8px;height:8px;background:var(--mario-green);border-radius:50%;display:inline-block;"></span> OPEN TO WORK</div>
+      <h1 class="hero-name">Piggy Ang</h1>
+      <div class="hero-subtitle">Senior Creative Designer & UI/UX Specialist</div>
+      <p class="hero-bio">
+        Interactive Playable Portfolio V3. Control Mario with arrow keys or A/D to jump, smash question blocks, collect coins, and unlock case studies!
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-action"><i class="fas fa-gamepad"></i> Explore Levels</a>
+        <button class="btn-action" style="background:var(--mario-yellow);color:#000;" onclick="downloadResume()"><i class="fas fa-download"></i> Resume</button>
       </div>
     </div>
 
-    <div class="mobile-toggle" id="mobileMenuBtn">
-      <i class="fas fa-bars"></i>
+    <div class="game-instructions">
+      🎮 CONTROLS:<br>
+      • ← → / A D : Move Left / Right<br>
+      • SPACE / W : Jump<br>
+      • Hit Blocks & Collect Coins!
     </div>
 
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#hero" class="active"><span class="nav-coin">🪙</span>Home</a></li>
-      <li><a href="#experience"><span class="nav-coin">🪙</span>Experience</a></li>
-      <li><a href="#projects"><span class="nav-coin">🪙</span>Projects</a></li>
-      <li><a href="#skills"><span class="nav-coin">🪙</span>Skills</a></li>
-      <li><a href="#contact"><span class="nav-coin">🪙</span>Contact</a></li>
-    </ul>
-  </nav>
+    <!-- 2D Canvas Game Stage -->
+    <canvas id="gameCanvas"></canvas>
+  </section>
 
-  <!-- ==========================================================================
-       HERO SECTION (Split Layout & Interactive Canvas Stage)
-       ========================================================================== -->
-  <section class="hero-section" id="hero">
-    <div class="hero-container">
-      <div class="hero-content">
-        <div class="badge-open">
-          <span class="dot"></span> Open To Work
-        </div>
-        <div class="hero-title-group">
-          <span class="hero-subtitle">World 1-1 • Hello World</span>
-          <h1 class="hero-name">Piggy Ang</h1>
-          <span class="hero-role">Senior Creative Designer & UI/UX Specialist</span>
-        </div>
-        <p class="hero-bio">
-          Blending 80% Nintendo gamified interactivity with 20% Apple-grade minimal aesthetics. Crafting high-converting digital products, interactive UI/UX, and pixel-perfect design systems.
-        </p>
-        <div class="hero-cta">
-          <a href="#projects" class="btn btn-primary">
-            <i class="fas fa-gamepad"></i> Explore Case Studies
-          </a>
-          <a href="#" class="btn btn-pixel" id="resumeBtn">
-            <i class="fas fa-download"></i> Download Resume
-          </a>
-        </div>
-      </div>
-
-      <!-- Interactive Mario Mini-Stage -->
-      <div class="hero-game-stage">
-        <div class="pixel-scene">
-          <div class="cloud cloud-1"></div>
-          <div class="cloud cloud-2"></div>
-          <div class="interactive-block" id="questionBlock">?</div>
-          <div class="mario-character" id="marioChar"></div>
-          <div class="pixel-ground"></div>
-        </div>
-      </div>
+  <!-- EDUCATION SECTION -->
+  <section id="education">
+    <div class="section-title-wrap">
+      <span class="section-tag">STAGE 01</span>
+      <h2 class="section-title">Education Gate</h2>
     </div>
-
-    <div class="scroll-hint">
-      <span>SCROLL DOWN</span>
-      <i class="fas fa-chevron-down"></i>
+    <div class="school-gate-container" onclick="openEducationCard()">
+      <i class="fas fa-university school-icon"></i>
+      <h3 style="font-size: 1.8rem; margin-bottom: 8px;">National Academy of Art & Design</h3>
+      <p style="font-family: var(--font-pixel); font-size: 0.75rem; color: var(--mario-red);">CLICK TO ENTER ACADEMIC RECORDS</p>
     </div>
   </section>
 
-  <!-- ==========================================================================
-       EXPERIENCE SECTION (Interactive Apple-Style Timeline)
-       ========================================================================== -->
+  <!-- EXPERIENCE SECTION -->
   <section id="experience">
-    <div class="section-title-wrap reveal">
-      <span class="section-tag">LEVEL 01</span>
-      <h2 class="section-title">Work Experience</h2>
+    <div class="section-title-wrap">
+      <span class="section-tag">STAGE 02</span>
+      <h2 class="section-title">Experience Map</h2>
     </div>
 
-    <div class="timeline">
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="role-year">2024 - PRESENT</div>
-          <h3 class="role-title">Senior UI/UX & Creative Director</h3>
-          <div class="role-company">Tech Interactive Studio</div>
-          <p class="role-desc">
-            Leading cross-functional design teams to build scalable enterprise design systems and high-converting interactive web platforms. Decreased bounce rates by 35% across key product flows.
-          </p>
+    <div class="timeline-map">
+      <div class="timeline-node">
+        <div class="node-flag"></div>
+        <div class="node-card">
+          <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-yellow);">2024 - PRESENT</span>
+          <h3 style="font-size: 1.3rem; margin: 6px 0;">Senior Creative Director</h3>
+          <p style="color: #AAA; font-size: 0.9rem;">Tech Interactive Studio • Spearheading design systems and Awwwards-grade web platforms.</p>
         </div>
       </div>
 
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="role-year">2021 - 2024</div>
-          <h3 class="role-title">Senior Product & Frontend Specialist</h3>
-          <div class="role-company">Digital Experience Agency</div>
-          <p class="role-desc">
-            Engineered award-winning interactive marketing experiences using React, HTML5 Canvas, and WebGL. Collaborated with global clients to deliver pixel-perfect digital brand identities.
-          </p>
-        </div>
-      </div>
-
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="role-year">2018 - 2021</div>
-          <h3 class="role-title">UI/UX Designer</h3>
-          <div class="role-company">Creative Web Lab</div>
-          <p class="role-desc">
-            Designed web applications, mobile interfaces, and design libraries. Specialized in micro-interactions, accessibility compliance, and user research protocols.
-          </p>
+      <div class="timeline-node">
+        <div class="node-flag"></div>
+        <div class="node-card">
+          <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-yellow);">2022 - 2024</span>
+          <h3 style="font-size: 1.3rem; margin: 6px 0;">Lead UI/UX Designer</h3>
+          <p style="color: #AAA; font-size: 0.9rem;">Digital Web Lab • Crafted gamified user journeys and responsive WebGL applications.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ==========================================================================
-       PROJECTS SECTION (Case Study Cards)
-       ========================================================================== -->
+  <!-- PROJECTS SECTION -->
   <section id="projects">
-    <div class="section-title-wrap reveal">
-      <span class="section-tag">LEVEL 02</span>
-      <h2 class="section-title">Featured Case Studies</h2>
+    <div class="section-title-wrap">
+      <span class="section-tag">STAGE 03</span>
+      <h2 class="section-title">Project Levels</h2>
     </div>
 
-    <div class="projects-grid">
-      <!-- Card 1 -->
-      <div class="project-card reveal" onclick="openCaseStudy(1)">
-        <div class="project-cover">
-          <div class="project-cover-placeholder">
-            [ CASE STUDY 01: PIXEL ECOSYSTEM ]
-          </div>
+    <div class="level-grid">
+      <div class="level-card" onclick="triggerLevelCaseStudy(1)">
+        <div class="level-header">
+          <span>LEVEL 1-1</span>
+          <span>FINTECH RPG</span>
         </div>
-        <div class="project-info">
-          <div class="project-meta">
-            <span>Fintech App</span>
-            <span>2024</span>
-          </div>
-          <h3 class="project-title">Gamified Finance Dashboard</h3>
-          <p class="project-desc">
-            Transforming mundane personal banking into an engaging interactive RPG experience with real-time goal tracking.
-          </p>
-          <div class="project-tags">
-            <span class="tag">UI/UX Design</span>
-            <span class="tag">React</span>
-            <span class="tag">Gamification</span>
-          </div>
+        <div class="level-body">
+          <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Gamified Finance App</h3>
+          <p style="color: #AAA; font-size: 0.9rem;">Complete UI/UX redesign turning daily spending tracking into an interactive RPG experience.</p>
         </div>
       </div>
 
-      <!-- Card 2 -->
-      <div class="project-card reveal" onclick="openCaseStudy(2)">
-        <div class="project-cover">
-          <div class="project-cover-placeholder">
-            [ CASE STUDY 02: APPLE MINIMALIST ]
-          </div>
+      <div class="level-card" onclick="triggerLevelCaseStudy(2)">
+        <div class="level-header">
+          <span>LEVEL 1-2</span>
+          <span>E-COMMERCE</span>
         </div>
-        <div class="project-info">
-          <div class="project-meta">
-            <span>E-Commerce</span>
-            <span>2023</span>
-          </div>
-          <h3 class="project-title">Next-Gen Audio Brand</h3>
-          <p class="project-desc">
-            A premium, high-converting e-commerce interface featuring 3D product previews and fluid micro-interactions.
-          </p>
-          <div class="project-tags">
-            <span class="tag">Creative Direction</span>
-            <span class="tag">Three.js</span>
-            <span class="tag">Design System</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="project-card reveal" onclick="openCaseStudy(3)">
-        <div class="project-cover">
-          <div class="project-cover-placeholder">
-            [ CASE STUDY 03: INTERACTIVE WORLD ]
-          </div>
-        </div>
-        <div class="project-info">
-          <div class="project-meta">
-            <span>Web Experience</span>
-            <span>2023</span>
-          </div>
-          <h3 class="project-title">Awwwards Winning Portfolio</h3>
-          <p class="project-desc">
-            Interactive single-page web app built with smooth parallax scroll, custom physics engine, and retro aesthetic.
-          </p>
-          <div class="project-tags">
-            <span class="tag">Frontend Eng</span>
-            <span class="tag">WebGL</span>
-            <span class="tag">Awwwards</span>
-          </div>
+        <div class="level-body">
+          <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Apple Minimal Audio Store</h3>
+          <p style="color: #AAA; font-size: 0.9rem;">High-converting digital storefront featuring 3D product renders and instant checkout.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CASE STUDY OVERLAY MODAL -->
-  <div class="case-modal" id="caseModal">
-    <div class="case-modal-content">
-      <span class="close-modal" onclick="closeCaseStudy()">&times;</span>
-      <h2 id="modalTitle" style="font-size: 2rem; margin-bottom: 12px;">Case Study Details</h2>
-      <p id="modalSub" style="color: var(--text-muted); margin-bottom: 20px;">Role: Lead Designer & Developer • Year: 2024</p>
-      
-      <div class="case-study-section">
-        <h4>01. The Problem</h4>
-        <p id="modalProblem">Users lacked engagement with traditional static financial reporting tools, leading to high drop-off rates within 30 days.</p>
-      </div>
+  <!-- SKILLS RPG TREE SECTION -->
+  <section id="skills">
+    <div class="section-title-wrap">
+      <span class="section-tag">STAGE 04</span>
+      <h2 class="section-title">RPG Skill Tree</h2>
+    </div>
 
-      <div class="case-study-section">
-        <h4>02. Research & Insights</h4>
-        <p id="modalResearch">Through user testing with over 50 participants, we found that visual progression and reward mechanics increased daily active engagement by 40%.</p>
+    <div class="skill-tree-grid">
+      <div class="skill-tree-node" onclick="upgradeSkill('Figma')">
+        <i class="fab fa-figma" style="font-size: 2rem; color: #F24E1E;"></i>
+        <h4 style="margin-top: 8px;">Figma / UI</h4>
+        <div class="star-rating">★★★★★</div>
       </div>
-
-      <div class="case-study-section">
-        <h4>03. Prototype & Solution</h4>
-        <p id="modalSolution">Built a high-fidelity prototype utilizing clean spatial typography paired with optional retro pixel indicators for milestone rewards.</p>
+      <div class="skill-tree-node" onclick="upgradeSkill('HTML/CSS')">
+        <i class="fab fa-html5" style="font-size: 2rem; color: #E34F26;"></i>
+        <h4 style="margin-top: 8px;">HTML / CSS3</h4>
+        <div class="star-rating">★★★★★</div>
       </div>
+      <div class="skill-tree-node" onclick="upgradeSkill('JavaScript')">
+        <i class="fab fa-js" style="font-size: 2rem; color: #F7DF1E;"></i>
+        <h4 style="margin-top: 8px;">JavaScript</h4>
+        <div class="star-rating">★★★★☆</div>
+      </div>
+      <div class="skill-tree-node" onclick="upgradeSkill('AI Tools')">
+        <i class="fas fa-robot" style="font-size: 2rem; color: var(--mario-yellow);"></i>
+        <h4 style="margin-top: 8px;">ChatGPT / Midjourney</h4>
+        <div class="star-rating">★★★★★</div>
+      </div>
+    </div>
+  </section>
 
-      <div class="case-study-section">
-        <h4>04. Key Results</h4>
-        <p id="modalResults">+120% increase in daily active user time, 4.9/5 user satisfaction score, featured on key design showcases.</p>
+  <!-- ABOUT ME NPC DIALOGUE SECTION -->
+  <section id="about">
+    <div class="section-title-wrap">
+      <span class="section-tag">STAGE 05</span>
+      <h2 class="section-title">NPC Dialogue</h2>
+    </div>
+
+    <div class="npc-dialogue-box">
+      <div class="npc-avatar">M</div>
+      <div>
+        <p class="pixel-text" style="font-size: 0.75rem; color: var(--mario-yellow); margin-bottom: 8px;">PIGGY ANG (CREATIVE DIRECT):</p>
+        <p style="font-size: 1rem; line-height: 1.6;">"Hello Traveler! I'm Piggy Ang, a hybrid UI/UX designer and frontend engineer with 20+ years of experience blending retro Nintendo magic with Apple-level elegance!"</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT CASTLE SECTION -->
+  <section id="contact">
+    <div class="castle-wrapper">
+      <span class="pixel-text" style="font-size: 0.8rem; color: var(--mario-yellow);">FINAL CASTLE</span>
+      <h2 style="font-size: 2.2rem; margin: 12px 0;">Let's Build Something Great Together!</h2>
+      <p style="color: #AAA;">Boss Defeated! Feel free to reach out for new opportunities.</p>
+
+      <div class="contact-buttons">
+        <a href="mailto:contact@piggyang.com" class="btn-action"><i class="fas fa-envelope"></i> Email Me</a>
+        <a href="https://github.com" target="_blank" class="btn-action" style="background:#222;"><i class="fab fa-github"></i> GitHub</a>
+        <a href="https://linkedin.com" target="_blank" class="btn-action" style="background:#0077B5;"><i class="fab fa-linkedin"></i> LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="settings-card">
+      <h3 style="font-family: var(--font-pixel); font-size: 1rem; margin-bottom: 20px;">GAME SETTINGS</h3>
+      <div class="setting-row">
+        <span>BGM Music</span>
+        <input type="checkbox" id="bgmCheckbox" checked onchange="toggleBGM()">
+      </div>
+      <div class="setting-row">
+        <span>Sound FX</span>
+        <input type="checkbox" id="sfxCheckbox" checked onchange="toggleSFX()">
+      </div>
+      <div style="margin-top: 24px; text-align: right;">
+        <button class="btn-action" style="padding: 8px 20px;" onclick="closeSettings()">CLOSE</button>
       </div>
     </div>
   </div>
 
-  <!-- ==========================================================================
-       SKILLS SECTION (Interactive Icon Grid)
-       ========================================================================== -->
-  <section id="skills">
-    <div class="section-title-wrap reveal">
-      <span class="section-tag">LEVEL 03</span>
-      <h2 class="section-title">Technical Mastery</h2>
+  <!-- MOBILE CONTROLLER -->
+  <div class="mobile-controls">
+    <div class="d-pad">
+      <div class="touch-btn" id="btnLeft"><i class="fas fa-arrow-left"></i></div>
+      <div class="touch-btn" id="btnRight"><i class="fas fa-arrow-right"></i></div>
     </div>
-
-    <div class="skills-grid reveal">
-      <div class="skill-card" data-tooltip="Expert • 6+ Years">
-        <i class="fab fa-figma" style="color: #F24E1E;"></i>
-        <span class="skill-name">Figma</span>
-      </div>
-      <div class="skill-card" data-tooltip="Advanced Design">
-        <i class="fab fa-html5" style="color: #E34F26;"></i>
-        <span class="skill-name">HTML5</span>
-      </div>
-      <div class="skill-card" data-tooltip="Modern CSS & Animations">
-        <i class="fab fa-css3-alt" style="color: #1572B6;"></i>
-        <span class="skill-name">CSS3 / SASS</span>
-      </div>
-      <div class="skill-card" data-tooltip="ES6+ / Async / Logic">
-        <i class="fab fa-js" style="color: #F7DF1E;"></i>
-        <span class="skill-name">JavaScript</span>
-      </div>
-      <div class="skill-card" data-tooltip="Component Systems">
-        <i class="fab fa-react" style="color: #61DAFB;"></i>
-        <span class="skill-name">React</span>
-      </div>
-      <div class="skill-card" data-tooltip="3D Modeling & Visuals">
-        <i class="fas fa-cube" style="color: #EA7600;"></i>
-        <span class="skill-name">Blender / C4D</span>
-      </div>
-      <div class="skill-card" data-tooltip="Brand & Vector Assets">
-        <i class="fas fa-pen-nib" style="color: #FF9A00;"></i>
-        <span class="skill-name">Illustrator</span>
-      </div>
-      <div class="skill-card" data-tooltip="UI Graphics & Editing">
-        <i class="fas fa-image" style="color: #31A8FF;"></i>
-        <span class="skill-name">Photoshop</span>
-      </div>
+    <div class="action-pad">
+      <div class="touch-btn" id="btnJump" style="background:var(--mario-red);"><i class="fas fa-arrow-up"></i></div>
     </div>
-  </section>
+  </div>
 
   <!-- ==========================================================================
-       CONTACT SECTION & MARIO ENDING
-       ========================================================================== -->
-  <section id="contact">
-    <div class="ending-card reveal">
-      <div style="font-family: var(--font-pixel); color: var(--mario-yellow); font-size: 0.8rem; margin-bottom: 12px;">FINAL STAGE</div>
-      <h2 class="ending-title">Let's Build Something Great Together</h2>
-      <p class="ending-subtitle">Currently available for senior creative roles, high-impact freelance projects, or design consultation.</p>
-
-      <div class="contact-links">
-        <a href="mailto:contact@piggyang.com" class="contact-btn">
-          <i class="fas fa-envelope"></i> Email Me
-        </a>
-        <a href="https://github.com" target="_blank" class="contact-btn">
-          <i class="fab fa-github"></i> GitHub
-        </a>
-        <a href="https://linkedin.com" target="_blank" class="contact-btn">
-          <i class="fab fa-linkedin"></i> LinkedIn
-        </a>
-        <a href="https://behance.net" target="_blank" class="contact-btn">
-          <i class="fab fa-behance"></i> Behance
-        </a>
-      </div>
-
-      <div class="achievement-banner">
-        <i class="fas fa-trophy"></i>
-        <span>ACHIEVEMENT UNLOCKED: Creative Designer Unlocked!</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       FOOTER
-       ========================================================================== -->
-  <footer>
-    <div>
-      Made with ❤️ using HTML, CSS & JavaScript • Piggy Ang © 2026
-    </div>
-    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to Top">
-      🚀
-    </div>
-  </footer>
-
-  <!-- ==========================================================================
-       JAVASCRIPT: INTERACTION, GAME MECHANICS & SCROLL EXPERIENCE
+       8. JAVASCRIPT GAME ENGINE, AUDIO SYNTHESIZER & WEATHER ENGINE
        ========================================================================== -->
   <script>
-    // State Variables
-    let coins = 0;
-    const coinCountEl = document.getElementById('coinCount');
-    const worldStateEl = document.getElementById('worldState');
-    const hudBar = document.getElementById('hudBar');
-    const marioChar = document.getElementById('marioChar');
-    const questionBlock = document.getElementById('questionBlock');
+    /* --------------------------------------------------------------------------
+       8.1 Web Audio Synthesizer (Zero External File Dependencies)
+       -------------------------------------------------------------------------- */
+    class RetroAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.bgmEnabled = true;
+        this.sfxEnabled = true;
+        this.bgmInterval = null;
+      }
 
-    // 1. Interactive Mario Jump & Coin Collection
-    function triggerJump() {
-      if (!marioChar.classList.contains('jump')) {
-        marioChar.classList.add('jump');
-        
-        // Trigger coin pop from block
-        setTimeout(() => {
-          coins += 1;
-          coinCountEl.textContent = coins;
-          questionBlock.style.transform = 'translateY(-10px)';
-          setTimeout(() => {
-            questionBlock.style.transform = 'translateY(0)';
-          }, 100);
-        }, 250);
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+      }
 
-        setTimeout(() => {
-          marioChar.classList.remove('jump');
-        }, 500);
+      playTone(freq, type, duration, vol = 0.1) {
+        if (!this.sfxEnabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch(e) {}
+      }
+
+      playCoinSound() {
+        this.playTone(987.77, 'sine', 0.08, 0.15);
+        setTimeout(() => this.playTone(1318.51, 'sine', 0.25, 0.15), 80);
+      }
+
+      playJumpSound() {
+        if (!this.sfxEnabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.15);
+        } catch(e) {}
+      }
+
+      playPowerUpSound() {
+        const notes = [330, 392, 659, 523, 587, 784];
+        notes.forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 'square', 0.1, 0.12), i * 60);
+        });
+      }
+
+      startBGM() {
+        if (!this.bgmEnabled || this.bgmInterval) return;
+        this.init();
+        const melody = [261.63, 261.63, 0, 261.63, 0, 207.65, 261.63, 0, 329.63];
+        let step = 0;
+        this.bgmInterval = setInterval(() => {
+          if (melody[step] > 0) {
+            this.playTone(melody[step], 'triangle', 0.15, 0.03);
+          }
+          step = (step + 1) % melody.length;
+        }, 220);
+      }
+
+      stopBGM() {
+        if (this.bgmInterval) {
+          clearInterval(this.bgmInterval);
+          this.bgmInterval = null;
+        }
       }
     }
 
-    marioChar.addEventListener('click', triggerJump);
-    questionBlock.addEventListener('click', triggerJump);
+    const audio = new RetroAudioEngine();
 
-    // 2. Scroll-Based World Dynamics & Gamification
-    window.addEventListener('scroll', () => {
-      const scrollPos = window.scrollY;
+    /* --------------------------------------------------------------------------
+       8.2 Weather Engine (Procedural Clouds, Leaves, Wind)
+       -------------------------------------------------------------------------- */
+    const weatherCanvas = document.getElementById('weatherCanvas');
+    const wCtx = weatherCanvas.getContext('2d');
+    let particles = [];
 
-      // HUD Background Transparency Toggle
-      if (scrollPos > 50) {
-        hudBar.classList.add('scrolled');
-      } else {
-        hudBar.classList.remove('scrolled');
-      }
+    function resizeWeather() {
+      weatherCanvas.width = window.innerWidth;
+      weatherCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeWeather);
+    resizeWeather();
 
-      // World Stage Tracking based on scroll depth
-      if (scrollPos < 600) {
-        document.body.style.backgroundColor = 'var(--sky-bg)';
-        worldStateEl.textContent = '1-1';
-      } else if (scrollPos >= 600 && scrollPos < 1600) {
-        document.body.style.backgroundColor = 'var(--underground-bg)';
-        worldStateEl.textContent = '1-2';
-      } else if (scrollPos >= 1600 && scrollPos < 2600) {
-        document.body.style.backgroundColor = '#19191E';
-        worldStateEl.textContent = '1-3';
-      } else {
-        document.body.style.backgroundColor = 'var(--castle-bg)';
-        worldStateEl.textContent = '1-4';
-      }
-
-      // Scroll Reveal Animations
-      const reveals = document.querySelectorAll('.reveal');
-      reveals.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
-        if (elementTop < windowHeight - 100) {
-          element.classList.add('active');
-        }
+    for (let i = 0; i < 25; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: Math.random() * 4 + 2,
+        speedX: Math.random() * 1 + 0.5,
+        speedY: Math.random() * 0.5 + 0.2
       });
-    });
+    }
 
-    // Initial Trigger for Reveal on Load
-    window.dispatchEvent(new Event('scroll'));
+    function animateWeather() {
+      wCtx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+      wCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x > weatherCanvas.width) p.x = -10;
+        if (p.y > weatherCanvas.height) p.y = -10;
+        wCtx.beginPath();
+        wCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        wCtx.fill();
+      });
+      requestAnimationFrame(animateWeather);
+    }
+    animateWeather();
 
-    // 3. Case Study Modal System
-    const caseModal = document.getElementById('caseModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalSub = document.getElementById('modalSub');
+    /* --------------------------------------------------------------------------
+       8.3 Playable 2D Physics Engine (Mario Controls, Blocks, Coins, Goomba)
+       -------------------------------------------------------------------------- */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
 
-    const caseStudiesData = {
-      1: {
-        title: "Gamified Finance Dashboard",
-        sub: "Role: Lead UI/UX Designer • Year: 2024",
-        problem: "Users struggled to maintain long-term budgeting habits due to dry, uninspiring data displays.",
-        research: "User testing indicated a 60% boost in retention when goal milestones featured visual progression cards.",
-        solution: "Engineered a hybrid interface: pristine Apple-style data charts accented with pixel achievement coins.",
-        results: "+120% active daily usage, 35% reduction in churn rate."
-      },
-      2: {
-        title: "Next-Gen Audio Brand E-Commerce",
-        sub: "Role: Creative Director • Year: 2023",
-        problem: "Traditional product pages failed to express the premium tactile quality of high-end hardware.",
-        research: "A/B testing proved 3D interactive rotatable models increased checkout conversion by 28%.",
-        solution: "Built a sleek, dark-mode minimalist store with real-time audio wave previews and smooth WebGL renders.",
-        results: "$1.2M gross sales within initial month of deployment."
-      },
-      3: {
-        title: "Awwwards Interactive Portfolio",
-        sub: "Role: Frontend Engineer & Designer • Year: 2023",
-        problem: "Standing out in a crowded creative industry required an unforgettable storytelling experience.",
-        research: "Recruiters spend an average of 30 seconds on a portfolio. High visual impact is essential within the first 3 seconds.",
-        solution: "Combined responsive retro video game physics with fluid Apple-grade scrolling dynamics.",
-        results: "Site of the Day Winner, over 100,000 unique global visits."
-      }
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = 480;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Engine State
+    let coinCount = parseInt(localStorage.getItem('mario_coins') || '0');
+    document.getElementById('hudCoinCount').textContent = coinCount;
+
+    const mario = {
+      x: 80,
+      y: 300,
+      width: 32,
+      height: 40,
+      vx: 0,
+      vy: 0,
+      speed: 4.5,
+      gravity: 0.5,
+      jumpPower: -11,
+      grounded: false,
+      poweredUp: false
     };
 
-    function openCaseStudy(id) {
-      const data = caseStudiesData[id];
-      if (data) {
-        modalTitle.textContent = data.title;
-        modalSub.textContent = data.sub;
-        document.getElementById('modalProblem').textContent = data.problem;
-        document.getElementById('modalResearch').textContent = data.research;
-        document.getElementById('modalSolution').textContent = data.solution;
-        document.getElementById('modalResults').textContent = data.results;
-        
-        caseModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+    const keys = {};
+
+    // Interactive Stage Elements
+    const groundHeight = 60;
+    const blocks = [
+      { x: 220, y: 280, width: 36, height: 36, hit: false, content: 'coin' },
+      { x: 260, y: 280, width: 36, height: 36, hit: false, content: 'mushroom' },
+      { x: 300, y: 280, width: 36, height: 36, hit: false, content: 'coin' },
+      { x: 500, y: 220, width: 36, height: 36, hit: false, content: 'coin' }
+    ];
+
+    const coinsList = [
+      { x: 380, y: 340, collected: false },
+      { x: 420, y: 340, collected: false },
+      { x: 460, y: 340, collected: false }
+    ];
+
+    const goomba = { x: 600, y: 380, width: 32, height: 32, vx: -1.2, alive: true };
+
+    // Input Events
+    window.addEventListener('keydown', e => {
+      keys[e.code] = true;
+      if (['Space', 'ArrowUp', 'KeyW'].includes(e.code) && mario.grounded) {
+        mario.vy = mario.jumpPower;
+        mario.grounded = false;
+        audio.playJumpSound();
       }
-    }
-
-    function closeCaseStudy() {
-      caseModal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-
-    // Close Modal on Background Click
-    caseModal.addEventListener('click', (e) => {
-      if (e.target === caseModal) {
-        closeCaseStudy();
-      }
     });
 
-    // 4. Mobile Menu Navigation Handler
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navLinks = document.getElementById('navLinks');
+    window.addEventListener('keyup', e => { keys[e.code] = false; });
 
-    mobileMenuBtn.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-
-    document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-      });
-    });
-
-    // 5. Resume Download Action Handler
-    document.getElementById('resumeBtn').addEventListener('click', (e) => {
+    // Touch Controller Handlers
+    document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); keys['ArrowLeft'] = true; });
+    document.getElementById('btnLeft').addEventListener('touchend', (e) => { e.preventDefault(); keys['ArrowLeft'] = false; });
+    document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); keys['ArrowRight'] = true; });
+    document.getElementById('btnRight').addEventListener('touchend', (e) => { e.preventDefault(); keys['ArrowRight'] = false; });
+    document.getElementById('btnJump').addEventListener('touchstart', (e) => {
       e.preventDefault();
-      alert('Downloading Piggy Ang - Resume.pdf');
+      if (mario.grounded) {
+        mario.vy = mario.jumpPower;
+        mario.grounded = false;
+        audio.playJumpSound();
+      }
     });
+
+    // Main Game Loop
+    function updateGame() {
+      // Horizontal Controls
+      if (keys['ArrowRight'] || keys['KeyD']) mario.vx = mario.speed;
+      else if (keys['ArrowLeft'] || keys['KeyA']) mario.vx = -mario.speed;
+      else mario.vx = 0;
+
+      // Apply Gravity
+      mario.vy += mario.gravity;
+
+      // Update Movement
+      mario.x += mario.vx;
+      mario.y += mario.vy;
+
+      // Canvas Boundary Collision
+      if (mario.x < 0) mario.x = 0;
+      if (mario.x + mario.width > canvas.width) mario.x = canvas.width - mario.width;
+
+      // Ground Collision
+      const floorY = canvas.height - groundHeight - mario.height;
+      if (mario.y >= floorY) {
+        mario.y = floorY;
+        mario.vy = 0;
+        mario.grounded = true;
+      }
+
+      // Block Head-Bumping Collision
+      blocks.forEach(b => {
+        if (
+          mario.x < b.x + b.width &&
+          mario.x + mario.width > b.x &&
+          mario.y < b.y + b.height &&
+          mario.y + mario.height > b.y
+        ) {
+          // Bumping bottom of block
+          if (mario.vy < 0 && mario.y >= b.y + b.height - 10) {
+            mario.vy = 2;
+            if (!b.hit) {
+              b.hit = true;
+              if (b.content === 'coin') {
+                audio.playCoinSound();
+                addCoins(1);
+              } else if (b.content === 'mushroom') {
+                audio.playPowerUpSound();
+                mario.poweredUp = true;
+                mario.height = 52;
+              }
+            }
+          }
+        }
+      });
+
+      // Coin Pickups
+      coinsList.forEach(c => {
+        if (!c.collected && Math.abs(mario.x - c.x) < 24 && Math.abs(mario.y - c.y) < 24) {
+          c.collected = true;
+          audio.playCoinSound();
+          addCoins(1);
+        }
+      });
+
+      // Goomba Logic
+      if (goomba.alive) {
+        goomba.x += goomba.vx;
+        if (goomba.x < 450 || goomba.x > 700) goomba.vx *= -1;
+
+        // Player collision with Goomba
+        if (
+          mario.x < goomba.x + goomba.width &&
+          mario.x + mario.width > goomba.x &&
+          mario.y < goomba.y + goomba.height &&
+          mario.y + mario.height > goomba.y
+        ) {
+          if (mario.vy > 0 && mario.y < goomba.y) {
+            // Stomp Goomba
+            goomba.alive = false;
+            mario.vy = -6;
+            audio.playJumpSound();
+          }
+        }
+      }
+    }
+
+    function renderGame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Render Ground
+      ctx.fillStyle = '#C84C0C';
+      ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
+      ctx.fillStyle = '#43B047';
+      ctx.fillRect(0, canvas.height - groundHeight, canvas.width, 12);
+
+      // Render Question / Hit Blocks
+      blocks.forEach(b => {
+        ctx.fillStyle = b.hit ? '#885522' : '#FBD000';
+        ctx.fillRect(b.x, b.y, b.width, b.height);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(b.x, b.y, b.width, b.height);
+
+        if (!b.hit) {
+          ctx.fillStyle = '#000';
+          ctx.font = '16px "Press Start 2P"';
+          ctx.fillText('?', b.x + 10, b.y + 26);
+        }
+      });
+
+      // Render Collectible Coins
+      coinsList.forEach(c => {
+        if (!c.collected) {
+          ctx.fillStyle = '#FBD000';
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, 10, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#000';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      });
+
+      // Render Goomba
+      if (goomba.alive) {
+        ctx.fillStyle = '#773311';
+        ctx.fillRect(goomba.x, goomba.y, goomba.width, goomba.height);
+        ctx.fillStyle = '#FFF';
+        ctx.fillRect(goomba.x + 4, goomba.y + 8, 6, 8);
+        ctx.fillRect(goomba.x + 20, goomba.y + 8, 6, 8);
+      }
+
+      // Render Mario Character
+      ctx.fillStyle = mario.poweredUp ? '#E52521' : '#E52521';
+      ctx.fillRect(mario.x, mario.y, mario.width, mario.height);
+      ctx.fillStyle = '#002395';
+      ctx.fillRect(mario.x, mario.y + mario.height / 2, mario.width, mario.height / 2);
+
+      // Cap
+      ctx.fillStyle = '#E52521';
+      ctx.fillRect(mario.x - 2, mario.y, mario.width + 4, 10);
+    }
+
+    function gameLoop() {
+      updateGame();
+      renderGame();
+      requestAnimationFrame(gameLoop);
+    }
+    gameLoop();
+
+    /* --------------------------------------------------------------------------
+       8.4 GLOBAL UI INTERACTION & SAVED PROGRESS HANDLERS
+       -------------------------------------------------------------------------- */
+    function addCoins(num) {
+      coinCount += num;
+      document.getElementById('hudCoinCount').textContent = coinCount;
+      localStorage.setItem('mario_coins', coinCount);
+    }
+
+    function startGameEngine() {
+      audio.init();
+      audio.startBGM();
+      document.getElementById('startMenuModal').classList.add('hidden');
+    }
+
+    function toggleBGM() {
+      audio.bgmEnabled = !audio.bgmEnabled;
+      const btn = document.getElementById('bgmToggleBtn');
+      if (audio.bgmEnabled) {
+        audio.startBGM();
+        btn.style.color = '#FFF';
+      } else {
+        audio.stopBGM();
+        btn.style.color = '#777';
+      }
+    }
+
+    function toggleSFX() {
+      audio.sfxEnabled = !audio.sfxEnabled;
+      const btn = document.getElementById('sfxToggleBtn');
+      btn.style.color = audio.sfxEnabled ? '#FFF' : '#777';
+    }
+
+    function toggleNightMode() {
+      document.getElementById('nightFilter').classList.toggle('active');
+    }
+
+    function openSettings() {
+      document.getElementById('settingsModal').classList.add('active');
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsModal').classList.remove('active');
+    }
+
+    function openEducationCard() {
+      audio.playPowerUpSound();
+      alert("ACADEMIC RECORD:\n• National Academy of Art & Design\n• B.A. in Visual Communication & UI/UX Design\n• Magna Cum Laude Honors");
+    }
+
+    function triggerLevelCaseStudy(levelId) {
+      audio.playPowerUpSound();
+      alert("LOADING CASE STUDY LEVEL " + levelId + "\n\nOverview -> Research -> Design -> Prototype -> Results");
+    }
+
+    function upgradeSkill(skillName) {
+      audio.playCoinSound();
+      alert("SKILL UPGRADE: " + skillName + " +100 XP!");
+    }
+
+    function downloadResume() {
+      audio.playPowerUpSound();
+      alert("Downloading Piggy_Ang_Resume_2026.pdf");
+    }
   </script>
 </body>
 </html>
