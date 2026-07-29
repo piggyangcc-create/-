@@ -1,1211 +1,1551 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yang Chuchu | Cross-border Visual Designer - Mario Interactive Portfolio</title>
-    <!-- Pixel Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <style>
-        /* ==========================================================================
-           MARIO PIXEL ENGINE THEME & STYLES
-           ========================================================================== */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Yang Chuchu (Piggy Ang) | Cross-border Visual Designer & Playable Mario Portfolio</title>
+  
+  <!-- SEO & Social Meta Tags -->
+  <meta name="description" content="Playable Mario-themed interactive portfolio of Yang Chuchu (Piggy Ang) - Cross-border Visual Designer with 3.5 years of experience in Amazon TOP brands, AIGC workflow, and brand visual design.">
+  <meta property="og:title" content="Yang Chuchu (Piggy Ang) - Playable Interactive Portfolio">
+  <meta property="og:description" content="Explore an Awwwards-grade interactive portfolio designed as a retro Mario game featuring physics, web audio, RPG skill trees, case studies, and achievements.">
+  <meta property="og:type" content="website">
 
-        :root {
-            --mario-red: #E52521;
-            --mario-blue: #00247D;
-            --mario-sky: #5C94FC;
-            --mario-yellow: #F8B800;
-            --mario-green: #00A800;
-            --mario-brick: #C84C0C;
-            --mario-bg-dark: #0f172a;
-            --pixel-font: 'Press Start 2P', cursive;
-            --text-font: 'VT323', monospace;
-        }
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            user-select: none;
-        }
+  <style>
+    /* ==========================================================================
+       1. CORE DESIGN SYSTEM & SYSTEM VARIABLES
+       ========================================================================== */
+    :root {
+      /* Theme Colors */
+      --mario-red: #E52521;
+      --mario-blue: #002395;
+      --mario-yellow: #FBD000;
+      --mario-green: #43B047;
+      --mario-brick: #C84C0C;
+      --mario-pipe: #00A800;
+      --apple-dark: #121214;
+      --apple-card-bg: rgba(255, 255, 255, 0.88);
+      --apple-card-dark: rgba(24, 24, 28, 0.92);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      
+      /* World Environments */
+      --world-sky: #5C94FC;
+      --world-underground: #100A1A;
+      --world-castle: #260808;
+      
+      /* Typography & Radii */
+      --font-pixel: 'Press Start 2P', monospace;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-        html, body {
-            width: 100%;
-            min-height: 100vh;
-            scroll-behavior: smooth;
-            background-color: var(--mario-bg-dark);
-            color: #ffffff;
-            font-family: var(--text-font);
-            font-size: 20px;
-            overflow-x: hidden;
-        }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
 
-        /* HUD Header */
-        .hud-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background: rgba(0, 0, 0, 0.9);
-            border-bottom: 4px solid var(--mario-yellow);
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            font-family: var(--pixel-font);
-            font-size: 11px;
-        }
+    html {
+      scroll-behavior: smooth;
+    }
 
-        .hud-left {
-            display: flex;
-            gap: 20px;
-        }
+    body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      font-family: var(--font-body);
+      background-color: var(--world-sky);
+      color: #1D1D1F;
+      transition: background-color 0.8s var(--ease-apple);
+      touch-action: manipulation;
+    }
 
-        .hud-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+    .pixel-text {
+      font-family: var(--font-pixel);
+      letter-spacing: -0.5px;
+    }
 
-        .hud-label {
-            color: var(--mario-yellow);
-        }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: var(--mario-red); border-radius: 4px; }
 
-        .hud-btn {
-            background: var(--mario-red);
-            color: #fff;
-            border: 2px solid #fff;
-            padding: 6px 12px;
-            font-family: var(--pixel-font);
-            font-size: 10px;
-            cursor: pointer;
-            text-decoration: none;
-            box-shadow: 2px 2px 0px #000;
-            transition: transform 0.1s;
-        }
+    /* ==========================================================================
+       2. START MENU & LOADING SCREEN
+       ========================================================================== */
+    #startMenuModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #FFF;
+      text-align: center;
+      padding: 20px;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
 
-        .hud-btn:hover {
-            transform: scale(1.05);
-            background: var(--mario-yellow);
-            color: #000;
-        }
+    #startMenuModal.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
 
-        /* Canvas Hero Section */
-        .game-section {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            min-height: 500px;
-            padding-top: 60px;
-            background: var(--mario-sky);
-            overflow: hidden;
-        }
+    .start-logo {
+      font-family: var(--font-pixel);
+      font-size: 2.2rem;
+      color: var(--mario-red);
+      text-shadow: 4px 4px 0px var(--mario-yellow), -2px -2px 0px #FFF;
+      margin-bottom: 20px;
+      animation: logoPulse 2s infinite alternate;
+    }
 
-        .game-instructions {
-            position: absolute;
-            top: 75px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.75);
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-family: var(--pixel-font);
-            font-size: 10px;
-            color: #fff;
-            z-index: 10;
-            pointer-events: none;
-            border: 2px solid var(--mario-yellow);
-            text-align: center;
-            width: 90%;
-            max-width: 600px;
-        }
+    @keyframes logoPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
 
-        #mario-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-            background: var(--mario-sky);
-        }
+    .start-menu-options {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 30px;
+      width: 100%;
+      max-width: 320px;
+    }
 
-        .hero-overlay {
-            position: absolute;
-            bottom: 40px;
-            left: 40px;
-            z-index: 10;
-            pointer-events: none;
-        }
+    .menu-btn {
+      font-family: var(--font-pixel);
+      font-size: 0.8rem;
+      padding: 16px 24px;
+      background: #222;
+      color: #FFF;
+      border: 3px solid #FFF;
+      box-shadow: 4px 4px 0px var(--mario-red);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-decoration: none;
+    }
 
-        .hero-card {
-            pointer-events: auto;
-            background: rgba(0, 0, 0, 0.85);
-            border: 4px solid var(--mario-yellow);
-            padding: 20px;
-            max-width: 500px;
-            box-shadow: 6px 6px 0px #000;
-        }
+    .menu-btn:hover {
+      background: var(--mario-yellow);
+      color: #000;
+      border-color: #000;
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #FFF;
+    }
 
-        .hero-card h1 {
-            font-family: var(--pixel-font);
-            font-size: 16px;
-            color: var(--mario-yellow);
-            margin: 10px 0;
-            line-height: 1.4;
-        }
+    /* ==========================================================================
+       3. TOP HUD & GLASS NAVIGATION BAR
+       ========================================================================== */
+    .hud-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--glass-border);
+      color: #FFF;
+      font-family: var(--font-pixel);
+      font-size: 0.7rem;
+    }
 
-        .hero-card h2 {
-            font-size: 22px;
-            color: #fff;
-            margin-bottom: 10px;
-        }
+    .hud-stats {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
 
-        .badge {
-            background: var(--mario-green);
-            color: #fff;
-            font-family: var(--pixel-font);
-            font-size: 9px;
-            padding: 4px 8px;
-            display: inline-block;
-        }
+    .coin-icon {
+      width: 12px;
+      height: 16px;
+      background: var(--mario-yellow);
+      border-radius: 50%;
+      border: 2px solid #000;
+      display: inline-block;
+      animation: coinSpin 1.2s steps(4) infinite;
+    }
 
-        .hero-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
+    @keyframes coinSpin {
+      0% { transform: scaleX(1); }
+      50% { transform: scaleX(0.2); }
+      100% { transform: scaleX(1); }
+    }
 
-        /* Pixel Buttons */
-        .pixel-btn {
-            font-family: var(--pixel-font);
-            font-size: 10px;
-            padding: 8px 14px;
-            border: 3px solid #fff;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            box-shadow: 4px 4px 0px #000;
-            transition: all 0.1s ease;
-            color: #fff;
-        }
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      list-style: none;
+    }
 
-        .pixel-btn.primary { background: var(--mario-red); }
-        .pixel-btn.secondary { background: var(--mario-blue); }
-        .pixel-btn.accent { background: var(--mario-green); }
-        .pixel-btn.small { font-size: 9px; padding: 6px 10px; }
+    .nav-links a {
+      color: #FFF;
+      text-decoration: none;
+      font-size: 0.65rem;
+      transition: color 0.3s ease;
+    }
 
-        .pixel-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px #000;
-            filter: brightness(1.2);
-        }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--mario-yellow);
+    }
 
-        /* Navigation Bar */
-        .main-nav {
-            position: sticky;
-            top: 60px;
-            z-index: 900;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--mario-brick);
-            padding: 10px 0;
-        }
+    .hud-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-        .main-nav ul {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            list-style: none;
-            flex-wrap: wrap;
-        }
+    .icon-toggle-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #FFF;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
 
-        .nav-link {
-            font-family: var(--pixel-font);
-            font-size: 10px;
-            color: #fff;
-            text-decoration: none;
-            padding: 6px 10px;
-            transition: color 0.2s;
-        }
+    .icon-toggle-btn:hover {
+      background: var(--mario-yellow);
+      color: #000;
+      transform: scale(1.1);
+    }
 
-        .nav-link:hover {
-            color: var(--mario-yellow);
-            background: rgba(248, 184, 0, 0.15);
-            border-radius: 4px;
-        }
+    /* ==========================================================================
+       4. HERO CANVASES & 2D PHYSICS PLAYABLE STAGE
+       ========================================================================== */
+    .hero-container {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 80px;
+      background: linear-gradient(180deg, #5C94FC 0%, #87B5FF 100%);
+      overflow: hidden;
+    }
 
-        /* Main Content Layout */
-        .content-wrapper {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+    .hero-text-overlay {
+      position: absolute;
+      top: 110px;
+      left: 6%;
+      z-index: 10;
+      max-width: 620px;
+      pointer-events: none;
+    }
 
-        .pixel-section {
-            margin-bottom: 60px;
-            background: rgba(30, 41, 59, 0.9);
-            border: 4px solid var(--mario-brick);
-            padding: 25px;
-            box-shadow: 8px 8px 0px #000;
-        }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(67, 176, 71, 0.25);
+      border: 1px solid var(--mario-green);
+      color: #114214;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      backdrop-filter: blur(8px);
+      pointer-events: auto;
+    }
 
-        .section-title {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+    .hero-title-main {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #FFF;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      margin-bottom: 8px;
+    }
 
-        .section-title h2 {
-            font-family: var(--pixel-font);
-            color: var(--mario-yellow);
-            font-size: 18px;
-            text-shadow: 2px 2px 0px #000;
-        }
+    .hero-name-sub {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #FFF;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
 
-        .section-title .subtitle {
-            color: #94a3b8;
-            margin-top: 6px;
-            font-size: 18px;
-        }
+    .hero-subtitle {
+      font-family: var(--font-pixel);
+      font-size: 0.8rem;
+      color: var(--mario-yellow);
+      text-shadow: 2px 2px 0px #000;
+      margin-bottom: 16px;
+    }
 
-        /* About Me (NPC Dialogue) */
-        .npc-container {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            background: #000;
-            border: 3px solid #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+    .hero-bio {
+      font-size: 1rem;
+      color: #FFF;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
 
-        .npc-sprite {
-            font-size: 40px;
-            animation: bounce 1s infinite alternate;
-        }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      pointer-events: auto;
+      flex-wrap: wrap;
+    }
 
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-8px); }
-        }
+    .game-instructions {
+      position: absolute;
+      top: 110px;
+      right: 6%;
+      background: rgba(0, 0, 0, 0.65);
+      border: 2px solid var(--mario-yellow);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      color: #FFF;
+      font-family: var(--font-pixel);
+      font-size: 0.62rem;
+      line-height: 1.8;
+      z-index: 10;
+      backdrop-filter: blur(8px);
+    }
 
-        .dialogue-box { flex: 1; }
-        .dialogue-speaker {
-            font-family: var(--pixel-font);
-            color: var(--mario-yellow);
-            font-size: 11px;
-            margin-bottom: 8px;
-        }
+    #gameCanvas {
+      width: 100%;
+      height: 480px;
+      display: block;
+      z-index: 5;
+    }
 
-        .dialogue-text { font-size: 20px; line-height: 1.4; }
-        .dialogue-action { margin-top: 10px; text-align: right; }
+    #weatherCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
 
-        .about-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 15px;
-        }
+    .night-filter {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 20, 0.5);
+      pointer-events: none;
+      z-index: 900;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
 
-        .about-card {
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid var(--mario-sky);
-            padding: 15px;
-        }
+    .night-filter.active { opacity: 1; }
 
-        .about-card h3 { color: var(--mario-sky); margin-bottom: 8px; }
+    /* ==========================================================================
+       5. CONTENT SECTIONS
+       ========================================================================== */
+    section {
+      position: relative;
+      padding: 90px 6%;
+      z-index: 10;
+    }
 
-        /* Education */
-        .school-building-wrapper { display: flex; flex-direction: column; gap: 15px; }
-        .pixel-school {
-            background: var(--mario-red);
-            border: 4px solid #fff;
-            padding: 18px;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 4px 4px 0px #000;
-        }
+    .section-title-wrap {
+      text-align: center;
+      margin-bottom: 50px;
+    }
 
-        .school-roof { font-family: var(--pixel-font); font-size: 12px; margin-bottom: 8px; }
-        .school-door {
-            background: var(--mario-yellow);
-            color: #000;
-            display: inline-block;
-            padding: 6px 12px;
-            font-family: var(--pixel-font);
-            font-size: 9px;
-        }
+    .section-tag {
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      color: var(--mario-yellow);
+      background: #000;
+      padding: 6px 14px;
+      display: inline-block;
+      box-shadow: 4px 4px 0px #FFF;
+      margin-bottom: 12px;
+    }
 
-        .education-card {
-            background: #0f172a;
-            border: 3px solid var(--mario-yellow);
-            padding: 20px;
-        }
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #FFF;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
 
-        .edu-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 2px dashed #334155;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-        }
+    /* ABOUT ME - NPC DIALOGUE */
+    #about { background: #141418; color: #FFF; }
 
-        .edu-date { color: var(--mario-yellow); font-family: var(--pixel-font); font-size: 11px; }
+    .npc-dialogue-box {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #000;
+      border: 4px solid #FFF;
+      border-radius: var(--radius-sm);
+      padding: 30px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      box-shadow: 8px 8px 0px var(--mario-red);
+    }
 
-        .edu-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-top: 12px;
-        }
+    .npc-avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--mario-red);
+      border: 3px solid #FFF;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-pixel);
+      font-size: 2rem;
+      color: #FFF;
+    }
 
-        .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-        .tag { background: var(--mario-blue); border: 1px solid var(--mario-sky); padding: 3px 6px; font-size: 16px; }
+    .dialogue-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
 
-        /* Experience Timeline */
-        .mario-map-timeline { display: flex; flex-direction: column; gap: 20px; }
-        .timeline-node { background: #0f172a; border: 3px solid var(--mario-green); padding: 18px; }
-        .node-flag { font-family: var(--pixel-font); color: var(--mario-yellow); font-size: 11px; margin-bottom: 8px; }
-        .company-badge {
-            display: inline-block;
-            background: var(--mario-brick);
-            padding: 2px 6px;
-            font-family: var(--pixel-font);
-            font-size: 9px;
-            margin-bottom: 8px;
-        }
+    .tag-chip {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+    }
 
-        .metrics-grid { display: flex; gap: 15px; margin-top: 12px; }
-        .metric {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 8px;
-            text-align: center;
-            flex: 1;
-            border: 1px solid var(--mario-yellow);
-        }
+    /* EDUCATION - SCHOOL GATE */
+    #education { background: var(--world-sky); border-top: 6px solid #000; }
 
-        .metric .num { display: block; font-family: var(--pixel-font); font-size: 14px; color: var(--mario-yellow); }
+    .school-gate-container {
+      max-width: 820px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.92);
+      border: 4px solid #000;
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        /* Skills Tree */
-        .skill-tree-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
-        .skill-branch h3 { font-family: var(--pixel-font); font-size: 11px; color: var(--mario-sky); margin-bottom: 12px; }
-        .skills-group { display: flex; flex-direction: column; gap: 8px; }
-        .skill-node {
-            background: #0f172a;
-            border: 2px solid #334155;
-            padding: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+    .school-gate-container:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+    }
 
-        .skill-node:hover { border-color: var(--mario-yellow); transform: translateX(4px); }
-        .skill-node .level { margin-left: auto; font-family: var(--pixel-font); font-size: 9px; color: var(--mario-green); }
+    /* EXPERIENCE - MARIO MAP */
+    #experience { background: var(--world-underground); color: #FFF; }
 
-        .skill-detail-box {
-            margin-top: 20px;
-            background: #000;
-            border: 2px solid var(--mario-yellow);
-            padding: 12px;
-            font-family: var(--pixel-font);
-            font-size: 10px;
-            color: var(--mario-yellow);
-            text-align: center;
-        }
+    .timeline-map {
+      max-width: 920px;
+      margin: 0 auto;
+      position: relative;
+    }
 
-        /* Project Doors */
-        .project-doors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
-        .project-door-card {
-            background: var(--mario-brick);
-            border: 4px solid #fff;
-            padding: 18px;
-            cursor: pointer;
-            text-align: center;
-            box-shadow: 4px 4px 0px #000;
-            transition: transform 0.2s;
-        }
+    .timeline-map::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--mario-yellow);
+      transform: translateX(-50%);
+    }
 
-        .project-door-card:hover { transform: translateY(-4px); background: var(--mario-red); }
-        .door-frame { font-family: var(--pixel-font); font-size: 11px; color: var(--mario-yellow); margin-bottom: 8px; }
-        .door-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
-        .door-tags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
-        .door-tags span { background: rgba(0,0,0,0.5); font-size: 13px; padding: 2px 6px; }
+    .timeline-node {
+      margin-bottom: 50px;
+      position: relative;
+      width: 50%;
+    }
 
-        /* Achievements */
-        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
-        .achievement-card { background: #0f172a; border: 3px solid var(--mario-yellow); padding: 15px; text-align: center; }
-        .trophy-icon { font-size: 32px; margin-bottom: 8px; }
-        .achieve-num { font-family: var(--pixel-font); font-size: 14px; color: var(--mario-yellow); }
-        .achieve-text { font-size: 16px; margin-top: 4px; color: #94a3b8; }
+    .timeline-node:nth-child(odd) { left: 0; padding-right: 40px; text-align: right; }
+    .timeline-node:nth-child(even) { left: 50%; padding-left: 40px; text-align: left; }
 
-        /* Contact Castle */
-        .castle-wrapper { background: #000; border: 4px solid var(--mario-red); padding: 25px; text-align: center; }
-        .castle-header { font-family: var(--pixel-font); color: var(--mario-red); font-size: 14px; margin-bottom: 12px; }
-        .contact-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+    .node-flag {
+      position: absolute;
+      top: 18px;
+      width: 24px;
+      height: 24px;
+      background: var(--mario-red);
+      border: 3px solid #FFF;
+      border-radius: 50%;
+      z-index: 5;
+    }
 
-        /* Case Study Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    .timeline-node:nth-child(odd) .node-flag { right: -12px; }
+    .timeline-node:nth-child(even) .node-flag { left: -12px; }
 
-        .modal-card {
-            background: #1e293b;
-            border: 4px solid var(--mario-yellow);
-            max-width: 700px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 25px;
-            position: relative;
-            box-shadow: 8px 8px 0px #000;
-        }
+    .node-card {
+      background: var(--apple-card-dark);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s var(--ease-apple);
+    }
 
-        .modal-close {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: var(--mario-red);
-            color: #fff;
-            border: 2px solid #fff;
-            font-family: var(--pixel-font);
-            font-size: 9px;
-            padding: 4px 8px;
-            cursor: pointer;
-        }
+    .node-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--mario-yellow);
+    }
 
-        /* Footer */
-        .mario-footer {
-            background: #000;
-            border-top: 4px solid var(--mario-yellow);
-            padding: 25px;
-            text-align: center;
-            font-family: var(--pixel-font);
-            font-size: 10px;
-        }
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      text-align: center;
+    }
 
-        .mario-footer h3 { color: var(--mario-yellow); margin-bottom: 8px; }
-        .mario-footer p { color: #64748b; margin-bottom: 12px; }
-    </style>
+    .metric-box {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .metric-num {
+      font-family: var(--font-pixel);
+      color: var(--mario-yellow);
+      font-size: 0.9rem;
+    }
+
+    .metric-label { font-size: 0.72rem; color: #AAA; margin-top: 4px; }
+
+    /* SKILLS - RPG TREE */
+    #skills { background: var(--world-castle); color: #FFF; }
+
+    .skill-tree-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .skill-tree-node {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .skill-tree-node:hover {
+      background: rgba(251, 208, 0, 0.15);
+      border-color: var(--mario-yellow);
+      transform: scale(1.04);
+    }
+
+    /* PROJECTS - MARIO LEVEL DOORS */
+    #projects { background: #18181C; color: #FFF; }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .level-card {
+      background: rgba(35, 35, 42, 0.9);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-apple);
+    }
+
+    .level-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--mario-yellow);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .level-header {
+      background: linear-gradient(135deg, var(--mario-red) 0%, #900 100%);
+      padding: 14px 20px;
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      color: #FFF;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .level-body { padding: 20px; }
+
+    /* ACHIEVEMENTS TROPHY WALL */
+    #achievements { background: #0E0E12; color: #FFF; }
+
+    .achieve-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .achieve-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .achieve-card:hover {
+      border-color: var(--mario-yellow);
+      transform: translateY(-4px);
+    }
+
+    .achieve-icon {
+      font-size: 2.2rem;
+      color: var(--mario-yellow);
+      margin-bottom: 12px;
+    }
+
+    /* CONTACT CASTLE & FOOTER */
+    #contact { background: #0A0A0C; color: #FFF; text-align: center; }
+
+    .castle-wrapper {
+      max-width: 820px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.04);
+      border: 2px dashed var(--mario-yellow);
+      border-radius: var(--radius-lg);
+      padding: 50px 30px;
+    }
+
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-weight: 600;
+      background: var(--mario-red);
+      color: #FFF;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-apple);
+      text-decoration: none;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(229, 37, 33, 0.4);
+    }
+
+    footer {
+      background: #000;
+      color: #777;
+      text-align: center;
+      padding: 30px;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* MODAL OVERLAYS */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 5000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      background: #1C1C1E;
+      color: #FFF;
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--glass-border);
+      padding: 32px;
+    }
+
+    /* MOBILE VIRTUAL CONTROLLER */
+    .mobile-controls {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      padding: 0 24px;
+      z-index: 2000;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    @media (max-width: 850px) {
+      .mobile-controls { display: flex; }
+      .game-instructions { display: none; }
+      .hero-title-main { font-size: 2.5rem; }
+      .hero-name-sub { font-size: 1.4rem; }
+      .timeline-map::before { left: 20px; }
+      .timeline-node { width: 100% !important; left: 0 !important; padding-left: 50px !important; text-align: left !important; }
+      .timeline-node .node-flag { left: 8px !important; }
+    }
+
+    .d-pad, .action-pad { pointer-events: auto; display: flex; gap: 12px; }
+
+    .touch-btn {
+      width: 58px;
+      height: 58px;
+      background: rgba(255, 255, 255, 0.25);
+      border: 2px solid #FFF;
+      border-radius: 50%;
+      backdrop-filter: blur(8px);
+      color: #FFF;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+    }
+
+    .touch-btn:active { background: var(--mario-yellow); color: #000; }
+  </style>
 </head>
 <body>
 
-    <!-- HUD / Top Bar -->
-    <header class="hud-header">
-        <div class="hud-left">
-            <div class="hud-item"><span class="hud-label">MARIO</span><span id="score-display">000000</span></div>
-            <div class="hud-item"><span class="hud-label">COINS</span><span id="coin-display">🪙 x00</span></div>
-            <div class="hud-item"><span class="hud-label">WORLD</span><span id="world-display">1-1</span></div>
-            <div class="hud-item"><span class="hud-label">EXP</span><span id="exp-display">3.5Y</span></div>
-        </div>
-        <div class="hud-right">
-            <button id="audio-toggle-btn" class="hud-btn" title="Toggle Sound/Music">🔊 MUSIC: ON</button>
-            <a href="#contact" class="hud-btn">START GAME</a>
-        </div>
-    </header>
+  <!-- NIGHT OVERLAY -->
+  <div class="night-filter" id="nightFilter"></div>
 
-    <!-- Canvas Game Engine Container for Hero Level -->
-    <section id="hero-game" class="game-section">
-        <div class="game-instructions">
-            <span>[A] [D] 或 [←] [→] 移动 | [SPACE] 或 [W] 跳跃 | 点击下方关卡开始探索</span>
-        </div>
-        <canvas id="mario-canvas"></canvas>
-        <div class="hero-overlay">
-            <div class="hero-card">
-                <span class="badge">OPEN TO WORK</span>
-                <h1>HELLO! I'M YANG CHUCHU</h1>
-                <h2>Cross-border Visual Designer (3.5 Years Exp)</h2>
-                <p>专精于跨境电商视觉设计、品牌包装、AIGC 辅助设计与 3D 产品精修。</p>
-                <div class="hero-actions">
-                    <a href="#about" class="pixel-btn primary">Start Journey</a>
-                    <a href="#projects" class="pixel-btn secondary">Explore Projects</a>
-                    <a href="#contact" class="pixel-btn accent">Download Resume</a>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- START MENU / LOADING SCREEN -->
+  <div id="startMenuModal">
+    <div class="start-logo">PIGGY ANG</div>
+    <p class="pixel-text" style="font-size: 0.75rem; color: var(--mario-yellow);">CROSS-BORDER VISUAL DESIGNER</p>
+    <div class="start-menu-options">
+      <button class="menu-btn" onclick="startGameEngine()"><i class="fas fa-play"></i> START JOURNEY</button>
+      <a href="#projects" class="menu-btn" onclick="startGameEngine()"><i class="fas fa-gamepad"></i> EXPLORE PROJECTS</a>
+      <button class="menu-btn" onclick="openSettings()"><i class="fas fa-cog"></i> SETTINGS</button>
+    </div>
+  </div>
 
-    <!-- Navigation Bar -->
-    <nav class="main-nav">
-        <ul>
-            <li><a href="#about" class="nav-link">About Me</a></li>
-            <li><a href="#education" class="nav-link">Education</a></li>
-            <li><a href="#experience" class="nav-link">Experience</a></li>
-            <li><a href="#skills" class="nav-link">Skills Tree</a></li>
-            <li><a href="#projects" class="nav-link">Projects</a></li>
-            <li><a href="#achievements" class="nav-link">Achievements</a></li>
-            <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
-    </nav>
-
-    <!-- Main Scrollable Content -->
-    <main class="content-wrapper">
-
-        <!-- ABOUT ME -->
-        <section id="about" class="pixel-section">
-            <div class="section-title">
-                <h2>WORLD 1: ABOUT ME</h2>
-                <p class="subtitle">[ Talk to NPC Toad to get details ]</p>
-            </div>
-            
-            <div class="npc-container">
-                <div class="npc-sprite">🍄</div>
-                <div class="dialogue-box">
-                    <div class="dialogue-speaker">Toad the Guide:</div>
-                    <div class="dialogue-text" id="dialogue-content">
-                        “你好！我是杨楚楚 (Yang Chuchu)，一位拥有 3.5 年经验的跨境视觉设计师。毕业于闽南理工学院视觉传达设计专业（艺术学学士）。熟练驾驭 Amazon, eBay, Walmart 以及独立站的全套视觉设计，并深耕 Prime Day 与 Black Friday 大促视觉突破！”
-                    </div>
-                    <div class="dialogue-action">
-                        <button class="pixel-btn small" id="next-dialogue-btn">Next Dialogue</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="about-grid">
-                <div class="about-card">
-                    <h3>🎨 视觉传达专业</h3>
-                    <p>扎实的平面构成、色彩学与视觉排版基础，将设计思维融合商业转化。</p>
-                </div>
-                <div class="about-card">
-                    <h3>🌐 3.5年跨境经验</h3>
-                    <p>精通 Amazon、eBay、Walmart 及品牌独立站视觉生态，熟悉全流程设计规范。</p>
-                </div>
-                <div class="about-card">
-                    <h3>🚀 AIGC 赋能</h3>
-                    <p>深入融合 Midjourney、Stable Diffusion 与 ChatGPT，提升工作流效率与创新视觉表达。</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- EDUCATION -->
-        <section id="education" class="pixel-section">
-            <div class="section-title">
-                <h2>WORLD 2: ACADEMIC HOUSE</h2>
-                <p class="subtitle">[ Education & Fundamentals ]</p>
-            </div>
-
-            <div class="school-building-wrapper">
-                <div class="pixel-school" id="school-trigger">
-                    <div class="school-roof">🏫 MINNAN UNIVERSITY OF TECHNOLOGY</div>
-                    <div class="school-door">ENTER CLASSROOM</div>
-                </div>
-
-                <div class="education-card">
-                    <div class="edu-header">
-                        <h3>闽南理工学院 (Minnan University of Technology)</h3>
-                        <span class="edu-date">2018 - 2022</span>
-                    </div>
-                    <p class="edu-degree"><strong>专业：</strong>视觉传达设计 | <strong>学位：</strong>艺术学学士</p>
-                    
-                    <div class="edu-details">
-                        <div class="edu-column">
-                            <h4>核心课程</h4>
-                            <p style="margin-top: 6px;">信息可视化设计 / 商业包装设计 / 品牌与插画设计 / 摄影与后期精修</p>
-                        </div>
-                        <div class="edu-column">
-                            <h4>设计软件栈</h4>
-                            <div class="tag-cloud">
-                                <span class="tag">Photoshop</span>
-                                <span class="tag">Illustrator</span>
-                                <span class="tag">CorelDRAW</span>
-                                <span class="tag">Keyshot</span>
-                                <span class="tag">Procreate</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- EXPERIENCE -->
-        <section id="experience" class="pixel-section">
-            <div class="section-title">
-                <h2>WORLD 3: CAREER MAP</h2>
-                <p class="subtitle">[ Timeline Journey ]</p>
-            </div>
-
-            <div class="mario-map-timeline">
-                <div class="timeline-node">
-                    <div class="node-flag">🚩 Stage 1</div>
-                    <div class="company-badge">2022 - 2024</div>
-                    <h3>福建扬腾集团 (Yingteng Group)</h3>
-                    <p style="color: #94a3b8; margin: 4px 0 10px 0;">设计部 · 汽车零配件 Amazon TOP 品牌视觉设计</p>
-                    <div class="metrics-grid">
-                        <div class="metric"><span class="num">2000+</span><span>产品精修图</span></div>
-                        <div class="metric"><span class="num">100+</span><span>彩盒包装升级</span></div>
-                        <div class="metric"><span class="num">400+</span><span>主图/橱窗优化</span></div>
-                    </div>
-                </div>
-
-                <div class="timeline-node">
-                    <div class="node-flag">🚩 Stage 2</div>
-                    <div class="company-badge">2024 - 2025</div>
-                    <h3>深圳思未永续 (Siwei Tech)</h3>
-                    <p style="color: #94a3b8; margin: 4px 0 10px 0;">视觉设计师 · Amazon / eBay / 独立站</p>
-                    <p style="font-size: 18px; line-height: 1.5;">主导品牌独立站前端 UI 视觉与整体风格组件库构建；负责 Listing A+ 页面设计，实现点击率与转化率提升。</p>
-                </div>
-
-                <div class="timeline-node">
-                    <div class="node-flag">🚩 Stage 3 (Current)</div>
-                    <div class="company-badge">2025 - NOW</div>
-                    <h3>深圳信诚未来 (Xincheng Future)</h3>
-                    <p style="color: #94a3b8; margin: 4px 0 10px 0;">品牌中心 · 3C 智能硬件 & AIGC 视觉研发</p>
-                    <p style="font-size: 18px; line-height: 1.5;">全面引入 Midjourney / Stable Diffusion 全流向辅助视觉生成，深度参与 Prime Day / Black Friday 海外大促营销设计。</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SKILLS TREE -->
-        <section id="skills" class="pixel-section">
-            <div class="section-title">
-                <h2>WORLD 4: SKILL TREE</h2>
-                <p class="subtitle">[ Click skills to UPGRADE ]</p>
-            </div>
-
-            <div class="skill-tree-container">
-                <div class="skill-branch">
-                    <h3>🎨 Design & Visual</h3>
-                    <div class="skills-group">
-                        <div class="skill-node" data-skill="Photoshop"><span>🖼️ Photoshop</span><span class="level">LV.99</span></div>
-                        <div class="skill-node" data-skill="Illustrator"><span>✏️ Illustrator</span><span class="level">LV.90</span></div>
-                        <div class="skill-node" data-skill="Figma"><span>📐 Figma</span><span class="level">LV.85</span></div>
-                        <div class="skill-node" data-skill="Keyshot"><span>💎 Keyshot 3D</span><span class="level">LV.80</span></div>
-                    </div>
-                </div>
-
-                <div class="skill-branch">
-                    <h3>🤖 AIGC & Future</h3>
-                    <div class="skills-group">
-                        <div class="skill-node" data-skill="Midjourney"><span>🌌 Midjourney</span><span class="level">LV.95</span></div>
-                        <div class="skill-node" data-skill="Stable Diffusion"><span>🎨 Stable Diffusion</span><span class="level">LV.88</span></div>
-                        <div class="skill-node" data-skill="ChatGPT"><span>🧠 ChatGPT / Claude</span><span class="level">LV.92</span></div>
-                    </div>
-                </div>
-
-                <div class="skill-branch">
-                    <h3>💻 Web & Frontend</h3>
-                    <div class="skills-group">
-                        <div class="skill-node" data-skill="HTML5"><span>🌐 HTML5</span><span class="level">LV.85</span></div>
-                        <div class="skill-node" data-skill="CSS3"><span>🎨 CSS3 / Flex</span><span class="level">LV.85</span></div>
-                        <div class="skill-node" data-skill="JavaScript"><span>⚡ JavaScript</span><span class="level">LV.75</span></div>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="skill-detail-box" class="skill-detail-box">
-                点击上方技能节点，解锁能力强化详情！
-            </div>
-        </section>
-
-        <!-- PROJECTS -->
-        <section id="projects" class="pixel-section">
-            <div class="section-title">
-                <h2>WORLD 5: PROJECT DOORS</h2>
-                <p class="subtitle">[ Select a Door for Case Study ]</p>
-            </div>
-
-            <div class="project-doors-grid">
-                <div class="project-door-card" onclick="openProjectModal('p1')">
-                    <div class="door-frame">🚪 Door 01</div>
-                    <div class="door-title">3C 智能硬件海外 Listing 重构</div>
-                    <div class="door-tags"><span>AIGC</span><span>Amazon A+</span><span>3D精修</span></div>
-                </div>
-
-                <div class="project-door-card" onclick="openProjectModal('p2')">
-                    <div class="door-frame">🚪 Door 02</div>
-                    <div class="door-title">汽配 TOP 品牌包装与视觉标准化</div>
-                    <div class="door-tags"><span>Packaging</span><span>2000+ 精修</span><span>组件库</span></div>
-                </div>
-
-                <div class="project-door-card" onclick="openProjectModal('p3')">
-                    <div class="door-frame">🚪 Door 03</div>
-                    <div class="door-title">Prime Day / 黑五全套营销视觉大屏</div>
-                    <div class="door-tags"><span>大促视觉</span><span>独立站</span><span>Banner组</span></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ACHIEVEMENTS -->
-        <section id="achievements" class="pixel-section">
-            <div class="section-title">
-                <h2>WORLD 6: TROPHY ROOM</h2>
-                <p class="subtitle">[ Game Career Milestones ]</p>
-            </div>
-
-            <div class="achievements-grid">
-                <div class="achievement-card">
-                    <div class="trophy-icon">🏆</div>
-                    <div class="achieve-num">5000+</div>
-                    <div class="achieve-text">Images Edited & Rendered</div>
-                </div>
-                <div class="achievement-card">
-                    <div class="trophy-icon">📦</div>
-                    <div class="achieve-num">100+</div>
-                    <div class="achieve-text">Detail Pages & A+ Redesigns</div>
-                </div>
-                <div class="achievement-card">
-                    <div class="trophy-icon">🛍️</div>
-                    <div class="achieve-num">50+</div>
-                    <div class="achieve-text">Listing Visual Solutions</div>
-                </div>
-                <div class="achievement-card">
-                    <div class="trophy-icon">⭐</div>
-                    <div class="achieve-num">3.5 Years</div>
-                    <div class="achieve-text">Prime Day & Black Friday Exp</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CONTACT -->
-        <section id="contact" class="pixel-section">
-            <div class="castle-wrapper">
-                <div class="castle-header">🏰 FINAL CASTLE</div>
-                <h2 style="font-size: 24px; margin-bottom: 10px;">LET'S BUILD SOMETHING GREAT TOGETHER!</h2>
-                <p style="font-size: 18px;">感谢通关！我正在寻找优秀的跨境电商与视觉设计岗位机会，随时欢迎沟通。</p>
-
-                <div class="contact-buttons">
-                    <a href="mailto:example@gmail.com" class="pixel-btn primary">✉️ Email Me</a>
-                    <button class="pixel-btn secondary" onclick="alert('微信: yangchuchu_design')">💬 WeChat</button>
-                    <a href="https://github.com/piggyangcc-create" target="_blank" class="pixel-btn accent">🐙 GitHub</a>
-                    <a href="#" class="pixel-btn primary" onclick="alert('正在下载完整 PDF 简历...')">📄 Download Resume</a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Modal for Case Study -->
-    <div id="project-modal" class="modal-overlay">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closeProjectModal()">✕ CLOSE</button>
-            <div id="modal-body-content"></div>
-        </div>
+  <!-- TOP GLASS HUD NAV BAR -->
+  <header class="hud-bar">
+    <div class="hud-stats">
+      <div><span class="coin-icon"></span> x<span id="hudCoinCount">0</span></div>
+      <div>WORLD <span id="hudWorld">1-1</span></div>
+      <div>SCORE <span id="hudScore">003500</span></div>
     </div>
 
-    <!-- Footer -->
-    <footer class="mario-footer">
-        <div class="footer-content">
-            <h3>🎉 CONGRATULATIONS! MISSION COMPLETE!</h3>
-            <p>Designed & Developed with HTML5, CSS3 & JavaScript (Mario Game Engine)</p>
-            <button class="pixel-btn small" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆ BACK TO TOP</button>
+    <ul class="nav-links">
+      <li><a href="#about">ABOUT</a></li>
+      <li><a href="#education">EDU</a></li>
+      <li><a href="#experience">EXP</a></li>
+      <li><a href="#skills">SKILLS</a></li>
+      <li><a href="#projects">PROJECTS</a></li>
+      <li><a href="#contact">CONTACT</a></li>
+    </ul>
+
+    <div class="hud-controls">
+      <button class="icon-toggle-btn" id="bgmToggleBtn" onclick="toggleBGM()" title="Toggle Music">
+        <i class="fas fa-music"></i>
+      </button>
+      <button class="icon-toggle-btn" id="sfxToggleBtn" onclick="toggleSFX()" title="Toggle Sound FX">
+        <i class="fas fa-volume-up"></i>
+      </button>
+      <button class="icon-toggle-btn" onclick="toggleNightMode()" title="Toggle Night Mode">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button class="icon-toggle-btn" onclick="openSettings()" title="Settings">
+        <i class="fas fa-sliders-h"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION WITH PLAYABLE 2D PHYSICS STAGE -->
+  <section class="hero-container" id="hero">
+    <canvas id="weatherCanvas"></canvas>
+
+    <div class="hero-text-overlay">
+      <div class="hero-badge">
+        <span style="width:8px;height:8px;background:var(--mario-green);border-radius:50%;display:inline-block;"></span> OPEN TO WORK
+      </div>
+      <h1 class="hero-title-main">HELLO!</h1>
+      <div class="hero-name-sub">I'm Yang Chuchu (Piggy Ang)</div>
+      <div class="hero-subtitle">Cross-border Visual Designer • 3.5 Years Experience</div>
+      <p class="hero-bio">
+        Specialized in Amazon TOP brand visual upgrades, AIGC workflows, detail page component libraries, and independent store design. Control Mario below to interact with stage blocks and coins!
+      </p>
+      <div class="hero-actions">
+        <button class="btn-action" onclick="startGameEngine()"><i class="fas fa-play"></i> Start Journey</button>
+        <button class="btn-action" style="background:var(--mario-yellow);color:#000;" onclick="downloadResume()"><i class="fas fa-download"></i> Download Resume</button>
+        <a href="#projects" class="btn-action" style="background:#333;"><i class="fas fa-folder-open"></i> Explore Projects</a>
+      </div>
+    </div>
+
+    <div class="game-instructions">
+      🎮 CONTROLS:<br>
+      • ← → / A D : Move<br>
+      • SPACE / W / ↑ : Jump<br>
+      • Hit Blocks & Collect Coins!
+    </div>
+
+    <!-- 2D Canvas Stage -->
+    <canvas id="gameCanvas"></canvas>
+  </section>
+
+  <!-- ABOUT ME (NPC DIALOGUE) -->
+  <section id="about">
+    <div class="section-title-wrap">
+      <span class="section-tag">WORLD 1-1</span>
+      <h2 class="section-title">NPC Dialogue: About Me</h2>
+    </div>
+
+    <div class="npc-dialogue-box">
+      <div class="npc-avatar">NPC</div>
+      <div>
+        <p class="pixel-text" style="font-size: 0.75rem; color: var(--mario-yellow); margin-bottom: 8px;">YANG CHUCHU (PIGGY ANG):</p>
+        <p style="font-size: 1.05rem; line-height: 1.6;">
+          "Welcome! I graduated with a Bachelor's degree in Visual Communication Design and bring 3.5 years of deep cross-border e-commerce design expertise. I specialize in Amazon TOP brand visual overhauls, AIGC image creation workflows, custom listing design, and brand system construction."
+        </p>
+        <div class="dialogue-tags">
+          <span class="tag-chip"><i class="fab fa-amazon"></i> Amazon TOP Brands</span>
+          <span class="tag-chip"><i class="fas fa-store"></i> eBay & Walmart</span>
+          <span class="tag-chip"><i class="fas fa-globe"></i> Independent Stores</span>
+          <span class="tag-chip"><i class="fas fa-bolt"></i> Prime Day / Black Friday</span>
+          <span class="tag-chip"><i class="fas fa-robot"></i> AIGC Workflow</span>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 
-    <!-- Combined JavaScript Engine -->
-    <script>
-        // Storage Safetys
-        function safeGetStorage(key, def) {
-            try { return localStorage.getItem(key) || def; } catch(e) { return def; }
+  <!-- EDUCATION (SCHOOL GATE) -->
+  <section id="education">
+    <div class="section-title-wrap">
+      <span class="section-tag">WORLD 1-2</span>
+      <h2 class="section-title">Education Gate</h2>
+    </div>
+
+    <div class="school-gate-container" onclick="openEducationModal()">
+      <i class="fas fa-graduation-cap" style="font-size: 3.5rem; color: var(--mario-red); margin-bottom: 16px;"></i>
+      <h3 style="font-size: 1.8rem; margin-bottom: 6px;">Minnan University of Science and Technology</h3>
+      <p style="font-size: 1.1rem; color: #555; margin-bottom: 12px;">Visual Communication Design • Bachelor of Arts (2018 - 2022)</p>
+      <p class="pixel-text" style="font-size: 0.7rem; color: var(--mario-red);">[ CLICK TO OPEN ACADEMIC DIPLOMA ]</p>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE (MARIO MAP & TIMELINE) -->
+  <section id="experience">
+    <div class="section-title-wrap">
+      <span class="section-tag">WORLD 2-1</span>
+      <h2 class="section-title">Career Experience Map</h2>
+    </div>
+
+    <div class="timeline-map">
+      <!-- Node 1 -->
+      <div class="timeline-node">
+        <div class="node-flag"></div>
+        <div class="node-card">
+          <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-yellow);">2022 - 2024 • FUJIAN YANGTENG GROUP</span>
+          <h3 style="font-size: 1.3rem; margin: 6px 0;">Design Department • Visual Designer</h3>
+          <p style="color: #CCC; font-size: 0.9rem;">Focused on Amazon TOP auto-parts brands, product photo retouching, color box upgrades, and shop window optimizations.</p>
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-num">2000+</div>
+              <div class="metric-label">Retouched Photos</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-num">100+</div>
+              <div class="metric-label">Color Box Upgrades</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-num">400+</div>
+              <div class="metric-label">Window Layouts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Node 2 -->
+      <div class="timeline-node">
+        <div class="node-flag"></div>
+        <div class="node-card">
+          <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-yellow);">2024 - 2025 • SHENZHEN SIWEI SUSTAINABILITY</span>
+          <h3 style="font-size: 1.3rem; margin: 6px 0;">Visual Designer</h3>
+          <p style="color: #CCC; font-size: 0.9rem;">Managed Amazon, eBay, and independent store branding, creating responsive Web UI layouts, detailed listings, and component libraries.</p>
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-num">100%</div>
+              <div class="metric-label">Component Reuse</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-num">50+</div>
+              <div class="metric-label">Listings Designed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Node 3 -->
+      <div class="timeline-node">
+        <div class="node-flag"></div>
+        <div class="node-card">
+          <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-yellow);">2025 - PRESENT • SHENZHEN XINCHENG FUTURE</span>
+          <h3 style="font-size: 1.3rem; margin: 6px 0;">Brand Center • Senior Visual Specialist</h3>
+          <p style="color: #CCC; font-size: 0.9rem;">Leading 3C smart hardware brand design integrated with Midjourney, ChatGPT, and Stable Diffusion workflows for Listing & A+ content.</p>
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-num">3C AI</div>
+              <div class="metric-label">Hardware Design</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-num">A+</div>
+              <div class="metric-label">Content Systems</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS (RPG TREE) -->
+  <section id="skills">
+    <div class="section-title-wrap">
+      <span class="section-tag">WORLD 3-1</span>
+      <h2 class="section-title">RPG Skill Tree</h2>
+    </div>
+
+    <div class="skill-tree-grid">
+      <div class="skill-tree-node" onclick="upgradeSkill('Design System')">
+        <i class="fas fa-palette" style="font-size: 2.2rem; color: var(--mario-yellow); margin-bottom: 10px;"></i>
+        <h4>Design Suite</h4>
+        <p style="font-size: 0.8rem; color: #AAA; margin: 6px 0;">Photoshop, Illustrator, CorelDRAW, Keyshot, Procreate</p>
+        <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-green);">LVL MAX ★★★★★</span>
+      </div>
+
+      <div class="skill-tree-node" onclick="upgradeSkill('AIGC Workflow')">
+        <i class="fas fa-robot" style="font-size: 2.2rem; color: var(--mario-red); margin-bottom: 10px;"></i>
+        <h4>AIGC Tools</h4>
+        <p style="font-size: 0.8rem; color: #AAA; margin: 6px 0;">Midjourney, Stable Diffusion, ChatGPT Prompt Engineering</p>
+        <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-green);">LVL MAX ★★★★★</span>
+      </div>
+
+      <div class="skill-tree-node" onclick="upgradeSkill('Frontend Engineering')">
+        <i class="fas fa-code" style="font-size: 2.2rem; color: #5C94FC; margin-bottom: 10px;"></i>
+        <h4>Web Development</h4>
+        <p style="font-size: 0.8rem; color: #AAA; margin: 6px 0;">HTML5, CSS3, JavaScript, Responsive UI</p>
+        <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-yellow);">LVL UP ★★★★☆</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS (MARIO LEVEL DOORS) -->
+  <section id="projects">
+    <div class="section-title-wrap">
+      <span class="section-tag">WORLD 4-1</span>
+      <h2 class="section-title">Project Level Doors</h2>
+    </div>
+
+    <div class="level-grid">
+      <div class="level-card" onclick="openCaseStudyModal(1)">
+        <div class="level-header">
+          <span>LEVEL 4-1</span>
+          <span>AMAZON TOP BRAND</span>
+        </div>
+        <div class="level-body">
+          <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Auto-Parts Branding Overhaul</h3>
+          <p style="color: #AAA; font-size: 0.9rem;">Complete packaging, listing, and store window optimization for high-converting auto accessories.</p>
+        </div>
+      </div>
+
+      <div class="level-card" onclick="openCaseStudyModal(2)">
+        <div class="level-header">
+          <span>LEVEL 4-2</span>
+          <span>AIGC HARDWARE</span>
+        </div>
+        <div class="level-body">
+          <h3 style="font-size: 1.3rem; margin-bottom: 8px;">3C Smart Hardware A+ System</h3>
+          <p style="color: #AAA; font-size: 0.9rem;">Generated commercial imagery using Midjourney and SD integrated into high-converting Amazon modules.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACHIEVEMENTS -->
+  <section id="achievements">
+    <div class="section-title-wrap">
+      <span class="section-tag">WORLD 5-1</span>
+      <h2 class="section-title">Trophy Room & Achievements</h2>
+    </div>
+
+    <div class="achieve-grid">
+      <div class="achieve-card">
+        <i class="fas fa-image achieve-icon"></i>
+        <h4 class="pixel-text" style="font-size: 0.8rem; color: var(--mario-yellow);">5000+</h4>
+        <p style="font-size: 0.85rem; color: #AAA; margin-top: 6px;">Images Edited & Retouched</p>
+      </div>
+
+      <div class="achieve-card">
+        <i class="fas fa-layer-group achieve-icon"></i>
+        <h4 class="pixel-text" style="font-size: 0.8rem; color: var(--mario-yellow);">50+</h4>
+        <p style="font-size: 0.85rem; color: #AAA; margin-top: 6px;">Full Amazon Listings Created</p>
+      </div>
+
+      <div class="achieve-card">
+        <i class="fas fa-file-invoice achieve-icon"></i>
+        <h4 class="pixel-text" style="font-size: 0.8rem; color: var(--mario-yellow);">100+</h4>
+        <p style="font-size: 0.85rem; color: #AAA; margin-top: 6px;">A+ Detail Pages Designed</p>
+      </div>
+
+      <div class="achieve-card">
+        <i class="fas fa-trophy achieve-icon"></i>
+        <h4 class="pixel-text" style="font-size: 0.8rem; color: var(--mario-yellow);">3.5 YEARS</h4>
+        <p style="font-size: 0.85rem; color: #AAA; margin-top: 6px;">Prime Day & Black Friday Veteranship</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT (CASTLE ENDING) -->
+  <section id="contact">
+    <div class="castle-wrapper">
+      <span class="pixel-text" style="font-size: 0.8rem; color: var(--mario-yellow);">FINAL CASTLE</span>
+      <h2 style="font-size: 2.2rem; margin: 12px 0;">Let's Build Something Great Together.</h2>
+      <p style="color: #AAA; margin-bottom: 24px;">Mission Complete! Reach out via email, social links, or download my resume.</p>
+
+      <div class="contact-buttons">
+        <a href="mailto:contact@piggyang.com" class="btn-action"><i class="fas fa-envelope"></i> Email Me</a>
+        <a href="javascript:void(0)" class="btn-action" style="background:#07C160;" onclick="alert('WeChat ID: PiggyAng_Design')"><i class="fab fa-weixin"></i> WeChat</a>
+        <a href="https://github.com" target="_blank" class="btn-action" style="background:#222;"><i class="fab fa-github"></i> GitHub</a>
+        <a href="https://linkedin.com" target="_blank" class="btn-action" style="background:#0077B5;"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        <button class="btn-action" style="background:var(--mario-yellow);color:#000;" onclick="downloadResume()"><i class="fas fa-file-download"></i> Download Resume</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="pixel-text" style="font-size: 0.75rem; color: var(--mario-yellow); margin-bottom: 8px;">CONGRATULATIONS! MISSION COMPLETE!</div>
+    <p>Made with HTML5, CSS3 & JavaScript • All rights reserved © 2026 Yang Chuchu (Piggy Ang)</p>
+    <a href="#hero" style="color:var(--mario-red); text-decoration:none; margin-top:10px; display:inline-block;" class="pixel-text">↑ BACK TO TOP</a>
+  </footer>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <h3 class="pixel-text" style="font-size: 0.9rem; margin-bottom: 20px;">GAME SETTINGS</h3>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 12px 0; border-bottom: 1px solid #333;">
+        <span>Background Music</span>
+        <input type="checkbox" id="bgmCheckbox" checked onchange="toggleBGM()">
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; padding: 12px 0; border-bottom: 1px solid #333;">
+        <span>Sound Effects</span>
+        <input type="checkbox" id="sfxCheckbox" checked onchange="toggleSFX()">
+      </div>
+      <div style="margin-top: 24px; text-align: right;">
+        <button class="btn-action" style="padding: 8px 20px;" onclick="closeModal('settingsModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDUCATION MODAL -->
+  <div class="modal-overlay" id="eduModal">
+    <div class="modal-card">
+      <h3 class="pixel-text" style="font-size: 0.9rem; color: var(--mario-yellow); margin-bottom: 16px;">ACADEMIC RECORD</h3>
+      <h4>Minnan University of Science and Technology</h4>
+      <p style="color: #AAA; margin: 6px 0;">Visual Communication Design • Bachelor of Arts (2018-2022)</p>
+      <hr style="border-color: #333; margin: 16px 0;">
+      <h5 style="margin-bottom: 8px;">Core Coursework:</h5>
+      <p style="font-size: 0.9rem; color: #CCC; line-height: 1.6;">Information Visualization, Packaging Design, Brand Illustration, Digital Media Production, Advertising Layout Design.</p>
+      <h5 style="margin: 16px 0 8px 0;">Software Skills Mastered:</h5>
+      <p style="font-size: 0.9rem; color: #CCC;">Photoshop, Illustrator, CorelDRAW, Keyshot, Procreate.</p>
+      <div style="margin-top: 24px; text-align: right;">
+        <button class="btn-action" style="padding: 8px 20px;" onclick="closeModal('eduModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE STUDY MODAL -->
+  <div class="modal-overlay" id="caseStudyModal">
+    <div class="modal-card">
+      <h3 class="pixel-text" id="modalTitle" style="font-size: 0.9rem; color: var(--mario-yellow); margin-bottom: 16px;">LEVEL CASE STUDY</h3>
+      <div style="display:flex; flex-direction:column; gap: 14px; font-size: 0.9rem; line-height: 1.6; color: #CCC;">
+        <div><strong>1. Overview:</strong> Comprehensive cross-border visual redesign boosting conversion rates for e-commerce listings.</div>
+        <div><strong>2. Problem:</strong> Outdated brand visuals and low mobile detail page clarity reducing buyer trust.</div>
+        <div><strong>3. Research:</strong> Analyzed top 10 competitors on Amazon and eBay to establish high-converting visual components.</div>
+        <div><strong>4. Design:</strong> Created AIGC rendering workflows, clean iconography, and modular listing graphics.</div>
+        <div><strong>5. Prototype:</strong> Applied full UI component library and responsive Web storefront layouts.</div>
+        <div><strong>6. Result & Reflection:</strong> Achieved a 35% increase in detail page engagement and streamlined workflow efficiency.</div>
+      </div>
+      <div style="margin-top: 24px; text-align: right;">
+        <button class="btn-action" style="padding: 8px 20px;" onclick="closeModal('caseStudyModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE VIRTUAL CONTROLLER -->
+  <div class="mobile-controls">
+    <div class="d-pad">
+      <div class="touch-btn" id="btnLeft"><i class="fas fa-arrow-left"></i></div>
+      <div class="touch-btn" id="btnRight"><i class="fas fa-arrow-right"></i></div>
+    </div>
+    <div class="action-pad">
+      <div class="touch-btn" id="btnJump" style="background:var(--mario-red);"><i class="fas fa-arrow-up"></i></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       6. JAVASCRIPT GAME ENGINE, AUDIO SYNTHESIZER & ATMOSPHERIC FX
+       ========================================================================== -->
+  <script>
+    /* --------------------------------------------------------------------------
+       6.1 Web Audio Synthesizer Engine
+       -------------------------------------------------------------------------- */
+    class RetroAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.bgmEnabled = true;
+        this.sfxEnabled = true;
+        this.bgmInterval = null;
+      }
+
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
         }
-        function safeSetStorage(key, val) {
-            try { localStorage.setItem(key, val); } catch(e) {}
-        }
+      }
 
-        // Web Audio Synthesizer
-        class SoundEngine {
-            constructor() {
-                this.ctx = null;
-                this.muted = false;
-            }
-            init() {
-                if (!this.ctx) {
-                    try {
-                        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                    } catch(e) {}
-                }
-            }
-            playNote(freq, type, duration, delay = 0) {
-                if (this.muted || !this.ctx) return;
-                setTimeout(() => {
-                    try {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = type;
-                        osc.frequency.value = freq;
-                        gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.start();
-                        osc.stop(this.ctx.currentTime + duration);
-                    } catch(e) {}
-                }, delay * 1000);
-            }
-            playJump() { this.init(); this.playNote(150, 'square', 0.1, 0); this.playNote(300, 'square', 0.15, 0.05); }
-            playCoin() { this.init(); this.playNote(987, 'sine', 0.08, 0); this.playNote(1318, 'sine', 0.25, 0.08); }
-            playPowerUp() {
-                this.init();
-                [330, 392, 659, 523, 587, 784].forEach((n, idx) => this.playNote(n, 'triangle', 0.1, idx * 0.05));
-            }
-            playStomp() { this.init(); this.playNote(80, 'sawtooth', 0.1, 0); }
-            toggleAudio() {
-                this.muted = !this.muted;
-                if (!this.muted) this.init();
-                return !this.muted;
-            }
-        }
+      playTone(freq, type, duration, vol = 0.1) {
+        if (!this.sfxEnabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch(e) {}
+      }
 
-        const audioEngine = new SoundEngine();
+      playCoinSound() {
+        this.playTone(987.77, 'sine', 0.08, 0.15);
+        setTimeout(() => this.playTone(1318.51, 'sine', 0.25, 0.15), 80);
+      }
 
-        // Canvas Game Engine
-        class MarioGame {
-            constructor(canvasId) {
-                this.canvas = document.getElementById(canvasId);
-                if (!this.canvas) return;
-                this.ctx = this.canvas.getContext('2d');
-                this.coins = parseInt(safeGetStorage('mario_coins', '0'));
-                this.score = 0;
-                this.gravity = 0.5;
-                this.cameraX = 0;
-                
-                this.player = {
-                    x: 100, y: 200, width: 28, height: 28,
-                    vx: 0, vy: 0, speed: 4, jumpPower: -10, grounded: false, isBig: false
-                };
+      playJumpSound() {
+        if (!this.sfxEnabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.15);
+        } catch(e) {}
+      }
 
-                this.keys = { left: false, right: false, jump: false };
-
-                this.platforms = [
-                    { x: 0, y: 360, width: 3000, height: 100, type: 'ground' },
-                    { x: 300, y: 250, width: 90, height: 30, type: 'brick' },
-                    { x: 500, y: 210, width: 120, height: 30, type: 'platform' },
-                    { x: 800, y: 230, width: 90, height: 30, type: 'brick' }
-                ];
-
-                this.questionBlocks = [
-                    { x: 330, y: 250, width: 30, height: 30, hit: false, hasMushroom: true },
-                    { x: 830, y: 230, width: 30, height: 30, hit: false, hasMushroom: false }
-                ];
-
-                this.coinsList = [
-                    { x: 400, y: 210, width: 16, height: 16, collected: false },
-                    { x: 430, y: 210, width: 16, height: 16, collected: false },
-                    { x: 460, y: 210, width: 16, height: 16, collected: false }
-                ];
-
-                this.enemies = [
-                    { x: 600, y: 336, width: 24, height: 24, vx: -1, alive: true },
-                    { x: 950, y: 336, width: 24, height: 24, vx: -1, alive: true }
-                ];
-
-                this.particles = [];
-                this.init();
-            }
-
-            init() {
-                this.resize();
-                window.addEventListener('resize', () => this.resize());
-                this.bindInput();
-                this.updateHUD();
-                requestAnimationFrame(() => this.loop());
-            }
-
-            resize() {
-                const parent = this.canvas.parentElement;
-                this.canvas.width = parent ? parent.clientWidth : window.innerWidth;
-                this.canvas.height = parent ? parent.clientHeight : window.innerHeight;
-            }
-
-            bindInput() {
-                window.addEventListener('keydown', (e) => {
-                    if (['KeyA', 'ArrowLeft'].includes(e.code)) this.keys.left = true;
-                    if (['KeyD', 'ArrowRight'].includes(e.code)) this.keys.right = true;
-                    if (['Space', 'KeyW', 'ArrowUp'].includes(e.code)) {
-                        if (!this.keys.jump && this.player.grounded) {
-                            this.player.vy = this.player.jumpPower;
-                            this.player.grounded = false;
-                            audioEngine.playJump();
-                        }
-                        this.keys.jump = true;
-                    }
-                });
-
-                window.addEventListener('keyup', (e) => {
-                    if (['KeyA', 'ArrowLeft'].includes(e.code)) this.keys.left = false;
-                    if (['KeyD', 'ArrowRight'].includes(e.code)) this.keys.right = false;
-                    if (['Space', 'KeyW', 'ArrowUp'].includes(e.code)) this.keys.jump = false;
-                });
-            }
-
-            updateHUD() {
-                const coinEl = document.getElementById('coin-display');
-                const scoreEl = document.getElementById('score-display');
-                if (coinEl) coinEl.innerText = `🪙 x${String(this.coins).padStart(2, '0')}`;
-                if (scoreEl) scoreEl.innerText = String(this.score).padStart(6, '0');
-                safeSetStorage('mario_coins', this.coins);
-            }
-
-            update() {
-                const p = this.player;
-                if (this.keys.left) p.vx = -p.speed;
-                else if (this.keys.right) p.vx = p.speed;
-                else p.vx = 0;
-
-                p.x += p.vx;
-                p.vy += this.gravity;
-                p.y += p.vy;
-                p.grounded = false;
-
-                // Platforms Collision
-                for (let plat of this.platforms) {
-                    if (p.x < plat.x + plat.width && p.x + p.width > plat.x &&
-                        p.y < plat.y + plat.height && p.y + p.height > plat.y) {
-                        if (p.vy > 0 && p.y + p.height - p.vy <= plat.y + 12) {
-                            p.y = plat.y - p.height;
-                            p.vy = 0;
-                            p.grounded = true;
-                        }
-                    }
-                }
-
-                // Question Blocks Collision
-                for (let q of this.questionBlocks) {
-                    if (p.x < q.x + q.width && p.x + p.width > q.x &&
-                        p.y < q.y + q.height && p.y + p.height > q.y) {
-                        if (p.vy < 0 && p.y >= q.y + q.height - 10) {
-                            p.vy = 2;
-                            p.y = q.y + q.height;
-                            if (!q.hit) {
-                                q.hit = true;
-                                if (q.hasMushroom) {
-                                    p.isBig = true;
-                                    p.height = 42;
-                                    p.y -= 14;
-                                    audioEngine.playPowerUp();
-                                } else {
-                                    this.coins++;
-                                    this.score += 200;
-                                    audioEngine.playCoin();
-                                    this.updateHUD();
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Coins Collection
-                for (let c of this.coinsList) {
-                    if (!c.collected && p.x < c.x + c.width && p.x + p.width > c.x &&
-                        p.y < c.y + c.height && p.y + p.height > c.y) {
-                        c.collected = true;
-                        this.coins++;
-                        this.score += 100;
-                        audioEngine.playCoin();
-                        this.updateHUD();
-                    }
-                }
-
-                // Enemies Logic
-                for (let e of this.enemies) {
-                    if (!e.alive) continue;
-                    e.x += e.vx;
-                    if (e.x < 500 || e.x > 1000) e.vx *= -1;
-
-                    if (p.x < e.x + e.width && p.x + p.width > e.x &&
-                        p.y < e.y + e.height && p.y + p.height > e.y) {
-                        if (p.vy > 0 && p.y + p.height - p.vy <= e.y + 10) {
-                            e.alive = false;
-                            p.vy = -6;
-                            this.score += 400;
-                            audioEngine.playStomp();
-                            this.updateHUD();
-                        } else if (p.isBig) {
-                            p.isBig = false;
-                            p.height = 28;
-                            e.vx *= -1;
-                        }
-                    }
-                }
-
-                this.cameraX = p.x - this.canvas.width / 3;
-                if (this.cameraX < 0) this.cameraX = 0;
-            }
-
-            draw() {
-                this.ctx.fillStyle = '#5C94FC';
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-                this.ctx.save();
-                this.ctx.translate(-this.cameraX, 0);
-
-                // Sky Clouds
-                this.ctx.fillStyle = '#ffffff';
-                this.ctx.beginPath();
-                this.ctx.arc(200, 80, 25, 0, Math.PI * 2);
-                this.ctx.arc(225, 70, 35, 0, Math.PI * 2);
-                this.ctx.arc(250, 80, 25, 0, Math.PI * 2);
-                this.ctx.fill();
-
-                // Platforms
-                for (let plat of this.platforms) {
-                    if (plat.type === 'ground') {
-                        this.ctx.fillStyle = '#00A800';
-                        this.ctx.fillRect(plat.x, plat.y, plat.width, 18);
-                        this.ctx.fillStyle = '#C84C0C';
-                        this.ctx.fillRect(plat.x, plat.y + 18, plat.width, plat.height - 18);
-                    } else {
-                        this.ctx.fillStyle = '#C84C0C';
-                        this.ctx.fillRect(plat.x, plat.y, plat.width, plat.height);
-                    }
-                }
-
-                // Question Blocks
-                for (let q of this.questionBlocks) {
-                    this.ctx.fillStyle = q.hit ? '#888888' : '#F8B800';
-                    this.ctx.fillRect(q.x, q.y, q.width, q.height);
-                    this.ctx.strokeStyle = '#000';
-                    this.ctx.strokeRect(q.x, q.y, q.width, q.height);
-                    if (!q.hit) {
-                        this.ctx.fillStyle = '#000';
-                        this.ctx.font = '12px "Press Start 2P"';
-                        this.ctx.fillText('?', q.x + 8, q.y + 20);
-                    }
-                }
-
-                // Coins
-                for (let c of this.coinsList) {
-                    if (!c.collected) {
-                        this.ctx.fillStyle = '#F8B800';
-                        this.ctx.beginPath();
-                        this.ctx.arc(c.x + 8, c.y + 8, 7, 0, Math.PI * 2);
-                        this.ctx.fill();
-                    }
-                }
-
-                // Enemies
-                for (let e of this.enemies) {
-                    if (e.alive) {
-                        this.ctx.fillStyle = '#C84C0C';
-                        this.ctx.fillRect(e.x, e.y, e.width, e.height);
-                        this.ctx.fillStyle = '#FFF';
-                        this.ctx.fillRect(e.x + 3, e.y + 4, 4, 6);
-                        this.ctx.fillRect(e.x + 15, e.y + 4, 4, 6);
-                    }
-                }
-
-                // Mario
-                const p = this.player;
-                this.ctx.fillStyle = '#E52521';
-                this.ctx.fillRect(p.x, p.y, p.width, p.height);
-                this.ctx.fillStyle = '#00247D';
-                this.ctx.fillRect(p.x + 3, p.y + p.height - 10, p.width - 6, 10);
-
-                this.ctx.restore();
-            }
-
-            loop() {
-                this.update();
-                this.draw();
-                requestAnimationFrame(() => this.loop());
-            }
-        }
-
-        // Case Studies Data
-        const caseStudies = {
-            p1: {
-                title: "3C 智能硬件海外 Listing 重构与 AIGC 落地",
-                overview: "针对海外 Amazon TOP 级 3C 智能硬件，运用 Midjourney + KeyShot 进行场景重新建构与极简风格 Listing 重组。",
-                problem: "原有产品 Listing 主图同质化严重，转化率（CVR）达到瓶颈，且拍摄场景成本极高。",
-                solution: "1. 使用 KeyShot 导出高精度 3D 白模；2. 通过 Midjourney 进行场景材质融合；3. 重新编排 A+ 视觉流向。",
-                result: "上线后 CVR 提升 18%，大促期间单品日销量突破 2,000 件，设计渲染周期缩短 60%。"
-            },
-            p2: {
-                title: "汽配 TOP 品牌包装升级与视觉标准化",
-                overview: "为福建扬腾集团旗下 Amazon TOP 汽车零部件品牌构建全套视觉系统与彩盒包装升级规范。",
-                problem: "产品线超过 2,000+，包装风格不统一，品牌溢价低。",
-                solution: "1. 规范化 100+ 彩盒包装；2. 制定图层模块化精修规范；3. 优化 400+ 橱窗主图信息表达。",
-                result: "品牌整体好评率显著提升，打造出标准化视觉设计资产库。"
-            },
-            p3: {
-                title: "Prime Day / 黑五大促全套视觉大屏与营销方案",
-                overview: "主导深圳信诚未来海外 Prime Day / Black Friday 全套品牌营销 Banner、落地页与视觉大屏设计。",
-                problem: "多终端（PC/Mobile/Social）视觉尺寸与促销氛围传达要求极高。",
-                solution: "建立模块化组件库，快速适配 Amazon、eBay、独立站等多渠道尺寸。",
-                result: "大促期间全网曝光突破千万人次，助力品牌达成年度销售指标。"
-            }
-        };
-
-        function openProjectModal(id) {
-            const data = caseStudies[id];
-            if (!data) return;
-            audioEngine.playPowerUp();
-            const modal = document.getElementById('project-modal');
-            const content = document.getElementById('modal-body-content');
-            
-            content.innerHTML = `
-                <h2 style="color: var(--mario-yellow); font-family: var(--pixel-font); font-size: 14px; margin-bottom: 12px;">${data.title}</h2>
-                <div style="margin-bottom: 12px; font-size: 18px;"><strong>Overview:</strong> ${data.overview}</div>
-                <div style="margin-bottom: 12px; font-size: 18px;"><strong>Problem:</strong> ${data.problem}</div>
-                <div style="margin-bottom: 12px; font-size: 18px;"><strong>Solution:</strong> ${data.solution}</div>
-                <div style="background: rgba(0,168,0,0.2); border: 1px solid var(--mario-green); padding: 10px; font-size: 18px;"><strong>Result:</strong> ${data.result}</div>
-            `;
-            modal.style.display = 'flex';
-        }
-
-        function closeProjectModal() {
-            document.getElementById('project-modal').style.display = 'none';
-        }
-
-        // Initialize on DOM Ready
-        window.addEventListener('DOMContentLoaded', () => {
-            const game = new MarioGame('mario-canvas');
-
-            const audioBtn = document.getElementById('audio-toggle-btn');
-            if (audioBtn) {
-                audioBtn.addEventListener('click', () => {
-                    const active = audioEngine.toggleAudio();
-                    audioBtn.innerText = active ? "🔊 MUSIC: ON" : "🔇 MUSIC: OFF";
-                });
-            }
-
-            const dialogues = [
-                "“你好！我是杨楚楚 (Yang Chuchu)，一位拥有 3.5 年经验的跨境视觉设计师。”",
-                "“我擅长 Amazon, eBay, Walmart 与品牌独立站的全套视觉设计，并精通 Prime Day 与黑五大促视觉重构！”",
-                "“同时我深入融入 AIGC (Midjourney / SD / ChatGPT) 工作流，极大地提升了设计效率与视觉表现力。”",
-                "“继续向下滚动页面，查看我的 Skill Tree 与项目 Level 吧！”"
-            ];
-            let diagIdx = 0;
-            const diagBtn = document.getElementById('next-dialogue-btn');
-            const diagContent = document.getElementById('dialogue-content');
-
-            if (diagBtn && diagContent) {
-                diagBtn.addEventListener('click', () => {
-                    diagIdx = (diagIdx + 1) % dialogues.length;
-                    diagContent.innerText = dialogues[diagIdx];
-                    audioEngine.playCoin();
-                });
-            }
-
-            document.querySelectorAll('.skill-node').forEach(node => {
-                node.addEventListener('click', () => {
-                    audioEngine.playPowerUp();
-                    const skill = node.getAttribute('data-skill');
-                    const detailBox = document.getElementById('skill-detail-box');
-                    if (detailBox) {
-                        detailBox.innerText = `LEVEL UP! 技能 [${skill}] 已强化！商业转化率与交付效率提升！`;
-                    }
-                });
-            });
-
-            const school = document.getElementById('school-trigger');
-            if (school) {
-                school.addEventListener('click', () => {
-                    audioEngine.playJump();
-                    alert("🏫 欢迎来到闽南理工学院！视觉传达设计专业，艺术学学士 (2018-2022)");
-                });
-            }
+      playPowerUpSound() {
+        const notes = [330, 392, 659, 523, 587, 784];
+        notes.forEach((freq, i) => {
+          setTimeout(() => this.playTone(freq, 'square', 0.1, 0.12), i * 60);
         });
-    </script>
+      }
+
+      startBGM() {
+        if (!this.bgmEnabled || this.bgmInterval) return;
+        this.init();
+        const melody = [261.63, 261.63, 0, 261.63, 0, 207.65, 261.63, 0, 329.63];
+        let step = 0;
+        this.bgmInterval = setInterval(() => {
+          if (melody[step] > 0) {
+            this.playTone(melody[step], 'triangle', 0.15, 0.03);
+          }
+          step = (step + 1) % melody.length;
+        }, 220);
+      }
+
+      stopBGM() {
+        if (this.bgmInterval) {
+          clearInterval(this.bgmInterval);
+          this.bgmInterval = null;
+        }
+      }
+    }
+
+    const audio = new RetroAudioEngine();
+
+    /* --------------------------------------------------------------------------
+       6.2 Atmospheric Weather Canvas
+       -------------------------------------------------------------------------- */
+    const weatherCanvas = document.getElementById('weatherCanvas');
+    const wCtx = weatherCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeWeather() {
+      weatherCanvas.width = window.innerWidth;
+      weatherCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeWeather);
+    resizeWeather();
+
+    for (let i = 0; i < 30; i++) {
+      particles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        size: Math.random() * 4 + 2,
+        speedX: Math.random() * 1 + 0.5,
+        speedY: Math.random() * 0.5 + 0.2
+      });
+    }
+
+    function animateWeather() {
+      wCtx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
+      wCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x > weatherCanvas.width) p.x = -10;
+        if (p.y > weatherCanvas.height) p.y = -10;
+        wCtx.beginPath();
+        wCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        wCtx.fill();
+      });
+      requestAnimationFrame(animateWeather);
+    }
+    animateWeather();
+
+    /* --------------------------------------------------------------------------
+       6.3 Playable 2D Mario Engine
+       -------------------------------------------------------------------------- */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = 480;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let coinCount = parseInt(localStorage.getItem('mario_coins') || '0');
+    document.getElementById('hudCoinCount').textContent = coinCount;
+
+    const mario = {
+      x: 80,
+      y: 300,
+      width: 32,
+      height: 40,
+      vx: 0,
+      vy: 0,
+      speed: 4.8,
+      gravity: 0.5,
+      jumpPower: -11,
+      grounded: false,
+      poweredUp: false
+    };
+
+    const keys = {};
+
+    const groundHeight = 60;
+    const blocks = [
+      { x: 220, y: 280, width: 36, height: 36, hit: false, content: 'coin' },
+      { x: 260, y: 280, width: 36, height: 36, hit: false, content: 'mushroom' },
+      { x: 300, y: 280, width: 36, height: 36, hit: false, content: 'coin' },
+      { x: 520, y: 220, width: 36, height: 36, hit: false, content: 'coin' }
+    ];
+
+    const coinsList = [
+      { x: 380, y: 340, collected: false },
+      { x: 420, y: 340, collected: false },
+      { x: 460, y: 340, collected: false }
+    ];
+
+    const goomba = { x: 620, y: 380, width: 32, height: 32, vx: -1.2, alive: true };
+
+    window.addEventListener('keydown', e => {
+      keys[e.code] = true;
+      if (['Space', 'ArrowUp', 'KeyW'].includes(e.code) && mario.grounded) {
+        mario.vy = mario.jumpPower;
+        mario.grounded = false;
+        audio.playJumpSound();
+      }
+    });
+
+    window.addEventListener('keyup', e => { keys[e.code] = false; });
+
+    document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); keys['ArrowLeft'] = true; });
+    document.getElementById('btnLeft').addEventListener('touchend', (e) => { e.preventDefault(); keys['ArrowLeft'] = false; });
+    document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); keys['ArrowRight'] = true; });
+    document.getElementById('btnRight').addEventListener('touchend', (e) => { e.preventDefault(); keys['ArrowRight'] = false; });
+    document.getElementById('btnJump').addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (mario.grounded) {
+        mario.vy = mario.jumpPower;
+        mario.grounded = false;
+        audio.playJumpSound();
+      }
+    });
+
+    function updateGame() {
+      if (keys['ArrowRight'] || keys['KeyD']) mario.vx = mario.speed;
+      else if (keys['ArrowLeft'] || keys['KeyA']) mario.vx = -mario.speed;
+      else mario.vx = 0;
+
+      mario.vy += mario.gravity;
+      mario.x += mario.vx;
+      mario.y += mario.vy;
+
+      if (mario.x < 0) mario.x = 0;
+      if (mario.x + mario.width > canvas.width) mario.x = canvas.width - mario.width;
+
+      const floorY = canvas.height - groundHeight - mario.height;
+      if (mario.y >= floorY) {
+        mario.y = floorY;
+        mario.vy = 0;
+        mario.grounded = true;
+      }
+
+      blocks.forEach(b => {
+        if (
+          mario.x < b.x + b.width &&
+          mario.x + mario.width > b.x &&
+          mario.y < b.y + b.height &&
+          mario.y + mario.height > b.y
+        ) {
+          if (mario.vy < 0 && mario.y >= b.y + b.height - 10) {
+            mario.vy = 2;
+            if (!b.hit) {
+              b.hit = true;
+              if (b.content === 'coin') {
+                audio.playCoinSound();
+                addCoins(1);
+              } else if (b.content === 'mushroom') {
+                audio.playPowerUpSound();
+                mario.poweredUp = true;
+                mario.height = 52;
+              }
+            }
+          }
+        }
+      });
+
+      coinsList.forEach(c => {
+        if (!c.collected && Math.abs(mario.x - c.x) < 24 && Math.abs(mario.y - c.y) < 24) {
+          c.collected = true;
+          audio.playCoinSound();
+          addCoins(1);
+        }
+      });
+
+      if (goomba.alive) {
+        goomba.x += goomba.vx;
+        if (goomba.x < 450 || goomba.x > 720) goomba.vx *= -1;
+
+        if (
+          mario.x < goomba.x + goomba.width &&
+          mario.x + mario.width > goomba.x &&
+          mario.y < goomba.y + goomba.height &&
+          mario.y + mario.height > goomba.y
+        ) {
+          if (mario.vy > 0 && mario.y < goomba.y) {
+            goomba.alive = false;
+            mario.vy = -6;
+            audio.playJumpSound();
+          }
+        }
+      }
+    }
+
+    function renderGame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Floor & Grass
+      ctx.fillStyle = '#C84C0C';
+      ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
+      ctx.fillStyle = '#43B047';
+      ctx.fillRect(0, canvas.height - groundHeight, canvas.width, 12);
+
+      // Blocks
+      blocks.forEach(b => {
+        ctx.fillStyle = b.hit ? '#885522' : '#FBD000';
+        ctx.fillRect(b.x, b.y, b.width, b.height);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(b.x, b.y, b.width, b.height);
+
+        if (!b.hit) {
+          ctx.fillStyle = '#000';
+          ctx.font = '16px "Press Start 2P"';
+          ctx.fillText('?', b.x + 10, b.y + 26);
+        }
+      });
+
+      // Coins
+      coinsList.forEach(c => {
+        if (!c.collected) {
+          ctx.fillStyle = '#FBD000';
+          ctx.beginPath();
+          ctx.arc(c.x, c.y, 10, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#000';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+      });
+
+      // Goomba
+      if (goomba.alive) {
+        ctx.fillStyle = '#773311';
+        ctx.fillRect(goomba.x, goomba.y, goomba.width, goomba.height);
+        ctx.fillStyle = '#FFF';
+        ctx.fillRect(goomba.x + 4, goomba.y + 8, 6, 8);
+        ctx.fillRect(goomba.x + 20, goomba.y + 8, 6, 8);
+      }
+
+      // Mario
+      ctx.fillStyle = '#E52521';
+      ctx.fillRect(mario.x, mario.y, mario.width, mario.height);
+      ctx.fillStyle = '#002395';
+      ctx.fillRect(mario.x, mario.y + mario.height / 2, mario.width, mario.height / 2);
+      ctx.fillStyle = '#E52521';
+      ctx.fillRect(mario.x - 2, mario.y, mario.width + 4, 10);
+    }
+
+    function gameLoop() {
+      updateGame();
+      renderGame();
+      requestAnimationFrame(gameLoop);
+    }
+    gameLoop();
+
+    /* --------------------------------------------------------------------------
+       6.4 UI Interaction Handlers
+       -------------------------------------------------------------------------- */
+    function addCoins(num) {
+      coinCount += num;
+      document.getElementById('hudCoinCount').textContent = coinCount;
+      localStorage.setItem('mario_coins', coinCount);
+    }
+
+    function startGameEngine() {
+      audio.init();
+      audio.startBGM();
+      document.getElementById('startMenuModal').classList.add('hidden');
+    }
+
+    function toggleBGM() {
+      audio.bgmEnabled = !audio.bgmEnabled;
+      const btn = document.getElementById('bgmToggleBtn');
+      if (audio.bgmEnabled) {
+        audio.startBGM();
+        if (btn) btn.style.color = '#FFF';
+      } else {
+        audio.stopBGM();
+        if (btn) btn.style.color = '#777';
+      }
+    }
+
+    function toggleSFX() {
+      audio.sfxEnabled = !audio.sfxEnabled;
+      const btn = document.getElementById('sfxToggleBtn');
+      if (btn) btn.style.color = audio.sfxEnabled ? '#FFF' : '#777';
+    }
+
+    function toggleNightMode() {
+      document.getElementById('nightFilter').classList.toggle('active');
+    }
+
+    function openSettings() {
+      document.getElementById('settingsModal').classList.add('active');
+    }
+
+    function openEducationModal() {
+      audio.playPowerUpSound();
+      document.getElementById('eduModal').classList.add('active');
+    }
+
+    function openCaseStudyModal(id) {
+      audio.playPowerUpSound();
+      document.getElementById('modalTitle').textContent = "LEVEL " + id + " CASE STUDY";
+      document.getElementById('caseStudyModal').classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    function upgradeSkill(skillName) {
+      audio.playCoinSound();
+      alert("SKILL UPGRADED: " + skillName + " +100 EXP!");
+    }
+
+    function downloadResume() {
+      audio.playPowerUpSound();
+      alert("Downloading Yang_Chuchu_Resume_2026.pdf");
+    }
+  </script>
 </body>
 </html>
