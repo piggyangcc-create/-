@@ -3,1196 +3,560 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>杨楚楚 - 视觉设计师 | 像素大冒险作品集</title>
-  <!-- 引入像素复古字体 -->
+  <title>杨楚楚 - 视觉设计师 | Picontier 像素小镇作品集</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
     /* ==========================================
-       1. RETRO PALETTE & PIXEL SYSTEM
+       1. PICONTIER TOWN COLOR PALETTE & SYSTEM
        ========================================== */
     :root {
-      --sky-blue: #5c94fc;
-      --sky-dark: #2038ec;
-      --grass-top: #00ca14;
-      --grass-body: #008800;
-      --dirt-brown: #d84800;
-      --dirt-dark: #802800;
-      --brick-red: #b83000;
-      --gold-yellow: #f8b800;
-      --coin-glow: #ffe066;
-      --pipe-green: #00a800;
-      --pipe-dark: #005800;
-      --pipe-light: #54d854;
+      --town-sky: #70c0ff;
+      --town-grass: #58b038;
+      --town-grass-dark: #388020;
+      --roof-red: #d84830;
+      --roof-blue: #3868c0;
+      --roof-yellow: #e8a020;
+      --wall-cream: #f8f0d8;
+      --wood-dark: #583018;
+      --wood-light: #a06030;
       
-      --card-bg: rgba(20, 24, 38, 0.88);
-      --card-border: #f8b800;
+      --card-bg: rgba(26, 32, 44, 0.94);
+      --card-border: #f8a020;
       --text-main: #ffffff;
-      --text-muted: #a0aab8;
+      --text-muted: #a0aec0;
       
       --font-pixel: 'Press Start 2P', cursive, monospace;
       --font-retro: 'Silkscreen', sans-serif;
       --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    html {
-      scroll-behavior: auto;
-      background-color: var(--sky-blue);
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: auto;
+      background: var(--town-sky);
       font-family: var(--font-ui);
       color: var(--text-main);
-      overflow-x: hidden;
     }
 
-    body {
-      position: relative;
-      min-height: 100vh;
-      background: #3b62c4;
-    }
-
-    /* 扫描线复古 CRT 特效滤镜 */
+    /* 复古 CRT 滤镜 */
     body::before {
       content: "";
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.15) 50%
-      );
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.12) 50%);
       background-size: 100% 4px;
       z-index: 998;
       pointer-events: none;
     }
 
-    :focus-visible {
-      outline: 4px solid var(--gold-yellow);
-      outline-offset: 4px;
-    }
-
     /* ==========================================
-       2. HUD TOP NAVBAR (NES STYLE)
+       2. HUD TOP NAVBAR & CONTROLS
        ========================================== */
     .hud-header {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 64px;
-      background: #000000;
-      border-bottom: 4px solid #383838;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-      z-index: 1000;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.5);
+      top: 0; left: 0; width: 100%; height: 60px;
+      background: #181c24;
+      border-bottom: 4px solid #383848;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 20px; z-index: 1000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
 
     .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--gold-yellow);
-      font-family: var(--font-pixel);
-      font-size: 0.75rem;
-      cursor: pointer;
-      text-shadow: 2px 2px #802800;
+      display: flex; align-items: center; gap: 10px;
+      color: var(--card-border);
+      font-family: var(--font-pixel); font-size: 0.75rem;
+      text-shadow: 2px 2px #583018; cursor: pointer;
     }
 
-    .coin-icon {
-      width: 18px;
-      height: 22px;
-      background: var(--gold-yellow);
-      border: 2px solid #000;
-      border-radius: 50%/30%;
-      display: inline-block;
-      box-shadow: inset -2px -2px 0 #b87000;
-      animation: coinSpin 1s infinite steps(4);
+    .controls-hint {
+      font-family: var(--font-retro); font-size: 0.8rem;
+      background: #282c38; padding: 6px 14px; border: 2px solid #484c58;
+      border-radius: 4px; color: #70c0ff;
     }
 
-    @keyframes coinSpin {
-      0% { transform: scaleX(1); }
-      50% { transform: scaleX(0.2); }
-      100% { transform: scaleX(1); }
-    }
-
-    .nav-menu {
-      display: flex;
-      gap: 6px;
-      list-style: none;
-    }
-
-    .nav-btn {
-      background: #181824;
-      border: 3px solid #404058;
-      color: #d0d8e8;
-      padding: 6px 12px;
-      font-family: var(--font-retro);
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      box-shadow: 0 4px 0 #000;
-    }
-
-    .nav-btn:hover, .nav-btn:focus-visible {
-      background: #2c2c40;
-      color: var(--gold-yellow);
-      border-color: var(--gold-yellow);
-      transform: translateY(-2px);
-    }
-
-    .nav-btn.active {
-      background: #e52521;
-      color: #ffffff;
-      border-color: #ff8885;
-      box-shadow: 0 2px 0 #800000;
-      text-shadow: 1px 1px #000;
-    }
-
-    .sound-group {
-      display: flex;
-      gap: 8px;
-    }
-
+    .sound-group { display: flex; gap: 8px; }
     .sound-toggle {
-      background: #2e1c40;
-      border: 3px solid #7848a0;
-      color: #f0c0ff;
-      padding: 6px 12px;
-      font-family: var(--font-retro);
-      font-size: 0.8rem;
-      cursor: pointer;
-      box-shadow: 0 4px 0 #000;
+      background: #2a2038; border: 3px solid #7848a0; color: #f0c0ff;
+      padding: 6px 12px; font-family: var(--font-retro); font-size: 0.8rem;
+      cursor: pointer; box-shadow: 0 4px 0 #000;
     }
-
-    .sound-toggle:hover {
-      background: #482c60;
-      border-color: #d080ff;
-    }
-
-    .mobile-menu-btn {
-      display: none;
-      background: #181824;
-      border: 3px solid #404058;
-      color: white;
-      padding: 6px 12px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
+    .sound-toggle:hover { background: #482c60; border-color: #d080ff; }
 
     /* ==========================================
-       3. LEVEL STAGES & SCENERY
+       3. PICONTIER MAP & HOUSES
        ========================================== */
-    .game-world {
+    .town-viewport {
       position: relative;
-      width: 100%;
-      padding-top: 64px;
-    }
-
-    .level-stage {
-      position: relative;
-      min-height: 100vh;
-      width: 100%;
-      padding: 70px 20px 140px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 8px solid #000;
+      min-width: 3800px;
+      height: 100vh;
+      background: linear-gradient(to bottom, #70c0ff 0%, #a0d8ff 60%, var(--town-grass) 60%, var(--town-grass-dark) 100%);
       overflow: hidden;
     }
 
-    #home { background: linear-gradient(to bottom, #5c94fc 0%, #80b0fc 65%, #00ca14 65%, #008800 100%); }
-    #about { background: linear-gradient(to bottom, #102040 0%, #183060 65%, #184820 65%, #082810 100%); }
-    #skills { background: linear-gradient(to bottom, #000000 0%, #181828 65%, #b83000 65%, #681800 100%); }
-    #projects { background: linear-gradient(to bottom, #281038 0%, #481860 65%, #d84800 65%, #802800 100%); }
-    #experience { background: linear-gradient(to bottom, #101018 0%, #202030 65%, #505060 65%, #303040 100%); }
-    #contact { background: linear-gradient(to bottom, #081018 0%, #102030 65%, #204060 65%, #102038 100%); }
-
-    .stage-badge {
-      display: inline-block;
-      background: #000000;
-      color: var(--gold-yellow);
-      border: 3px solid var(--gold-yellow);
-      padding: 6px 16px;
-      font-family: var(--font-pixel);
-      font-size: 0.65rem;
-      letter-spacing: 1px;
-      margin-bottom: 16px;
-      box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
+    /* 装饰：树木与小花 */
+    .pixel-tree {
+      position: absolute; bottom: 120px; width: 64px; height: 96px;
+      background: #287818; border: 4px solid #000; border-radius: 32px 32px 8px 8px;
+      box-shadow: inset -8px -8px 0 #185010;
+    }
+    .pixel-tree::after {
+      content: ""; position: absolute; bottom: -24px; left: 24px;
+      width: 16px; height: 28px; background: var(--wood-dark); border: 3px solid #000;
     }
 
-    .stage-title {
-      font-family: var(--font-pixel);
-      font-size: 2rem;
-      text-align: center;
-      margin-bottom: 24px;
-      color: #ffffff;
-      text-shadow: 4px 4px 0 #000;
-      line-height: 1.3;
-    }
-
-    .content-card {
-      background: var(--card-bg);
-      color: var(--text-main);
-      border: 4px solid #000000;
-      outline: 4px solid var(--card-border);
-      border-radius: 4px;
-      padding: 36px;
-      max-width: 920px;
-      width: 100%;
-      box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.6);
-      z-index: 2;
-      backdrop-filter: blur(6px);
-    }
-
-    .cloud {
+    /* 房屋建筑（Picontier 房屋系统） */
+    .house-module {
       position: absolute;
-      background: #ffffff;
+      bottom: 120px;
+      width: 320px;
+      background: var(--wall-cream);
       border: 4px solid #000;
-      border-radius: 20px;
-      z-index: 1;
-      opacity: 0.9;
-    }
-
-    .cloud-1 { top: 12%; left: 8%; width: 120px; height: 36px; animation: cloudFloat 24s linear infinite; }
-    .cloud-2 { top: 22%; right: 10%; width: 160px; height: 44px; animation: cloudFloat 32s linear infinite reverse; }
-
-    @keyframes cloudFloat {
-      0% { transform: translateX(-20px); }
-      50% { transform: translateX(20px); }
-      100% { transform: translateX(-20px); }
-    }
-
-    .pipe-decor {
-      position: absolute;
-      bottom: 64px;
-      right: 12%;
-      width: 64px;
-      height: 90px;
-      background: linear-gradient(to right, var(--pipe-light) 0%, var(--pipe-green) 40%, var(--pipe-dark) 100%);
-      border: 4px solid #000;
-      z-index: 2;
-    }
-    .pipe-decor::before {
-      content: "";
-      position: absolute;
-      top: -16px;
-      left: -8px;
-      width: 72px;
-      height: 24px;
-      background: linear-gradient(to right, var(--pipe-light) 0%, var(--pipe-green) 40%, var(--pipe-dark) 100%);
-      border: 4px solid #000;
-    }
-
-    .question-block {
-      display: inline-flex;
+      box-shadow: 8px 12px 0 rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      background: var(--gold-yellow);
-      border: 4px solid #000;
-      color: #802800;
-      font-family: var(--font-pixel);
-      font-size: 1.2rem;
-      box-shadow: inset -4px -4px 0 #b87000, inset 4px 4px 0 #fff;
       cursor: pointer;
-      animation: blockPulse 1.5s infinite;
+      transition: transform 0.2s ease;
+    }
+    .house-module:hover { transform: translateY(-6px); }
+
+    .house-roof {
+      position: absolute; top: -70px; width: 350px; height: 70px;
+      background: var(--roof-red); border: 4px solid #000;
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
     }
 
-    @keyframes blockPulse {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
+    .house-sign {
+      position: absolute; top: -105px;
+      background: var(--wood-light); border: 3px solid #000;
+      color: #fff; font-family: var(--font-pixel); font-size: 0.65rem;
+      padding: 6px 12px; box-shadow: 0 4px 0 #000; text-align: center;
     }
 
-    .ground-layer {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 64px;
-      background-color: var(--dirt-brown);
-      background-image: 
-        radial-gradient(var(--dirt-dark) 15%, transparent 16%),
-        radial-gradient(var(--dirt-dark) 15%, transparent 16%);
-      background-size: 16px 16px;
-      background-position: 0 0, 8px 8px;
-      border-top: 8px solid var(--grass-top);
-      box-shadow: inset 0 6px 0 var(--grass-body);
-      z-index: 10;
+    .house-door {
+      position: absolute; bottom: 0; width: 60px; height: 90px;
+      background: var(--wood-dark); border: 4px solid #000;
+      border-radius: 8px 8px 0 0;
+      box-shadow: inset -4px 0 0 var(--wood-light);
+    }
+    .house-door::after {
+      content: ""; position: absolute; top: 42px; right: 8px;
+      width: 8px; height: 8px; background: #f8a020; border-radius: 50%;
+    }
+
+    .house-window {
+      width: 50px; height: 50px; background: #80e0ff;
+      border: 4px solid #000; margin-top: 30px;
+      box-shadow: inset 4px 4px 0 #fff;
+    }
+
+    .house-title-label {
+      font-family: var(--font-retro); font-size: 1.1rem;
+      color: var(--wood-dark); font-weight: bold; margin-top: 20px;
+    }
+
+    /* 地面与小路 */
+    .ground-path {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 120px;
+      background: #a07040; border-top: 8px solid var(--town-grass-dark);
+      background-image: radial-gradient(#784820 15%, transparent 16%);
+      background-size: 24px 24px;
     }
 
     /* ==========================================
-       4. HERO CHARACTER
+       4. CHARACTER & POPUP MODAL
        ========================================== */
     #hero-character-container {
-      position: fixed;
-      left: 100px;
-      bottom: 64px;
-      width: 76px;
-      height: 100px;
-      z-index: 500;
-      pointer-events: none;
-      transform: translateX(-50%);
-      filter: drop-shadow(0 4px 0 rgba(0,0,0,0.4));
+      position: absolute; bottom: 120px; left: 150px;
+      width: 64px; height: 84px; z-index: 500;
+      pointer-events: none; transform: translateX(-50%);
+      transition: bottom 0.15s ease;
     }
 
-    .hero-svg {
-      width: 100%;
-      height: 100%;
-      overflow: visible;
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000; opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .modal-card {
+      background: var(--card-bg); border: 4px solid #000;
+      outline: 4px solid var(--card-border); border-radius: 8px;
+      padding: 32px; max-width: 720px; width: 90%;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.8);
+      max-height: 85vh; overflow-y: auto; position: relative;
     }
 
-    .character-shadow {
-      position: absolute;
-      bottom: -6px;
-      left: 15%;
-      width: 70%;
-      height: 10px;
-      background: rgba(0, 0, 0, 0.45);
-      border-radius: 50%;
-      z-index: -1;
+    .close-btn {
+      position: absolute; top: 16px; right: 16px;
+      background: #e52521; color: #fff; border: 3px solid #000;
+      font-family: var(--font-pixel); padding: 6px 10px; cursor: pointer;
     }
 
-    .dust-particle {
-      position: absolute;
-      bottom: 4px;
-      width: 12px;
-      height: 12px;
-      background: #ffffff;
-      border: 2px solid #000;
-      pointer-events: none;
-      animation: dustFade 0.35s ease-out forwards;
-    }
-
-    @keyframes dustFade {
-      0% { transform: scale(0.6) translate(0, 0); opacity: 1; }
-      100% { transform: scale(1.8) translate(-12px, -12px); opacity: 0; }
-    }
-
-    /* ==========================================
-       5. BUTTONS & RIPPLE
-       ========================================== */
     .pixel-btn {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      background: #e52521;
-      color: #ffffff;
-      font-family: var(--font-retro);
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 14px 24px;
-      border: 4px solid #000000;
-      border-radius: 4px;
-      cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; background: #e52521; color: #fff;
+      font-family: var(--font-retro); font-weight: 700; font-size: 0.9rem;
+      padding: 10px 18px; border: 3px solid #000; border-radius: 4px;
+      cursor: pointer; box-shadow: 0 4px 0 #000; margin: 6px 4px;
       text-decoration: none;
-      box-shadow: inset -4px -4px 0 #800000, inset 4px 4px 0 #ff8885, 0 6px 0 #000;
-      transition: all 0.1s ease;
-      overflow: hidden;
-      margin: 8px 4px;
     }
-
-    .pixel-btn:hover {
-      background: #ff3b30;
-      transform: translateY(-2px);
-      box-shadow: inset -4px -4px 0 #800000, inset 4px 4px 0 #ff8885, 0 8px 0 #000;
-    }
-
-    .pixel-btn:active {
-      transform: translateY(4px);
-      box-shadow: inset -4px -4px 0 #800000, inset 4px 4px 0 #ff8885, 0 2px 0 #000;
-    }
-
-    .pixel-btn.secondary {
-      background: #0058d8;
-      box-shadow: inset -4px -4px 0 #002880, inset 4px 4px 0 #66a0ff, 0 6px 0 #000;
-    }
-    .pixel-btn.secondary:hover {
-      background: #1a72f0;
-      box-shadow: inset -4px -4px 0 #002880, inset 4px 4px 0 #66a0ff, 0 8px 0 #000;
-    }
-
-    .pixel-btn.gold {
-      background: var(--gold-yellow);
-      color: #000000;
-      box-shadow: inset -4px -4px 0 #b87000, inset 4px 4px 0 #ffea88, 0 6px 0 #000;
-    }
-    .pixel-btn.gold:hover {
-      background: #ffc81a;
-      box-shadow: inset -4px -4px 0 #b87000, inset 4px 4px 0 #ffea88, 0 8px 0 #000;
-    }
-
-    .ripple-effect {
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.6);
-      transform: scale(0);
-      animation: ripple 0.45s linear;
-      pointer-events: none;
-    }
-
-    @keyframes ripple {
-      to {
-        transform: scale(4);
-        opacity: 0;
-      }
-    }
-
-    /* ==========================================
-       6. CONTENT SECTIONS SPECIFICS
-       ========================================== */
-    .hero-avatar {
-      width: 100px;
-      height: 100px;
-      background: #ffcca0;
-      border: 4px solid #000;
-      border-radius: 50%;
-      margin: 0 auto 20px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 0 rgba(0,0,0,0.4);
-      overflow: hidden;
-    }
-
-    .hero-subtitle {
-      font-family: var(--font-retro);
-      font-size: 1.15rem;
-      color: var(--gold-yellow);
-      margin-bottom: 20px;
-    }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
-
-    .skill-box {
-      background: #181824;
-      border: 3px solid #000;
-      outline: 2px solid #383850;
-      padding: 16px;
-      box-shadow: 4px 4px 0 #000;
-    }
-
-    .skill-title {
-      font-family: var(--font-retro);
-      color: var(--gold-yellow);
-      font-size: 1rem;
-      margin-bottom: 8px;
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .project-card {
-      background: #181828;
-      border: 3px solid #000;
-      outline: 2px solid var(--gold-yellow);
-      overflow: hidden;
-      box-shadow: 6px 6px 0 #000;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .project-img-placeholder {
-      height: 110px;
-      background: #283858;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-retro);
-      color: var(--gold-yellow);
-      border-bottom: 3px solid #000;
-      font-size: 0.9rem;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .project-body {
-      padding: 16px;
-    }
-
-    .timeline {
-      border-left: 4px solid var(--gold-yellow);
-      margin: 20px 0 0 20px;
-      padding-left: 20px;
-    }
-
-    .timeline-item {
-      position: relative;
-      margin-bottom: 24px;
-    }
-
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: -28px;
-      top: 4px;
-      width: 12px;
-      height: 12px;
-      background: #e52521;
-      border: 3px solid #000;
-    }
-
-    .contact-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .tag-badge {
-      display: inline-block;
-      background: #e52521;
-      color: white;
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      border-radius: 4px;
-      border: 2px solid #000;
-      margin-right: 6px;
-      margin-bottom: 6px;
-    }
-
-    @media (max-width: 768px) {
-      .stage-title { font-size: 1.4rem; }
-      .nav-menu {
-        position: fixed;
-        top: 64px; right: -100%;
-        width: 200px; height: calc(100vh - 64px);
-        background: #000000;
-        flex-direction: column;
-        padding: 20px;
-        transition: right 0.3s ease;
-        border-left: 4px solid #383838;
-      }
-      .nav-menu.open { right: 0; }
-      .mobile-menu-btn { display: block; }
-      #hero-character-container { width: 60px; height: 80px; }
-      .content-card { padding: 20px; }
-    }
+    .pixel-btn:hover { background: #ff3b30; transform: translateY(-2px); }
+    .pixel-btn.secondary { background: #0058d8; }
   </style>
 </head>
 <body>
 
-  <!-- ==========================================
-       RETRO HUD TOP NAVBAR
-       ========================================== -->
+  <!-- HUD 顶栏 -->
   <header class="hud-header">
-    <div class="brand-logo" id="hud-logo" tabindex="0" role="button" aria-label="返回首页">
-      <span class="coin-icon"></span>
-      <span>YANG CHUCHU PORTFOLIO</span>
+    <div class="brand-logo" onclick="walkToX(150)">
+      <span>🏡 YANG CHUCHU PICONTIER TOWN</span>
     </div>
-
-    <button class="mobile-menu-btn" id="mobile-toggle" aria-label="切换菜单">☰</button>
-
-    <nav>
-      <ul class="nav-menu" id="nav-menu">
-        <li><button class="nav-btn active" data-target="#home">🎮 HOME</button></li>
-        <li><button class="nav-btn" data-target="#about">🍄 ABOUT</button></li>
-        <li><button class="nav-btn" data-target="#skills">⭐ SKILLS</button></li>
-        <li><button class="nav-btn" data-target="#projects">🔥 PROJECTS</button></li>
-        <li><button class="nav-btn" data-target="#experience">🏰 EXP</button></li>
-        <li><button class="nav-btn" data-target="#contact">🚩 CONTACT</button></li>
-      </ul>
-    </nav>
-
+    <div class="controls-hint">
+      🎮 控制：键盘 [A / D / 👈 👉] 行走，[Space / W] 跳跃 | 点击地面/房子可直接走去
+    </div>
     <div class="sound-group">
-      <button class="sound-toggle" id="bgm-btn" aria-label="开启或关闭音乐">🎵 BGM: OFF</button>
-      <button class="sound-toggle" id="sound-btn" aria-label="开启或关闭音效">🔊 SFX: OFF</button>
+      <button class="sound-toggle" id="bgm-btn">🎵 BGM: OFF</button>
+      <button class="sound-toggle" id="sound-btn">🔊 SFX: OFF</button>
     </div>
   </header>
 
-  <!-- ==========================================
-       GAME HERO CHARACTER (HIGH-RES SVG)
-       ========================================== -->
-  <div id="hero-character-container" aria-hidden="true">
-    <div class="character-shadow" id="char-shadow"></div>
-    <svg class="hero-svg" viewBox="0 0 76 100" id="mario-character">
-      <g id="char-root" transform="translate(0,0)">
-        <path id="hat" d="M 18,16 L 58,16 L 64,28 L 12,28 Z" fill="#e52521" stroke="#000" stroke-width="2"/>
-        <path id="hat-brim" d="M 8,28 L 68,28 L 68,34 L 8,34 Z" fill="#b81810" stroke="#000" stroke-width="2"/>
-        <rect id="face" x="14" y="34" width="48" height="28" rx="4" fill="#ffcca0" stroke="#000" stroke-width="2"/>
-        <ellipse id="eye-left" cx="28" cy="44" rx="4" ry="7" fill="#000"/>
-        <circle cx="27" cy="42" r="2" fill="#fff"/>
-        <ellipse id="eye-right" cx="48" cy="44" rx="4" ry="7" fill="#000"/>
-        <circle cx="47" cy="42" r="2" fill="#fff"/>
-        <circle cx="18" cy="48" r="3" fill="#ff9999" opacity="0.7"/>
-        <circle cx="58" cy="48" r="3" fill="#ff9999" opacity="0.7"/>
-        <path id="mustache" d="M 20,52 Q 38,62 56,52 Q 38,56 20,52 Z" fill="#3a1d00" stroke="#000" stroke-width="2"/>
-        <rect id="body-shirt" x="22" y="62" width="32" height="16" fill="#e52521" stroke="#000" stroke-width="2"/>
-        <path id="overalls" d="M 24,66 L 52,66 L 54,82 L 22,82 Z" fill="#0038d8" stroke="#000" stroke-width="2"/>
-        <circle cx="28" cy="70" r="3" fill="#f8b800" stroke="#000" stroke-width="1"/>
-        <circle cx="48" cy="70" r="3" fill="#f8b800" stroke="#000" stroke-width="1"/>
+  <!-- 地图主场景 -->
+  <div class="town-viewport" id="town-viewport">
+    
+    <!-- 装饰树木 -->
+    <div class="pixel-tree" style="left: 80px;"></div>
+    <div class="pixel-tree" style="left: 650px;"></div>
+    <div class="pixel-tree" style="left: 130px;"></div>
+    <div class="pixel-tree" style="left: 2000px;"></div>
+    <div class="pixel-tree" style="left: 2700px;"></div>
 
-        <g id="arm-left">
-          <rect x="10" y="62" width="12" height="14" rx="3" fill="#e52521" stroke="#000" stroke-width="2"/>
-          <circle cx="12" cy="76" r="5" fill="#fff" stroke="#000" stroke-width="2"/>
-        </g>
-        <g id="arm-right">
-          <rect x="54" y="62" width="12" height="14" rx="3" fill="#e52521" stroke="#000" stroke-width="2"/>
-          <circle cx="64" cy="76" r="5" fill="#fff" stroke="#000" stroke-width="2"/>
-        </g>
+    <!-- 1. HOME 房子 -->
+    <div class="house-module" style="left: 250px; height: 210px;" onclick="interactWithHouse('home', 410)">
+      <div class="house-roof"></div>
+      <div class="house-sign">WORLD 1-1<br>HOME</div>
+      <div class="house-window"></div>
+      <div class="house-title-label">楚楚的小屋</div>
+      <div class="house-door"></div>
+    </div>
 
-        <g id="leg-left">
-          <rect x="24" y="80" width="10" height="10" fill="#002880" stroke="#000" stroke-width="1.5"/>
-          <path d="M 16,90 L 34,90 L 34,96 L 16,96 Z" fill="#682800" stroke="#000" stroke-width="2"/>
+    <!-- 2. ABOUT 房子 -->
+    <div class="house-module" style="left: 850px; height: 220px;" onclick="interactWithHouse('about', 1010)">
+      <div class="house-roof" style="background: var(--roof-blue);"></div>
+      <div class="house-sign">WORLD 1-2<br>ABOUT</div>
+      <div class="house-window"></div>
+      <div class="house-title-label">个人档案馆</div>
+      <div class="house-door"></div>
+    </div>
+
+    <!-- 3. SKILLS 房子 -->
+    <div class="house-module" style="left: 1500px; height: 230px;" onclick="interactWithHouse('skills', 1660)">
+      <div class="house-roof" style="background: var(--roof-yellow);"></div>
+      <div class="house-sign">WORLD 1-3<br>SKILLS</div>
+      <div style="display: flex; gap: 12px;">
+        <div class="house-window"></div>
+        <div class="house-window"></div>
+      </div>
+      <div class="house-title-label">技能装备库</div>
+      <div class="house-door"></div>
+    </div>
+
+    <!-- 4. PROJECTS 房子 -->
+    <div class="house-module" style="left: 2150px; height: 240px;" onclick="interactWithHouse('projects', 2310)">
+      <div class="house-roof" style="background: #288050;"></div>
+      <div class="house-sign">WORLD 1-4<br>PROJECTS</div>
+      <div class="house-window"></div>
+      <div class="house-title-label">爆款作品工坊</div>
+      <div class="house-door"></div>
+    </div>
+
+    <!-- 5. EXPERIENCE 城堡 -->
+    <div class="house-module" style="left: 2800px; height: 260px; background: #a0a8b8;" onclick="interactWithHouse('experience', 2960)">
+      <div class="house-roof" style="background: #484860; clip-path: none; top: -40px; height: 40px; width: 330px;"></div>
+      <div class="house-sign">WORLD 1-5<br>EXPERIENCE</div>
+      <div class="house-window" style="background: #f8e070;"></div>
+      <div class="house-title-label">职业历程城堡</div>
+      <div class="house-door"></div>
+    </div>
+
+    <!-- 6. CONTACT 终点旗帜小屋 -->
+    <div class="house-module" style="left: 3400px; height: 210px;" onclick="interactWithHouse('contact', 3560)">
+      <div class="house-roof" style="background: #803090;"></div>
+      <div class="house-sign">FINAL STAGE<br>CONTACT</div>
+      <div class="house-window"></div>
+      <div class="house-title-label">联系驿站</div>
+      <div class="house-door"></div>
+    </div>
+
+    <!-- 人物 Vector SVG -->
+    <div id="hero-character-container">
+      <svg viewBox="0 0 76 100" style="width:100%; height:100%;">
+        <g id="char-root">
+          <path d="M 18,16 L 58,16 L 64,28 L 12,28 Z" fill="#e52521" stroke="#000" stroke-width="2"/>
+          <path d="M 8,28 L 68,28 L 68,34 L 8,34 Z" fill="#b81810" stroke="#000" stroke-width="2"/>
+          <rect x="14" y="34" width="48" height="28" rx="4" fill="#ffcca0" stroke="#000" stroke-width="2"/>
+          <ellipse cx="28" cy="44" rx="4" ry="7" fill="#000"/><circle cx="27" cy="42" r="2" fill="#fff"/>
+          <ellipse cx="48" cy="44" rx="4" ry="7" fill="#000"/><circle cx="47" cy="42" r="2" fill="#fff"/>
+          <path d="M 20,52 Q 38,62 56,52 Q 38,56 20,52 Z" fill="#3a1d00" stroke="#000" stroke-width="2"/>
+          <rect x="22" y="62" width="32" height="16" fill="#e52521" stroke="#000" stroke-width="2"/>
+          <path d="M 24,66 L 52,66 L 54,82 L 22,82 Z" fill="#0038d8" stroke="#000" stroke-width="2"/>
+          <g id="leg-l"><path d="M 16,90 L 34,90 L 34,96 L 16,96 Z" fill="#682800" stroke="#000" stroke-width="2"/></g>
+          <g id="leg-r"><path d="M 42,90 L 60,90 L 60,96 L 42,96 Z" fill="#682800" stroke="#000" stroke-width="2"/></g>
         </g>
-        <g id="leg-right">
-          <rect x="42" y="80" width="10" height="10" fill="#002880" stroke="#000" stroke-width="1.5"/>
-          <path d="M 42,90 L 60,90 L 60,96 L 42,96 Z" fill="#682800" stroke="#000" stroke-width="2"/>
-        </g>
-      </g>
-    </svg>
+      </svg>
+    </div>
+
+    <div class="ground-path" id="ground-path"></div>
+  </div>
+
+  <!-- 房子详情弹窗（Modal） -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-card">
+      <button class="close-btn" onclick="closeModal()">X</button>
+      <div id="modal-content"></div>
+    </div>
   </div>
 
   <!-- ==========================================
-       6 GAME WORLD STAGES
-       ========================================== -->
-  <main class="game-world">
-
-    <!-- WORLD 1-1: HOME -->
-    <section class="level-stage" id="home">
-      <div class="cloud cloud-1"></div>
-      <div class="cloud cloud-2"></div>
-      <div class="stage-badge">WORLD 1-1</div>
-      <h1 class="stage-title">YANG CHUCHU</h1>
-
-      <div class="content-card hero-content" style="text-align: center;">
-        <div class="hero-avatar">
-          <svg width="76" height="100" viewBox="0 0 76 100">
-            <use href="#char-root"/>
-          </svg>
-        </div>
-        <h2 style="font-family: var(--font-retro); font-size: 1.8rem; margin-bottom: 6px;">杨楚楚 | 视觉设计师</h2>
-        <p class="hero-subtitle">3.5年跨境电商视觉设计经验 / AIGC工具高效提效</p>
-        
-        <div style="margin-bottom: 20px;">
-          <span class="tag-badge">离职随时到岗</span>
-          <span class="tag-badge" style="background:#0058d8;">闽南理工学院全日制本科</span>
-          <span class="tag-badge" style="background:#008800;">图片处理 5000+</span>
-        </div>
-
-        <p style="margin-bottom: 24px; line-height: 1.6; color: var(--text-muted);">
-          熟练掌握国外电商平台风格（Amazon、eBay、Walmart、美客多、速卖通、独立站等），能独立完成产品全链路视觉设计与爆款打造。
-        </p>
-
-        <div>
-          <a href="#about" class="pixel-btn">
-            <span>🎮 开始探索冒险</span>
-          </a>
-          <button class="pixel-btn secondary" id="btn-download-resume">
-            <span>📄 查看完整经历</span>
-          </button>
-        </div>
-      </div>
-      <div class="ground-layer"></div>
-    </section>
-
-    <!-- WORLD 1-2: ABOUT -->
-    <section class="level-stage" id="about">
-      <div class="stage-badge">WORLD 1-2</div>
-      <h2 class="stage-title">ABOUT ME</h2>
-
-      <div class="content-card">
-        <h3 style="font-family: var(--font-retro); font-size: 1.3rem; color: var(--gold-yellow); margin-bottom: 16px;">🍄 玩家属性与综合素质</h3>
-        
-        <p style="line-height: 1.7; margin-bottom: 16px; color: #d0d8e8;">
-          <b>【核心能力】</b> 视觉传达设计专业科班出身，3.5年跨境电商视觉设计经验。拥有黑五、Prime Day 等大型电商活动设计经验，掌握跨境电商视觉创意方法论，精准把握国际市场审美趋势与视觉转化逻辑。
-        </p>
-        <p style="line-height: 1.7; margin-bottom: 20px; color: #d0d8e8;">
-          <b>【个人优势】</b> 精通PS、AI、Procreate、Keyshot 等设计软件，擅长运用 AIGC 工具（ChatGPT 4o, Midjourney, Stable Diffusion）辅助项目设计，显著提升视觉吸引力与设计效率；具备极强抗压性与团队协作能力。
-        </p>
-
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="#skills" class="pixel-btn gold"><span>⭐ 查看技能装备</span></a>
-          <a href="#contact" class="pixel-btn secondary"><span>✉️ 快速联系</span></a>
-        </div>
-      </div>
-      <div class="pipe-decor"></div>
-      <div class="ground-layer" style="background-color: #184820; border-color: #388830;"></div>
-    </section>
-
-    <!-- WORLD 1-3: SKILLS -->
-    <section class="level-stage" id="skills">
-      <div class="stage-badge">WORLD 1-3</div>
-      <h2 class="stage-title">SKILL POWER-UPS</h2>
-
-      <div class="content-card">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-          <h3 style="font-family: var(--font-retro); font-size: 1.3rem; color: var(--gold-yellow);">🍄 装备与技能树 (SKILL INVENTORY)</h3>
-          <div class="question-block" id="question-box">?</div>
-        </div>
-        
-        <div class="skills-grid">
-          <div class="skill-box">
-            <div class="skill-title">🤖 AIGC 创意生成</div>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">ChatGPT 4o, Midjourney, Stable Diffusion, AI修图/增效工具，高效生成场景氛围与视觉优化</p>
-          </div>
-          <div class="skill-box">
-            <div class="skill-title">🎨 视觉平面核心</div>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Photoshop, Adobe Illustrator, CorelDraw, Procreate 精致精修、场景合成与矢量版式设计</p>
-          </div>
-          <div class="skill-box">
-            <div class="skill-title">💎 3D 渲染精修</div>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Keyshot 场景建模渲染、产品质感渲染、光源分布校色与后期精修全流程</p>
-          </div>
-          <div class="skill-box">
-            <div class="skill-title">🌐 跨境电商全栈</div>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Amazon, eBay, Walmart, 美客多, 速卖通, 独立站 Listing 套图、高级 A+ 页面与活动 Banner 制作</p>
-          </div>
-        </div>
-
-        <div style="margin-top: 24px; text-align: center;">
-          <a href="#projects" class="pixel-btn"><span>🔥 前往项目关卡</span></a>
-        </div>
-      </div>
-      <div class="ground-layer" style="background-color: #681800; border-color: #b83000;"></div>
-    </section>
-
-    <!-- WORLD 1-4: PROJECTS -->
-    <section class="level-stage" id="projects">
-      <div class="stage-badge">WORLD 1-4</div>
-      <h2 class="stage-title">FEATURED PROJECTS</h2>
-
-      <div class="content-card" style="max-width: 960px;">
-        <h3 style="font-family: var(--font-retro); font-size: 1.3rem; color: var(--gold-yellow); margin-bottom: 16px;">🪙 代表战绩与爆款案例</h3>
-
-        <div class="projects-grid">
-          <div class="project-card">
-            <div class="project-img-placeholder" style="background: #a82000;">
-              🚀 自营品牌 50+ Listing 套图
-            </div>
-            <div class="project-body">
-              <h4 style="font-family: var(--font-retro); font-size: 0.95rem; margin-bottom: 8px;">iscooter / Circooter 品牌视觉</h4>
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">独立完成自营品牌 Listing 套图与高级 A+ 页面，精准把握卖点，<b>推动点击率提升 30%-50%</b>。</p>
-              <button class="pixel-btn secondary p-btn-action" data-title="iscooter/Circooter 品牌全套视觉" style="padding: 8px 14px; font-size: 0.75rem;">查看详情</button>
-            </div>
-          </div>
-
-          <div class="project-card">
-            <div class="project-img-placeholder" style="background: #0040a8;">
-              🚗 多平台规范与组件库
-            </div>
-            <div class="project-body">
-              <h4 style="font-family: var(--font-retro); font-size: 0.95rem; margin-bottom: 8px;">汽配全渠道独立站搭建</h4>
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">建立多平台设计规范与组件库，参与 <b>50+ 次新品上市</b>，15 天完成多品类上新，准时交付率 100%。</p>
-              <button class="pixel-btn secondary p-btn-action" data-title="汽配全渠道独立站设计规范与组件库" style="padding: 8px 14px; font-size: 0.75rem;">查看详情</button>
-            </div>
-          </div>
-
-          <div class="project-card">
-            <div class="project-img-placeholder" style="background: #006830;">
-              🏆 A-PREMIUM 2000+ 主图精修
-            </div>
-            <div class="project-body">
-              <h4 style="font-family: var(--font-retro); font-size: 0.95rem; margin-bottom: 8px;">亚马逊 TOP 前三项目</h4>
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">负责 TOP 1-20 核心类目，主导完成新品精修与橱窗 <b>2000+ 款</b>，通过 A/B 测试持续优化转化率。</p>
-              <button class="pixel-btn secondary p-btn-action" data-title="A-PREMIUM 核心类目 A/B 测试视觉优化" style="padding: 8px 14px; font-size: 0.75rem;">查看详情</button>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top: 24px; text-align: center;">
-          <a href="#experience" class="pixel-btn gold"><span>🏰 城堡关卡: 工作经历</span></a>
-        </div>
-      </div>
-      <div class="ground-layer" style="background-color: #802800; border-color: #d84800;"></div>
-    </section>
-
-    <!-- WORLD 1-5: EXPERIENCE -->
-    <section class="level-stage" id="experience">
-      <div class="stage-badge">WORLD 1-5</div>
-      <h2 class="stage-title">CASTLE EXPERIENCE</h2>
-
-      <div class="content-card">
-        <h3 style="font-family: var(--font-retro); font-size: 1.3rem; color: var(--gold-yellow); margin-bottom: 16px;">🏰 职业征程 (WORK EXPERIENCE)</h3>
-
-        <div class="timeline">
-          <div class="timeline-item">
-            <h4 style="font-family: var(--font-retro); font-size: 0.95rem; color: #fff;">平面设计师 (品牌中心)</h4>
-            <div style="font-size: 0.8rem; color: var(--gold-yellow); margin: 4px 0;">深圳市信诚未来科技有限公司 | 2025.04 - 2025.07</div>
-            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-muted);">主导 3C、智能硬件、户外用品类目，独立完成 iscooter、Circooter 等自营品牌 Listing 套图与高级 A+，联动 AI 工具提效，推动 CTR 增长 30%-50%。</p>
-          </div>
-
-          <div class="timeline-item">
-            <h4 style="font-family: var(--font-retro); font-size: 0.95rem; color: #fff;">视觉设计师 (运营部)</h4>
-            <div style="font-size: 0.8rem; color: var(--gold-yellow); margin: 4px 0;">深圳思未永续科技发展有限公司 | 2024.03 - 2025.03</div>
-            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-muted);">负责欧美汽配类目全渠道视觉，建立品牌多平台组件库，输出 100+ 详情页规范，协同 IT 及运营部门高质高效实现 15 天多品类极速上新。</p>
-          </div>
-
-          <div class="timeline-item">
-            <h4 style="font-family: var(--font-retro); font-size: 0.95rem; color: #fff;">视觉设计师 (设计部 / 亚马逊 TOP 前三)</h4>
-            <div style="font-size: 0.8rem; color: var(--gold-yellow); margin: 4px 0;">福建扬腾集团 | 2022.08 - 2024.03</div>
-            <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-muted);">负责 A-PREMIUM TOP 1-20 核心类目活动页与橱窗，主导新品精修与橱窗制作 2000+ 款、彩盒升级 100+ 款，基于 A/B 测试数据精准提升转化率。</p>
-          </div>
-        </div>
-
-        <div style="margin-top: 24px; text-align: center;">
-          <a href="#contact" class="pixel-btn"><span>🚩 终点旗帜: 联系我</span></a>
-        </div>
-      </div>
-      <div class="ground-layer" style="background-color: #303040; border-color: #505060;"></div>
-    </section>
-
-    <!-- FINAL STAGE: CONTACT -->
-    <section class="level-stage" id="contact">
-      <div class="stage-badge">FINAL STAGE</div>
-      <h2 class="stage-title">MISSION COMPLETE!</h2>
-
-      <div class="content-card" style="text-align: center;">
-        <h3 style="font-family: var(--font-retro); font-size: 1.4rem; color: var(--gold-yellow); margin-bottom: 12px;">🚩 通关！与杨楚楚取得联系</h3>
-        <p style="margin-bottom: 24px; color: var(--text-muted);">感谢探索！随时欢迎沟通视觉设计、电商打造与团队合作。</p>
-
-        <div class="contact-links">
-          <button class="pixel-btn secondary c-btn-action" data-type="Phone">
-            <span>📞 18596773812</span>
-          </button>
-          <button class="pixel-btn c-btn-action" data-type="Email">
-            <span>✉️ 906745060@qq.com</span>
-          </button>
-        </div>
-
-        <div style="margin-top: 36px; padding-top: 20px; border-top: 2px dashed #444;">
-          <button class="pixel-btn gold" id="btn-back-top">
-            <span>⬆️ 重新挑战 (返回顶部)</span>
-          </button>
-        </div>
-      </div>
-      <div class="ground-layer" style="background-color: #102038; border-color: #204060;"></div>
-    </section>
-
-  </main>
-
-  <!-- ==========================================
-       7. GAME ENGINE & INTERACTION LOGIC
+       5. GAME ENGINE & LONG BGM SYSTEM
        ========================================== -->
   <script>
-    (function() {
-      'use strict';
+    /* 1. 音效与 Picontier 风长乐曲合成器 */
+    let audioCtx = null;
+    let sfxOn = false;
+    let bgmOn = false;
+    let bgmTimer = null;
 
-      /* 8-Bit 音效与轻快背景音乐合成器 */
-      let audioEnabled = false;
-      let bgmEnabled = false;
-      let audioCtx = null;
-      let bgmInterval = null;
-
-      function initAudio() {
-        if (!audioCtx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) audioCtx = new AudioContext();
-        }
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtxClass) audioCtx = new AudioCtxClass();
       }
+    }
 
-      function play8BitSound(type) {
-        if (!audioEnabled || !audioCtx) return;
-        if (audioCtx.state === 'suspended') audioCtx.resume();
+    function playSfx(type) {
+      if (!sfxOn || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain); gain.connect(audioCtx.destination);
+      const t = audioCtx.currentTime;
 
+      if (type === 'jump') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(150, t);
+        osc.frequency.exponentialRampToValueAtTime(600, t + 0.15);
+        gain.gain.setValueAtTime(0.1, t);
+        gain.gain.linearRampToValueAtTime(0.01, t + 0.15);
+        osc.start(t); osc.stop(t + 0.15);
+      } else if (type === 'open') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, t);
+        osc.frequency.setValueAtTime(600, t + 0.08);
+        gain.gain.setValueAtTime(0.1, t);
+        gain.gain.linearRampToValueAtTime(0.01, t + 0.2);
+        osc.start(t); osc.stop(t + 0.2);
+      }
+    }
+
+    /* 包含 A/B 段舒缓悠扬的 8-Bit Picontier 治愈小镇长乐曲 */
+    const longTownMelody = [
+      // Section A
+      {f: 523.25, d: 0.25}, {f: 659.25, d: 0.25}, {f: 783.99, d: 0.25}, {f: 1046.50, d: 0.5},
+      {f: 880.00, d: 0.25}, {f: 783.99, d: 0.5}, {f: 659.25, d: 0.5},
+      {f: 587.33, d: 0.25}, {f: 659.25, d: 0.25}, {f: 698.46, d: 0.5}, {f: 659.25, d: 0.25}, {f: 587.33, d: 0.5},
+      {f: 523.25, d: 0.75}, {f: 0, d: 0.25},
+      
+      // Section A'
+      {f: 523.25, d: 0.25}, {f: 659.25, d: 0.25}, {f: 783.99, d: 0.25}, {f: 1046.50, d: 0.5},
+      {f: 1174.66, d: 0.25}, {f: 1046.50, d: 0.5}, {f: 880.00, d: 0.5},
+      {f: 783.99, d: 0.25}, {f: 880.00, d: 0.25}, {f: 783.99, d: 0.25}, {f: 659.25, d: 0.25}, {f: 587.33, d: 0.5},
+      {f: 523.25, d: 0.75}, {f: 0, d: 0.25},
+
+      // Section B (副歌升调)
+      {f: 880.00, d: 0.35}, {f: 987.77, d: 0.2}, {f: 1046.50, d: 0.35}, {f: 880.00, d: 0.35},
+      {f: 783.99, d: 0.35}, {f: 659.25, d: 0.35}, {f: 523.25, d: 0.5},
+      {f: 698.46, d: 0.35}, {f: 783.99, d: 0.35}, {f: 880.00, d: 0.35}, {f: 698.46, d: 0.35},
+      {f: 659.25, d: 0.75}, {f: 0, d: 0.25}
+    ];
+
+    let noteIdx = 0;
+    function playNextTownNote() {
+      if (!bgmOn || !audioCtx) return;
+      const note = longTownMelody[noteIdx];
+      if (note.f > 0) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        osc.type = 'triangle'; // 选用温暖柔和的三角波
+        osc.frequency.setValueAtTime(note.f, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + note.d);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + note.d);
+      }
+      noteIdx = (noteIdx + 1) % longTownMelody.length;
+      bgmTimer = setTimeout(playNextTownNote, note.d * 1000);
+    }
 
-        const now = audioCtx.currentTime;
+    document.getElementById('bgm-btn').addEventListener('click', () => {
+      initAudio();
+      bgmOn = !bgmOn;
+      document.getElementById('bgm-btn').textContent = bgmOn ? '🎵 BGM: ON' : '🎵 BGM: OFF';
+      if (bgmOn) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        playNextTownNote();
+      } else {
+        clearTimeout(bgmTimer);
+      }
+    });
 
-        if (type === 'jump') {
-          osc.type = 'square';
-          osc.frequency.setValueAtTime(160, now);
-          osc.frequency.exponentialRampToValueAtTime(640, now + 0.15);
-          gain.gain.setValueAtTime(0.12, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
-          osc.start(now);
-          osc.stop(now + 0.15);
-        } else if (type === 'click') {
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.setValueAtTime(880, now + 0.05);
-          gain.gain.setValueAtTime(0.1, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
-          osc.start(now);
-          osc.stop(now + 0.08);
-        } else if (type === 'coin') {
-          osc.type = 'square';
-          osc.frequency.setValueAtTime(987.77, now);
-          osc.frequency.setValueAtTime(1318.51, now + 0.08);
-          gain.gain.setValueAtTime(0.1, now);
-          gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
-          osc.start(now);
-          osc.stop(now + 0.25);
+    document.getElementById('sound-btn').addEventListener('click', () => {
+      initAudio();
+      sfxOn = !sfxOn;
+      document.getElementById('sound-btn').textContent = sfxOn ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+    });
+
+    /* 2. 人物物理与小镇行走引擎 */
+    const hero = document.getElementById('hero-character-container');
+    let heroX = 150;
+    let targetX = 150;
+    let heroPosY = 0; // 跳跃高度
+    let velocityY = 0;
+    let isJumping = false;
+    let facingRight = true;
+    let keys = {};
+
+    window.addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; });
+    window.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+
+    document.getElementById('ground-path').addEventListener('click', (e) => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickXOnMap = e.clientX - rect.left;
+      targetX = clickXOnMap;
+    });
+
+    function walkToX(x) { targetX = x; }
+
+    function updatePhysics() {
+      // 键盘优先
+      if (keys['a'] || keys['arrowleft']) {
+        targetX = heroX - 6;
+        facingRight = false;
+      } else if (keys['d'] || keys['arrowright']) {
+        targetX = heroX + 6;
+        facingRight = true;
+      }
+
+      if ((keys['w'] || keys[' '] || keys['arrowup']) && !isJumping) {
+        isJumping = true;
+        velocityY = 12;
+        playSfx('jump');
+      }
+
+      // 跳跃物理
+      if (isJumping) {
+        heroPosY += velocityY;
+        velocityY -= 0.8;
+        if (heroPosY <= 0) {
+          heroPosY = 0;
+          isJumping = false;
         }
       }
 
-      /* 8-Bit 轻松可爱旋律 (超级玛丽经典风调性) */
-      const melodyNotes = [
-        659.25, 659.25, 0, 659.25, 0, 523.25, 659.25, 0,
-        783.99, 0, 0, 0, 392.00, 0, 0, 0,
-        523.25, 0, 0, 392.00, 0, 0, 329.63, 0,
-        440.00, 0, 493.88, 0, 466.16, 440.00, 0, 392.00
-      ];
-      let noteIndex = 0;
-
-      function toggleBGM() {
-        initAudio();
-        bgmEnabled = !bgmEnabled;
-        const bgmBtn = document.getElementById('bgm-btn');
-        bgmBtn.textContent = bgmEnabled ? '🎵 BGM: ON' : '🎵 BGM: OFF';
-
-        if (bgmEnabled) {
-          if (audioCtx.state === 'suspended') audioCtx.resume();
-          bgmInterval = setInterval(() => {
-            const freq = melodyNotes[noteIndex];
-            if (freq > 0) {
-              const osc = audioCtx.createOscillator();
-              const gain = audioCtx.createGain();
-              osc.type = 'square';
-              osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-              gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-              gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-              osc.connect(gain);
-              gain.connect(audioCtx.destination);
-              osc.start();
-              osc.stop(audioCtx.currentTime + 0.12);
-            }
-            noteIndex = (noteIndex + 1) % melodyNotes.length;
-          }, 150);
-        } else {
-          clearInterval(bgmInterval);
-        }
+      // 平滑步行
+      const dx = targetX - heroX;
+      if (Math.abs(dx) > 2) {
+        facingRight = dx > 0;
+        heroX += Math.sign(dx) * Math.min(Math.abs(dx), 5);
       }
 
-      const soundBtn = document.getElementById('sound-btn');
-      soundBtn.addEventListener('click', () => {
-        initAudio();
-        audioEnabled = !audioEnabled;
-        soundBtn.textContent = audioEnabled ? '🔊 SFX: ON' : '🔇 SFX: OFF';
-        if (audioEnabled) play8BitSound('click');
-      });
+      // 保持坐标范围
+      heroX = Math.max(50, Math.min(3700, heroX));
 
-      document.getElementById('bgm-btn').addEventListener('click', toggleBGM);
+      // 更新 DOM
+      hero.style.left = `${heroX}px`;
+      hero.style.bottom = `${120 + heroPosY}px`;
+      hero.style.transform = `translateX(-50%) scaleX(${facingRight ? 1 : -1})`;
 
-      /* 波纹与按钮反馈 */
-      function createRipple(e) {
-        const btn = e.currentTarget;
-        const circle = document.createElement('span');
-        const diameter = Math.max(btn.clientWidth, btn.clientHeight);
-        const radius = diameter / 2;
+      // 镜头平滑跟随小人
+      const screenWidth = window.innerWidth;
+      const scrollLeft = heroX - screenWidth / 2;
+      window.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'auto' });
 
-        const rect = btn.getBoundingClientRect();
-        circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${e.clientX - rect.left - radius}px`;
-        circle.style.top = `${e.clientY - rect.top - radius}px`;
-        circle.classList.add('ripple-effect');
+      requestAnimationFrame(updatePhysics);
+    }
+    requestAnimationFrame(updatePhysics);
 
-        const existingRipple = btn.querySelector('.ripple-effect');
-        if (existingRipple) existingRipple.remove();
+    /* 3. 房子交互与简历 Modal 详情[cite: 3] */
+    const modalData = {
+      home: `
+        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🏡 杨楚楚 | 视觉设计师</h2>
+        <p style="color: var(--text-muted); margin-bottom: 16px;">3.5年跨境电商视觉设计经验 / AIGC工具提效 / 离职随时到岗[cite: 3]</p>
+        <p style="line-height: 1.6; color: #d0d8e8;">熟练掌握国外电商平台风格（Amazon、eBay、Walmart、美客多、速卖通、独立站等），能独立完成产品全链路视觉设计与爆款打造。[cite: 3]</p>
+      `,
+      about: `
+        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🍄 个人档案与综合素质[cite: 3]</h2>
+        <p style="line-height: 1.6; margin-bottom: 12px; color: #d0d8e8;"><b>【学历背景】</b> 闽南理工学院 - 全日制本科 (视觉传达设计专业)[cite: 3]</p>
+        <p style="line-height: 1.6; color: #d0d8e8;"><b>【核心优势】</b> 拥有黑五、Prime Day 等大型电商活动设计经验，掌握跨境电商视觉创意方法论[cite: 3]。精通 PS、AI、Procreate、Keyshot 等设计软件，擅长运用 AIGC 工具辅助项目设计，显著提升视觉吸引力与效率[cite: 3]。</p>
+      `,
+      skills: `
+        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">⭐ 技能装备库[cite: 3]</h2>
+        <ul style="line-height: 1.8; color: #d0d8e8; margin-left: 20px;">
+          <li><b>🤖 AIGC 工具:</b> ChatGPT 4o, Midjourney, Stable Diffusion[cite: 3]</li>
+          <li><b>🎨 视觉平面:</b> Photoshop, Adobe Illustrator, CorelDraw, Procreate[cite: 3]</li>
+          <li><b>💎 3D 渲染:</b> Keyshot 场景建模与产品质感精修[cite: 3]</li>
+          <li><b>🌐 电商全栈:</b> Amazon Listing 套图、高级 A+ 页面、独立站组件库[cite: 3]</li>
+        </ul>
+      `,
+      projects: `
+        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🔥 爆款作品工坊[cite: 3]</h2>
+        <p style="line-height: 1.6; margin-bottom: 8px;"><b>🚀 iscooter / Circooter 品牌视觉:</b> 独立完成自营品牌 Listing 套图与高级 A+ 页面，<b>推动 CTR 提升 30%-50%</b>[cite: 3]。</p>
+        <p style="line-height: 1.6; margin-bottom: 8px;"><b>🚗 汽配全渠道独立站:</b> 建立多平台设计规范与组件库，参与 50+ 次新品上市，15 天完成多品类上新[cite: 3]。</p>
+        <p style="line-height: 1.6;"><b>🏆 A-PREMIUM 核心类目精修:</b> 主导新品精修与橱窗 2000+ 款，基于 A/B 测试数据优化转化率[cite: 3]。</p>
+      `,
+      experience: `
+        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🏰 职业历程城堡[cite: 3]</h2>
+        <div style="line-height: 1.6; color: #d0d8e8;">
+          <p style="color: var(--card-border);"><b>深圳市信诚未来科技有限公司</b> (2025.04 - 2025.07)[cite: 3]</p>
+          <p style="margin-bottom: 10px; font-size: 0.85rem;">平面设计师 (品牌中心) - 负责 3C、智能硬件及自营品牌全套视觉建设[cite: 3]。</p>
+          <p style="color: var(--card-border);"><b>深圳思未永续科技发展有限公司</b> (2024.03 - 2025.03)[cite: 3]</p>
+          <p style="margin-bottom: 10px; font-size: 0.85rem;">视觉设计师 - 建立品牌多平台组件库，输出 100+ 详情页规范[cite: 3]。</p>
+          <p style="color: var(--card-border);"><b>福建扬腾集团</b> (2022.08 - 2024.03)[cite: 3]</p>
+          <p style="font-size: 0.85rem;">视觉设计师 (亚马逊 TOP 前三) - 负责核心类目精修 2000+ 款[cite: 3]。</p>
+        </div>
+      `,
+      contact: `
+        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🚩 联系驿站[cite: 3]</h2>
+        <p style="margin-bottom: 16px;">感谢探索小镇！随时欢迎联系：[cite: 3]</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="tel:18596773812" class="pixel-btn"><span>📞 电话/微信: 18596773812</span></a>[cite: 3]
+          <a href="mailto:906745060@qq.com" class="pixel-btn secondary"><span>✉️ 邮箱: 906745060@qq.com</span></a>[cite: 3]
+        </div>
+      `
+    };
 
-        btn.appendChild(circle);
-        play8BitSound('click');
-      }
+    function interactWithHouse(key, targetWalkX) {
+      walkToX(targetWalkX);
+      setTimeout(() => {
+        playSfx('open');
+        document.getElementById('modal-content').innerHTML = modalData[key];
+        document.getElementById('modal-overlay').classList.add('active');
+      }, Math.min(Math.abs(heroX - targetWalkX) * 10, 400));
+    }
 
-      document.querySelectorAll('.pixel-btn, .nav-btn').forEach(btn => {
-        btn.addEventListener('click', createRipple);
-      });
-
-      /* 问号砖块金币声 */
-      document.getElementById('question-box')?.addEventListener('click', () => {
-        play8BitSound('coin');
-        alert('🪙 获得经验金币 +100！\n杨楚楚精通 AIGC 提效与电商落地设计！');
-      });
-
-      /* 角色逻辑 */
-      const heroContainer = document.getElementById('hero-character-container');
-      const legLeft = document.getElementById('leg-left');
-      const legRight = document.getElementById('leg-right');
-      const armLeft = document.getElementById('arm-left');
-      const armRight = document.getElementById('arm-right');
-      const charRoot = document.getElementById('char-root');
-      const charShadow = document.getElementById('char-shadow');
-
-      let state = {
-        x: 100,
-        targetX: 100,
-        isMoving: false,
-        isJumping: false,
-        facingRight: true,
-        runCycle: 0
-      };
-
-      function createDust() {
-        if (Math.random() > 0.4) return;
-        const dust = document.createElement('div');
-        dust.className = 'dust-particle';
-        dust.style.left = `${heroContainer.offsetLeft + (state.facingRight ? -10 : 30)}px`;
-        dust.style.bottom = '64px';
-        document.body.appendChild(dust);
-        setTimeout(() => dust.remove(), 350);
-      }
-
-      function updateCharacterAnimation() {
-        state.runCycle += 0.2;
-        const bounce = Math.sin(state.runCycle * 2) * 4;
-
-        if (state.isJumping) {
-          charRoot.setAttribute('transform', 'translate(0, -18)');
-          legLeft.setAttribute('transform', 'rotate(-25, 29, 85)');
-          legRight.setAttribute('transform', 'rotate(25, 47, 85)');
-          armLeft.setAttribute('transform', 'rotate(-40, 16, 68)');
-          armRight.setAttribute('transform', 'rotate(40, 60, 68)');
-          charShadow.style.transform = 'scale(0.6)';
-        } else if (state.isMoving) {
-          const legAngle = Math.sin(state.runCycle * 3) * 35;
-          const armAngle = Math.sin(state.runCycle * 3) * 40;
-
-          charRoot.setAttribute('transform', `translate(0, ${-Math.abs(bounce)})`);
-          legLeft.setAttribute('transform', `rotate(${legAngle}, 29, 85)`);
-          legRight.setAttribute('transform', `rotate(${-legAngle}, 47, 85)`);
-          armLeft.setAttribute('transform', `rotate(${-armAngle}, 16, 68)`);
-          armRight.setAttribute('transform', `rotate(${armAngle}, 60, 68)`);
-          charShadow.style.transform = `scale(${1 - Math.abs(bounce)/20})`;
-
-          createDust();
-        } else {
-          const idleBounce = Math.sin(Date.now() / 300) * 1.5;
-          charRoot.setAttribute('transform', `translate(0, ${idleBounce})`);
-          legLeft.setAttribute('transform', 'rotate(0)');
-          legRight.setAttribute('transform', 'rotate(0)');
-          armLeft.setAttribute('transform', 'rotate(0)');
-          armRight.setAttribute('transform', 'rotate(0)');
-          charShadow.style.transform = 'scale(1)';
-        }
-
-        heroContainer.style.transform = `translateX(-50%) scaleX(${state.facingRight ? 1 : -1})`;
-      }
-
-      function gameLoop() {
-        const screenWidth = window.innerWidth;
-        const clampedTarget = Math.max(screenWidth * 0.12, Math.min(screenWidth * 0.88, state.targetX));
-        const dx = clampedTarget - state.x;
-
-        if (Math.abs(dx) > 2) {
-          state.isMoving = true;
-          state.facingRight = dx > 0;
-          state.x += dx * 0.12;
-          heroContainer.style.left = `${state.x}px`;
-        } else {
-          state.isMoving = false;
-        }
-
-        updateCharacterAnimation();
-        requestAnimationFrame(gameLoop);
-      }
-      requestAnimationFrame(gameLoop);
-
-      function triggerJump() {
-        if (state.isJumping) return;
-        state.isJumping = true;
-        play8BitSound('jump');
-        setTimeout(() => { state.isJumping = false; }, 400);
-      }
-
-      /* 滚动与导航卡位 */
-      const sections = document.querySelectorAll('.level-stage');
-      const navBtns = document.querySelectorAll('.nav-btn');
-
-      function onScrollUpdate() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = maxScroll > 0 ? scrollTop / maxScroll : 0;
-
-        const screenWidth = window.innerWidth;
-        state.targetX = (screenWidth * 0.15) + progress * (screenWidth * 0.7);
-      }
-
-      window.addEventListener('scroll', onScrollUpdate, { passive: true });
-
-      function scrollToSection(targetId) {
-        const targetEl = document.querySelector(targetId);
-        if (!targetEl) return;
-
-        triggerJump();
-        const targetTop = targetEl.getBoundingClientRect().top + window.pageYOffset - 64;
-
-        window.scrollTo({ top: targetTop, behavior: 'smooth' });
-        document.getElementById('nav-menu').classList.remove('open');
-      }
-
-      navBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          scrollToSection(btn.getAttribute('data-target'));
-        });
-      });
-
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-          e.preventDefault();
-          scrollToSection(anchor.getAttribute('href'));
-        });
-      });
-
-      const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const id = `#${entry.target.id}`;
-            navBtns.forEach(btn => {
-              btn.classList.toggle('active', btn.getAttribute('data-target') === id);
-            });
-          }
-        });
-      }, { threshold: 0.3 });
-
-      sections.forEach(sec => sectionObserver.observe(sec));
-
-      /* 交互动作按钮逻辑 */
-      document.getElementById('btn-download-resume')?.addEventListener('click', () => {
-        scrollToSection('#experience');
-      });
-
-      document.querySelectorAll('.p-btn-action').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          alert(`🎮 [项目案例: ${e.currentTarget.getAttribute('data-title')}]\n详细视觉图层与 AIGC 优化效果已展现！`);
-        });
-      });
-
-      document.querySelectorAll('.c-btn-action').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const type = e.currentTarget.getAttribute('data-type');
-          if (type === 'Email') window.location.href = 'mailto:906745060@qq.com';
-          else if (type === 'Phone') window.location.href = 'tel:18596773812';
-        });
-      });
-
-      document.getElementById('btn-back-top')?.addEventListener('click', () => scrollToSection('#home'));
-      document.getElementById('hud-logo')?.addEventListener('click', () => scrollToSection('#home'));
-
-      document.getElementById('mobile-toggle')?.addEventListener('click', () => {
-        document.getElementById('nav-menu').classList.toggle('open');
-      });
-
-      onScrollUpdate();
-    })();
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('active');
+    }
   </script>
 </body>
 </html>
