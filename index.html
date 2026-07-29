@@ -1,1382 +1,400 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Piggy Ang | Creative Designer & Playable Mario Portfolio V3 Ultimate</title>
-  
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Playable Mario-themed interactive portfolio of Piggy Ang - Senior UX/UI Designer & Creative Director. Integrated 2D Physics Engine, Web Audio, RPG Skill Tree, Case Studies, and Achievements.">
-  <meta property="og:title" content="Piggy Ang - Playable Interactive Portfolio">
-  <meta property="og:description" content="Explore a Nintendo x Apple grade portfolio as an interactive Mario game. Control Mario, collect coins, unlock achievements, and view deep case studies.">
-  <meta property="og:type" content="website">
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
-  
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-  <style>
-    /* ==========================================================================
-       1. CORE DESIGN SYSTEM & ENGINE VARIABLES
-       ========================================================================== */
-    :root {
-      /* Theme Colors */
-      --mario-red: #E52521;
-      --mario-blue: #002395;
-      --mario-yellow: #FBD000;
-      --mario-green: #43B047;
-      --mario-brick: #C84C0C;
-      --apple-dark: #121214;
-      --apple-card-bg: rgba(255, 255, 255, 0.85);
-      --apple-card-dark: rgba(24, 24, 28, 0.88);
-      --glass-border: rgba(255, 255, 255, 0.22);
-      
-      /* World Canvas Backgrounds */
-      --world-sky: #5C94FC;
-      --world-underground: #100A1A;
-      --world-castle: #260808;
-      
-      /* Fonts & Radii */
-      --font-pixel: 'Press Start 2P', monospace;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      
-      /* Dynamic Night Mode Filters */
-      --night-overlay: rgba(0, 0, 15, 0.45);
-      --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
-      font-family: var(--font-body);
-      background-color: var(--world-sky);
-      color: #1D1D1F;
-      transition: background-color 0.8s var(--ease-apple);
-      touch-action: manipulation;
-    }
-
-    /* Pixel typography util */
-    .pixel-text {
-      font-family: var(--font-pixel);
-      letter-spacing: -0.5px;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #000; }
-    ::-webkit-scrollbar-thumb { background: var(--mario-red); border-radius: 4px; }
-
-    /* ==========================================================================
-       2. START MENU & NINTENDO LOADING SCREEN
-       ========================================================================== */
-    #startMenuModal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: #FFF;
-      text-align: center;
-      padding: 20px;
-      transition: opacity 0.6s ease, visibility 0.6s ease;
-    }
-
-    #startMenuModal.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .start-logo {
-      font-family: var(--font-pixel);
-      font-size: 2.5rem;
-      color: var(--mario-red);
-      text-shadow: 4px 4px 0px var(--mario-yellow), -2px -2px 0px #FFF;
-      margin-bottom: 20px;
-      animation: logoPulse 2s infinite alternate;
-    }
-
-    @keyframes logoPulse {
-      0% { transform: scale(1); }
-      100% { transform: scale(1.05); }
-    }
-
-    .start-menu-options {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 30px;
-      width: 100%;
-      max-width: 320px;
-    }
-
-    .menu-btn {
-      font-family: var(--font-pixel);
-      font-size: 0.85rem;
-      padding: 16px 24px;
-      background: #222;
-      color: #FFF;
-      border: 3px solid #FFF;
-      box-shadow: 4px 4px 0px var(--mario-red);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    .menu-btn:hover {
-      background: var(--mario-yellow);
-      color: #000;
-      border-color: #000;
-      transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0px #FFF;
-    }
-
-    /* ==========================================================================
-       3. TOP HUD, AUDIO TOGGLES & DAY/NIGHT CONTROL
-       ========================================================================== */
-    .hud-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 30px;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--glass-border);
-      color: #FFF;
-      font-family: var(--font-pixel);
-      font-size: 0.75rem;
-    }
-
-    .hud-stats {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-    }
-
-    .coin-icon {
-      width: 14px;
-      height: 18px;
-      background: var(--mario-yellow);
-      border-radius: 50%;
-      border: 2px solid #000;
-      display: inline-block;
-      animation: coinSpin 1.2s steps(4) infinite;
-    }
-
-    @keyframes coinSpin {
-      0% { transform: scaleX(1); }
-      50% { transform: scaleX(0.15); }
-      100% { transform: scaleX(1); }
-    }
-
-    .hud-controls {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .icon-toggle-btn {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: #FFF;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-    }
-
-    .icon-toggle-btn:hover {
-      background: var(--mario-yellow);
-      color: #000;
-      transform: scale(1.1);
-    }
-
-    .nav-menu {
-      display: flex;
-      gap: 20px;
-      list-style: none;
-    }
-
-    .nav-menu a {
-      color: #FFF;
-      text-decoration: none;
-      font-size: 0.7rem;
-      transition: color 0.3s;
-    }
-
-    .nav-menu a:hover {
-      color: var(--mario-yellow);
-    }
-
-    /* ==========================================================================
-       4. HERO CANVASES & PLAYABLE 2D PHYSICS STAGE
-       ========================================================================== */
-    .hero-container {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding-top: 80px;
-      background: linear-gradient(180deg, #5C94FC 0%, #87B5FF 100%);
-      overflow: hidden;
-    }
-
-    .hero-text-overlay {
-      position: absolute;
-      top: 120px;
-      left: 8%;
-      z-index: 10;
-      max-width: 580px;
-      pointer-events: none;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: rgba(67, 176, 71, 0.2);
-      border: 1px solid var(--mario-green);
-      color: #114214;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      backdrop-filter: blur(8px);
-      pointer-events: auto;
-    }
-
-    .hero-name {
-      font-size: 3.8rem;
-      font-weight: 800;
-      line-height: 1.1;
-      color: #FFF;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      margin-bottom: 12px;
-    }
-
-    .hero-subtitle {
-      font-family: var(--font-pixel);
-      font-size: 0.85rem;
-      color: var(--mario-yellow);
-      text-shadow: 2px 2px 0px #000;
-      margin-bottom: 16px;
-    }
-
-    .hero-bio {
-      font-size: 1.05rem;
-      color: #FFF;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      pointer-events: auto;
-    }
-
-    .game-instructions {
-      position: absolute;
-      top: 120px;
-      right: 8%;
-      background: rgba(0, 0, 0, 0.65);
-      border: 2px solid var(--mario-yellow);
-      border-radius: var(--radius-md);
-      padding: 16px;
-      color: #FFF;
-      font-family: var(--font-pixel);
-      font-size: 0.65rem;
-      line-height: 1.8;
-      z-index: 10;
-      backdrop-filter: blur(8px);
-    }
-
-    /* 2D Physics Canvas Element */
-    #gameCanvas {
-      width: 100%;
-      height: 480px;
-      display: block;
-      z-index: 5;
-    }
-
-    /* Weather FX Canvas Overlay */
-    #weatherCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    /* Night Overlay */
-    .night-filter {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: var(--night-overlay);
-      pointer-events: none;
-      z-index: 900;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
-
-    .night-filter.active {
-      opacity: 1;
-    }
-
-    /* ==========================================================================
-       5. CONTENT SECTIONS (EDUCATION, EXPERIENCE, PROJECTS, SKILLS, ABOUT, CONTACT)
-       ========================================================================== */
-    section {
-      position: relative;
-      padding: 100px 8%;
-      z-index: 10;
-    }
-
-    .section-title-wrap {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .section-tag {
-      font-family: var(--font-pixel);
-      font-size: 0.75rem;
-      color: var(--mario-yellow);
-      background: #000;
-      padding: 6px 12px;
-      display: inline-block;
-      box-shadow: 4px 4px 0px #FFF;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 2.8rem;
-      font-weight: 800;
-      color: #FFF;
-    }
-
-    /* EDUCATION SCHOOL GATE */
-    #education {
-      background: var(--world-sky);
-      border-top: 6px solid #000;
-    }
-
-    .school-gate-container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.9);
-      border: 4px solid #000;
-      border-radius: var(--radius-lg);
-      padding: 40px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .school-gate-container:hover {
-      transform: translateY(-5px) scale(1.01);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-    }
-
-    .school-icon {
-      font-size: 3.5rem;
-      color: var(--mario-red);
-      margin-bottom: 16px;
-    }
-
-    /* EXPERIENCE TIMELINE MAP */
-    #experience {
-      background: var(--world-underground);
-      color: #FFF;
-    }
-
-    .timeline-map {
-      max-width: 900px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .timeline-map::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 0;
-      width: 4px;
-      height: 100%;
-      background: var(--mario-yellow);
-      transform: translateX(-50%);
-    }
-
-    .timeline-node {
-      margin-bottom: 60px;
-      position: relative;
-      width: 50%;
-    }
-
-    .timeline-node:nth-child(odd) { left: 0; padding-right: 40px; text-align: right; }
-    .timeline-node:nth-child(even) { left: 50%; padding-left: 40px; text-align: left; }
-
-    .node-flag {
-      position: absolute;
-      top: 15px;
-      width: 24px;
-      height: 24px;
-      background: var(--mario-red);
-      border: 3px solid #FFF;
-      border-radius: 50%;
-      z-index: 5;
-    }
-
-    .timeline-node:nth-child(odd) .node-flag { right: -12px; }
-    .timeline-node:nth-child(even) .node-flag { left: -12px; }
-
-    .node-card {
-      background: var(--apple-card-dark);
-      border: 1px solid var(--glass-border);
-      border-radius: var(--radius-md);
-      padding: 24px;
-      backdrop-filter: blur(12px);
-      transition: all 0.3s var(--ease-apple);
-    }
-
-    .node-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--mario-yellow);
-    }
-
-    /* PROJECTS LEVELS */
-    #projects {
-      background: #18181C;
-      color: #FFF;
-    }
-
-    .level-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 30px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .level-card {
-      background: rgba(35, 35, 42, 0.9);
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s var(--ease-apple);
-    }
-
-    .level-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--mario-yellow);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    }
-
-    .level-header {
-      background: linear-gradient(135deg, var(--mario-red) 0%, #900 100%);
-      padding: 16px;
-      font-family: var(--font-pixel);
-      font-size: 0.75rem;
-      color: #FFF;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .level-body {
-      padding: 24px;
-    }
-
-    /* SKILLS RPG TREE */
-    #skills {
-      background: var(--world-castle);
-      color: #FFF;
-    }
-
-    .skill-tree-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .skill-tree-node {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .skill-tree-node:hover {
-      background: rgba(251, 208, 0, 0.15);
-      border-color: var(--mario-yellow);
-      transform: scale(1.05);
-    }
-
-    .star-rating {
-      color: var(--mario-yellow);
-      margin-top: 8px;
-      font-size: 0.9rem;
-    }
-
-    /* ABOUT ME NPC DIALOGUE */
-    #about {
-      background: #141416;
-      color: #FFF;
-    }
-
-    .npc-dialogue-box {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #000;
-      border: 4px solid #FFF;
-      border-radius: var(--radius-sm);
-      padding: 30px;
-      display: flex;
-      gap: 24px;
-      align-items: center;
-      box-shadow: var(--shadow-pixel);
-    }
-
-    .npc-avatar {
-      width: 80px;
-      height: 80px;
-      background: var(--mario-red);
-      border: 3px solid #FFF;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-pixel);
-      font-size: 2rem;
-      color: #FFF;
-    }
-
-    /* CONTACT CASTLE ENDING */
-    #contact {
-      background: #0A0A0C;
-      color: #FFF;
-      text-align: center;
-    }
-
-    .castle-wrapper {
-      max-width: 800px;
-      margin: 0 auto;
-      background: rgba(255, 255, 255, 0.04);
-      border: 2px dashed var(--mario-yellow);
-      border-radius: var(--radius-lg);
-      padding: 50px 30px;
-    }
-
-    .contact-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 30px;
-    }
-
-    .btn-action {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 28px;
-      border-radius: 30px;
-      font-weight: 600;
-      background: var(--mario-red);
-      color: #FFF;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s var(--ease-apple);
-      text-decoration: none;
-    }
-
-    .btn-action:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 20px rgba(229, 37, 33, 0.4);
-    }
-
-    /* ==========================================================================
-       6. SETTINGS MODAL & ACHIEVEMENTS PANEL
-       ========================================================================== */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(16px);
-      z-index: 5000;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.active { display: flex; }
-
-    .settings-card {
-      background: #1C1C1E;
-      color: #FFF;
-      width: 100%;
-      max-width: 500px;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--glass-border);
-      padding: 30px;
-      font-family: var(--font-body);
-    }
-
-    .setting-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* ==========================================================================
-       7. MOBILE VIRTUAL CONTROLLER
-       ========================================================================== */
-    .mobile-controls {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      left: 0;
-      width: 100%;
-      padding: 0 24px;
-      z-index: 2000;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-
-    @media (max-width: 850px) {
-      .mobile-controls { display: flex; }
-      .game-instructions { display: none; }
-      .hero-name { font-size: 2.8rem; }
-    }
-
-    .d-pad, .action-pad {
-      pointer-events: auto;
-      display: flex;
-      gap: 12px;
-    }
-
-    .touch-btn {
-      width: 58px;
-      height: 58px;
-      background: rgba(255, 255, 255, 0.25);
-      border: 2px solid #FFF;
-      border-radius: 50%;
-      backdrop-filter: blur(8px);
-      color: #FFF;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      touch-action: manipulation;
-    }
-
-    .touch-btn:active {
-      background: var(--mario-yellow);
-      color: #000;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yang Chuchu | Cross-border Visual Designer - Mario Interactive Portfolio</title>
+    <!-- Pixel Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- NIGHT OVERLAY -->
-  <div class="night-filter" id="nightFilter"></div>
-
-  <!-- START MENU / LOADING SCREEN -->
-  <div id="startMenuModal">
-    <div class="start-logo">PIGGY ANG V3</div>
-    <p class="pixel-text" style="font-size: 0.75rem; color: var(--mario-yellow);">MARIO x APPLE EDITION</p>
-    <div class="start-menu-options">
-      <button class="menu-btn" onclick="startGameEngine()"><i class="fas fa-play"></i> PRESS START</button>
-      <button class="menu-btn" onclick="openSettings()"><i class="fas fa-cog"></i> SETTINGS</button>
-    </div>
-  </div>
-
-  <!-- TOP HUD BAR -->
-  <header class="hud-bar">
-    <div class="hud-stats">
-      <div><span class="coin-icon"></span> x<span id="hudCoinCount">0</span></div>
-      <div>WORLD <span id="hudWorld">1-1</span></div>
-      <div>SCORE <span id="hudScore">000000</span></div>
-    </div>
-
-    <div class="hud-controls">
-      <button class="icon-toggle-btn" id="bgmToggleBtn" onclick="toggleBGM()" title="Toggle Music">
-        <i class="fas fa-music"></i>
-      </button>
-      <button class="icon-toggle-btn" id="sfxToggleBtn" onclick="toggleSFX()" title="Toggle Sound FX">
-        <i class="fas fa-volume-up"></i>
-      </button>
-      <button class="icon-toggle-btn" onclick="toggleNightMode()" title="Toggle Day/Night">
-        <i class="fas fa-moon"></i>
-      </button>
-      <button class="icon-toggle-btn" onclick="openSettings()" title="Settings">
-        <i class="fas fa-sliders-h"></i>
-      </button>
-    </div>
-  </header>
-
-  <!-- HERO SECTION WITH PLAYABLE 2D PHYSICS ENGINE -->
-  <section class="hero-container" id="hero">
-    <canvas id="weatherCanvas"></canvas>
-
-    <div class="hero-text-overlay">
-      <div class="hero-badge"><span style="width:8px;height:8px;background:var(--mario-green);border-radius:50%;display:inline-block;"></span> OPEN TO WORK</div>
-      <h1 class="hero-name">Piggy Ang</h1>
-      <div class="hero-subtitle">Senior Creative Designer & UI/UX Specialist</div>
-      <p class="hero-bio">
-        Interactive Playable Portfolio V3. Control Mario with arrow keys or A/D to jump, smash question blocks, collect coins, and unlock case studies!
-      </p>
-      <div class="hero-actions">
-        <a href="#projects" class="btn-action"><i class="fas fa-gamepad"></i> Explore Levels</a>
-        <button class="btn-action" style="background:var(--mario-yellow);color:#000;" onclick="downloadResume()"><i class="fas fa-download"></i> Resume</button>
-      </div>
-    </div>
-
-    <div class="game-instructions">
-      🎮 CONTROLS:<br>
-      • ← → / A D : Move Left / Right<br>
-      • SPACE / W : Jump<br>
-      • Hit Blocks & Collect Coins!
-    </div>
-
-    <!-- 2D Canvas Game Stage -->
-    <canvas id="gameCanvas"></canvas>
-  </section>
-
-  <!-- EDUCATION SECTION -->
-  <section id="education">
-    <div class="section-title-wrap">
-      <span class="section-tag">STAGE 01</span>
-      <h2 class="section-title">Education Gate</h2>
-    </div>
-    <div class="school-gate-container" onclick="openEducationCard()">
-      <i class="fas fa-university school-icon"></i>
-      <h3 style="font-size: 1.8rem; margin-bottom: 8px;">National Academy of Art & Design</h3>
-      <p style="font-family: var(--font-pixel); font-size: 0.75rem; color: var(--mario-red);">CLICK TO ENTER ACADEMIC RECORDS</p>
-    </div>
-  </section>
-
-  <!-- EXPERIENCE SECTION -->
-  <section id="experience">
-    <div class="section-title-wrap">
-      <span class="section-tag">STAGE 02</span>
-      <h2 class="section-title">Experience Map</h2>
-    </div>
-
-    <div class="timeline-map">
-      <div class="timeline-node">
-        <div class="node-flag"></div>
-        <div class="node-card">
-          <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-yellow);">2024 - PRESENT</span>
-          <h3 style="font-size: 1.3rem; margin: 6px 0;">Senior Creative Director</h3>
-          <p style="color: #AAA; font-size: 0.9rem;">Tech Interactive Studio • Spearheading design systems and Awwwards-grade web platforms.</p>
+    <!-- HUD / Top Bar -->
+    <header class="hud-header">
+        <div class="hud-left">
+            <div class="hud-item"><span class="hud-label">MARIO</span><span id="score-display">000000</span></div>
+            <div class="hud-item"><span class="hud-label">COINS</span><span id="coin-display">🪙 x00</span></div>
+            <div class="hud-item"><span class="hud-label">WORLD</span><span id="world-display">1-1</span></div>
+            <div class="hud-item"><span class="hud-label">EXP</span><span id="exp-display">3.5Y</span></div>
         </div>
-      </div>
-
-      <div class="timeline-node">
-        <div class="node-flag"></div>
-        <div class="node-card">
-          <span class="pixel-text" style="font-size: 0.65rem; color: var(--mario-yellow);">2022 - 2024</span>
-          <h3 style="font-size: 1.3rem; margin: 6px 0;">Lead UI/UX Designer</h3>
-          <p style="color: #AAA; font-size: 0.9rem;">Digital Web Lab • Crafted gamified user journeys and responsive WebGL applications.</p>
+        <div class="hud-right">
+            <button id="audio-toggle-btn" class="hud-btn" title="Toggle Sound/Music">🔊 MUSIC: ON</button>
+            <a href="#contact" class="hud-btn highlight">START GAME</a>
         </div>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- PROJECTS SECTION -->
-  <section id="projects">
-    <div class="section-title-wrap">
-      <span class="section-tag">STAGE 03</span>
-      <h2 class="section-title">Project Levels</h2>
-    </div>
-
-    <div class="level-grid">
-      <div class="level-card" onclick="triggerLevelCaseStudy(1)">
-        <div class="level-header">
-          <span>LEVEL 1-1</span>
-          <span>FINTECH RPG</span>
+    <!-- Canvas Game Engine Container for Hero Level -->
+    <section id="hero-game" class="game-section">
+        <div class="game-instructions">
+            <span>[A] [D] 或 [←] [→] 移动 | [SPACE] 或 [W] 跳跃 | [E] 与 NPC 交互</span>
         </div>
-        <div class="level-body">
-          <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Gamified Finance App</h3>
-          <p style="color: #AAA; font-size: 0.9rem;">Complete UI/UX redesign turning daily spending tracking into an interactive RPG experience.</p>
+        <canvas id="mario-canvas"></canvas>
+        <div class="hero-overlay">
+            <div class="hero-card">
+                <span class="badge">OPEN TO WORK</span>
+                <h1>HELLO! I'M YANG CHUCHU</h1>
+                <h2>Cross-border Visual Designer (3.5 Years Exp)</h2>
+                <p>专精于跨境电商视觉设计、品牌包装、AIGC 辅助设计与 3D 产品精修。</p>
+                <div class="hero-actions">
+                    <a href="#about" class="pixel-btn primary">Start Journey</a>
+                    <a href="#projects" class="pixel-btn secondary">Explore Projects</a>
+                    <a href="#contact" class="pixel-btn accent">Download Resume</a>
+                </div>
+            </div>
         </div>
-      </div>
+    </section>
 
-      <div class="level-card" onclick="triggerLevelCaseStudy(2)">
-        <div class="level-header">
-          <span>LEVEL 1-2</span>
-          <span>E-COMMERCE</span>
+    <!-- Navigation Bar (Glassmorphism) -->
+    <nav class="main-nav">
+        <ul>
+            <li><a href="#about" class="nav-link">About Me</a></li>
+            <li><a href="#education" class="nav-link">Education</a></li>
+            <li><a href="#experience" class="nav-link">Experience</a></li>
+            <li><a href="#skills" class="nav-link">Skills Tree</a></li>
+            <li><a href="#projects" class="nav-link">Projects</a></li>
+            <li><a href="#achievements" class="nav-link">Achievements</a></li>
+            <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Scrollable Content -->
+    <main class="content-wrapper">
+
+        <!-- ABOUT ME (NPC Dialogue Quest) -->
+        <section id="about" class="pixel-section scroll-reveal">
+            <div class="section-title">
+                <h2>WORLD 1: ABOUT ME</h2>
+                <p class="subtitle">[ Talk to NPC Toad to get details ]</p>
+            </div>
+            
+            <div class="npc-container">
+                <div class="npc-sprite" id="toad-npc">🍄</div>
+                <div class="dialogue-box">
+                    <div class="dialogue-speaker">Toad the Guide:</div>
+                    <div class="dialogue-text" id="dialogue-content">
+                        “你好！我是杨楚楚 (Yang Chuchu)，一位拥有 3.5 年经验的跨境视觉设计师。毕业于闽南理工学院视觉传达设计专业（艺术学学士）。熟练驾驭 Amazon, eBay, Walmart 以及独立站的全套视觉设计，并深耕 Prime Day 与 Black Friday 大促视觉突破！”
+                    </div>
+                    <div class="dialogue-action">
+                        <button class="pixel-btn small" id="next-dialogue-btn">Next [E]</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>🎨 视觉传达专业</h3>
+                    <p>扎实的平面构成、色彩学与视觉排版基础，将设计思维融合商业转化。</p>
+                </div>
+                <div class="about-card">
+                    <h3>🌐 3.5年跨境经验</h3>
+                    <p>精通 Amazon、eBay、Walmart 及品牌独立站视觉生态，熟悉全流程设计规范。</p>
+                </div>
+                <div class="about-card">
+                    <h3>🚀 AIGC 赋能</h3>
+                    <p>深入融合 Midjourney、Stable Diffusion 与 ChatGPT，提升工作流效率与创新视觉表达。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION (School Station) -->
+        <section id="education" class="pixel-section scroll-reveal">
+            <div class="section-title">
+                <h2>WORLD 2: ACADEMIC HOUSE</h2>
+                <p class="subtitle">[ Education & Fundamentals ]</p>
+            </div>
+
+            <div class="school-building-wrapper">
+                <div class="pixel-school" id="school-trigger">
+                    <div class="school-roof">🏫 MINNAN UNIVERSITY OF TECHNOLOGY</div>
+                    <div class="school-door">ENTER CLASSROOM</div>
+                </div>
+
+                <div class="education-card" id="edu-card">
+                    <div class="edu-header">
+                        <h3>闽南理工学院 (Minnan University of Technology)</h3>
+                        <span class="edu-date">2018 - 2022</span>
+                    </div>
+                    <p class="edu-degree"><strong>专业：</strong>视觉传达设计 | <strong>学位：</strong>艺术学学士</p>
+                    
+                    <div class="edu-details">
+                        <div class="edu-column">
+                            <h4>核心课程</h4>
+                            <ul>
+                                <li>信息可视化设计</li>
+                                <li>商业包装设计</li>
+                                <li>品牌与插画设计</li>
+                                <li>摄影与后期精修</li>
+                            </ul>
+                        </div>
+                        <div class="edu-column">
+                            <h4>设计软件栈</h4>
+                            <div class="tag-cloud">
+                                <span class="tag">Photoshop</span>
+                                <span class="tag">Illustrator</span>
+                                <span class="tag">CorelDRAW</span>
+                                <span class="tag">Keyshot</span>
+                                <span class="tag">Procreate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE (World Map Timeline) -->
+        <section id="experience" class="pixel-section scroll-reveal">
+            <div class="section-title">
+                <h2>WORLD 3: CAREER MAP</h2>
+                <p class="subtitle">[ Timeline Journey ]</p>
+            </div>
+
+            <div class="mario-map-timeline">
+                
+                <!-- Stage 1 -->
+                <div class="timeline-node">
+                    <div class="node-flag">🚩 Stage 1</div>
+                    <div class="node-content">
+                        <div class="company-badge">2022 - 2024</div>
+                        <h3>福建扬腾集团 (Yingteng Group)</h3>
+                        <p class="role">设计部 · 汽车零配件 Amazon TOP 品牌视觉设计</p>
+                        <div class="metrics-grid">
+                            <div class="metric"><span class="num">2000+</span><span class="lbl">产品精修图</span></div>
+                            <div class="metric"><span class="num">100+</span><span class="lbl">彩盒包装升级</span></div>
+                            <div class="metric"><span class="num">400+</span><span class="lbl">主图/橱窗优化</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stage 2 -->
+                <div class="timeline-node">
+                    <div class="node-flag">🚩 Stage 2</div>
+                    <div class="node-content">
+                        <div class="company-badge">2024 - 2025</div>
+                        <h3>深圳思未永续 (Siwei Tech)</h3>
+                        <p class="role">视觉设计师 · Amazon / eBay / 独立站</p>
+                        <ul class="task-list">
+                            <li>主导品牌独立站前端 UI 视觉与整体风格组件库构建。</li>
+                            <li>负责 Listing A+ 页面设计，实现点击率与转化率提升。</li>
+                            <li>制定多平台规范化的视觉设计组件化流程。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Stage 3 -->
+                <div class="timeline-node">
+                    <div class="node-flag">🚩 Stage 3 (Current)</div>
+                    <div class="node-content">
+                        <div class="company-badge">2025 - NOW</div>
+                        <h3>深圳信诚未来 (Xincheng Future)</h3>
+                        <p class="role">品牌中心 · 3C 智能硬件 & AIGC 视觉研发</p>
+                        <ul class="task-list">
+                            <li>全面引入 Midjourney / Stable Diffusion 全流向辅助视觉生成。</li>
+                            <li>打造 3C 智能产品的高端视觉组图与高转化 Listing A+ 结构。</li>
+                            <li>深度参与 Prime Day / Black Friday 等海外大促大屏与全套营销海报设计。</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SKILLS TREE (RPG Skill Trees) -->
+        <section id="skills" class="pixel-section scroll-reveal">
+            <div class="section-title">
+                <h2>WORLD 4: SKILL TREE</h2>
+                <p class="subtitle">[ Click skills to UPGRADE ]</p>
+            </div>
+
+            <div class="skill-tree-container">
+                <!-- Branch 1 -->
+                <div class="skill-branch">
+                    <h3>🎨 Design & Visual</h3>
+                    <div class="skills-group">
+                        <div class="skill-node" data-skill="Photoshop">
+                            <span class="icon">🖼️</span>
+                            <span class="name">Photoshop</span>
+                            <span class="level">LV.99</span>
+                        </div>
+                        <div class="skill-node" data-skill="Illustrator">
+                            <span class="icon">✏️</span>
+                            <span class="name">Illustrator</span>
+                            <span class="level">LV.90</span>
+                        </div>
+                        <div class="skill-node" data-skill="Figma">
+                            <span class="icon">📐</span>
+                            <span class="name">Figma</span>
+                            <span class="level">LV.85</span>
+                        </div>
+                        <div class="skill-node" data-skill="Keyshot">
+                            <span class="icon">💎</span>
+                            <span class="name">Keyshot 3D</span>
+                            <span class="level">LV.80</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Branch 2 -->
+                <div class="skill-branch">
+                    <h3>🤖 AIGC & Future</h3>
+                    <div class="skills-group">
+                        <div class="skill-node" data-skill="Midjourney">
+                            <span class="icon">🌌</span>
+                            <span class="name">Midjourney</span>
+                            <span class="level">LV.95</span>
+                        </div>
+                        <div class="skill-node" data-skill="Stable Diffusion">
+                            <span class="icon">🎨</span>
+                            <span class="name">Stable Diffusion</span>
+                            <span class="level">LV.88</span>
+                        </div>
+                        <div class="skill-node" data-skill="ChatGPT">
+                            <span class="icon">🧠</span>
+                            <span class="name">ChatGPT / Claude</span>
+                            <span class="level">LV.92</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Branch 3 -->
+                <div class="skill-branch">
+                    <h3>💻 Web & Frontend</h3>
+                    <div class="skills-group">
+                        <div class="skill-node" data-skill="HTML5">
+                            <span class="icon">🌐</span>
+                            <span class="name">HTML5</span>
+                            <span class="level">LV.85</span>
+                        </div>
+                        <div class="skill-node" data-skill="CSS3">
+                            <span class="icon">🎨</span>
+                            <span class="name">CSS3 / Flex</span>
+                            <span class="level">LV.85</span>
+                        </div>
+                        <div class="skill-node" data-skill="JavaScript">
+                            <span class="icon">⚡</span>
+                            <span class="name">JavaScript</span>
+                            <span class="level">LV.75</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="skill-detail-box" class="skill-detail-box">
+                点击上方技能节点，扣除金币进行 LEVEL UP 并解锁能力详情！
+            </div>
+        </section>
+
+        <!-- PROJECTS (Mario Castle Doors / Case Studies) -->
+        <section id="projects" class="pixel-section scroll-reveal">
+            <div class="section-title">
+                <h2>WORLD 5: PROJECT DOORS</h2>
+                <p class="subtitle">[ Select a Door for Case Study ]</p>
+            </div>
+
+            <div class="project-doors-grid">
+                <!-- Project 1 -->
+                <div class="project-door-card" onclick="openProjectModal('p1')">
+                    <div class="door-frame">🚪 Door 01</div>
+                    <div class="door-title">3C 智能硬件海外 Listing 重构</div>
+                    <div class="door-tags">
+                        <span>AIGC</span>
+                        <span>Amazon A+</span>
+                        <span>3D精修</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-door-card" onclick="openProjectModal('p2')">
+                    <div class="door-frame">🚪 Door 02</div>
+                    <div class="door-title">汽配 TOP 品牌包装与视觉标准化</div>
+                    <div class="door-tags">
+                        <span>Packaging</span>
+                        <span>2000+ 精修</span>
+                        <span>组件库</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-door-card" onclick="openProjectModal('p3')">
+                    <div class="door-frame">🚪 Door 03</div>
+                    <div class="door-title">Prime Day / 黑五全套营销视觉大屏</div>
+                    <div class="door-tags">
+                        <span>大促视觉</span>
+                        <span>独立站</span>
+                        <span>Banner组</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACHIEVEMENTS (Mario Trophies) -->
+        <section id="achievements" class="pixel-section scroll-reveal">
+            <div class="section-title">
+                <h2>WORLD 6: TROPHY ROOM</h2>
+                <p class="subtitle">[ Game Career Milestones ]</p>
+            </div>
+
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="trophy-icon">🏆</div>
+                    <div class="achieve-num">5000+</div>
+                    <div class="achieve-text">Images Edited & Rendered</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="trophy-icon">📦</div>
+                    <div class="achieve-num">100+</div>
+                    <div class="achieve-text">Detail Pages & A+ Redesigns</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="trophy-icon">🛍️</div>
+                    <div class="achieve-num">50+</div>
+                    <div class="achieve-text">Listing Visual Solutions</div>
+                </div>
+                <div class="achievement-card">
+                    <div class="trophy-icon">⭐</div>
+                    <div class="achieve-num">3.5 Years</div>
+                    <div class="achieve-text">Prime Day & Black Friday Exp</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT (Final Bowser Castle) -->
+        <section id="contact" class="pixel-section scroll-reveal">
+            <div class="castle-wrapper">
+                <div class="castle-header">🏰 FINAL CASTLE</div>
+                <h2>LET'S BUILD SOMETHING GREAT TOGETHER!</h2>
+                <p>感谢通关！我正在寻找优秀的跨境电商与视觉设计岗位机会，随时欢迎沟通。</p>
+
+                <div class="contact-buttons">
+                    <a href="mailto:example@gmail.com" class="pixel-btn primary">✉️ Email Me</a>
+                    <button class="pixel-btn secondary" onclick="alert('微信: yangchuchu_design')">💬 WeChat</button>
+                    <a href="https://github.com/piggyangcc-create" target="_blank" class="pixel-btn accent">🐙 GitHub</a>
+                    <a href="#" class="pixel-btn primary" onclick="alert('正在下载完整 PDF 简历...')">📄 Download Resume</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Case Study -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeProjectModal()">✕ CLOSE [ESC]</button>
+            <div id="modal-body-content">
+                <!-- Injected via JavaScript -->
+            </div>
         </div>
-        <div class="level-body">
-          <h3 style="font-size: 1.3rem; margin-bottom: 8px;">Apple Minimal Audio Store</h3>
-          <p style="color: #AAA; font-size: 0.9rem;">High-converting digital storefront featuring 3D product renders and instant checkout.</p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mario-footer">
+        <div class="footer-content">
+            <h3>🎉 CONGRATULATIONS! MISSION COMPLETE!</h3>
+            <p>Designed & Developed with HTML5, CSS3, JavaScript & Web Audio API (Mario Engine v2.0)</p>
+            <button class="pixel-btn small" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆ BACK TO TOP</button>
         </div>
-      </div>
-    </div>
-  </section>
+    </footer>
 
-  <!-- SKILLS RPG TREE SECTION -->
-  <section id="skills">
-    <div class="section-title-wrap">
-      <span class="section-tag">STAGE 04</span>
-      <h2 class="section-title">RPG Skill Tree</h2>
-    </div>
-
-    <div class="skill-tree-grid">
-      <div class="skill-tree-node" onclick="upgradeSkill('Figma')">
-        <i class="fab fa-figma" style="font-size: 2rem; color: #F24E1E;"></i>
-        <h4 style="margin-top: 8px;">Figma / UI</h4>
-        <div class="star-rating">★★★★★</div>
-      </div>
-      <div class="skill-tree-node" onclick="upgradeSkill('HTML/CSS')">
-        <i class="fab fa-html5" style="font-size: 2rem; color: #E34F26;"></i>
-        <h4 style="margin-top: 8px;">HTML / CSS3</h4>
-        <div class="star-rating">★★★★★</div>
-      </div>
-      <div class="skill-tree-node" onclick="upgradeSkill('JavaScript')">
-        <i class="fab fa-js" style="font-size: 2rem; color: #F7DF1E;"></i>
-        <h4 style="margin-top: 8px;">JavaScript</h4>
-        <div class="star-rating">★★★★☆</div>
-      </div>
-      <div class="skill-tree-node" onclick="upgradeSkill('AI Tools')">
-        <i class="fas fa-robot" style="font-size: 2rem; color: var(--mario-yellow);"></i>
-        <h4 style="margin-top: 8px;">ChatGPT / Midjourney</h4>
-        <div class="star-rating">★★★★★</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT ME NPC DIALOGUE SECTION -->
-  <section id="about">
-    <div class="section-title-wrap">
-      <span class="section-tag">STAGE 05</span>
-      <h2 class="section-title">NPC Dialogue</h2>
-    </div>
-
-    <div class="npc-dialogue-box">
-      <div class="npc-avatar">M</div>
-      <div>
-        <p class="pixel-text" style="font-size: 0.75rem; color: var(--mario-yellow); margin-bottom: 8px;">PIGGY ANG (CREATIVE DIRECT):</p>
-        <p style="font-size: 1rem; line-height: 1.6;">"Hello Traveler! I'm Piggy Ang, a hybrid UI/UX designer and frontend engineer with 20+ years of experience blending retro Nintendo magic with Apple-level elegance!"</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT CASTLE SECTION -->
-  <section id="contact">
-    <div class="castle-wrapper">
-      <span class="pixel-text" style="font-size: 0.8rem; color: var(--mario-yellow);">FINAL CASTLE</span>
-      <h2 style="font-size: 2.2rem; margin: 12px 0;">Let's Build Something Great Together!</h2>
-      <p style="color: #AAA;">Boss Defeated! Feel free to reach out for new opportunities.</p>
-
-      <div class="contact-buttons">
-        <a href="mailto:contact@piggyang.com" class="btn-action"><i class="fas fa-envelope"></i> Email Me</a>
-        <a href="https://github.com" target="_blank" class="btn-action" style="background:#222;"><i class="fab fa-github"></i> GitHub</a>
-        <a href="https://linkedin.com" target="_blank" class="btn-action" style="background:#0077B5;"><i class="fab fa-linkedin"></i> LinkedIn</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SETTINGS MODAL -->
-  <div class="modal-overlay" id="settingsModal">
-    <div class="settings-card">
-      <h3 style="font-family: var(--font-pixel); font-size: 1rem; margin-bottom: 20px;">GAME SETTINGS</h3>
-      <div class="setting-row">
-        <span>BGM Music</span>
-        <input type="checkbox" id="bgmCheckbox" checked onchange="toggleBGM()">
-      </div>
-      <div class="setting-row">
-        <span>Sound FX</span>
-        <input type="checkbox" id="sfxCheckbox" checked onchange="toggleSFX()">
-      </div>
-      <div style="margin-top: 24px; text-align: right;">
-        <button class="btn-action" style="padding: 8px 20px;" onclick="closeSettings()">CLOSE</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MOBILE CONTROLLER -->
-  <div class="mobile-controls">
-    <div class="d-pad">
-      <div class="touch-btn" id="btnLeft"><i class="fas fa-arrow-left"></i></div>
-      <div class="touch-btn" id="btnRight"><i class="fas fa-arrow-right"></i></div>
-    </div>
-    <div class="action-pad">
-      <div class="touch-btn" id="btnJump" style="background:var(--mario-red);"><i class="fas fa-arrow-up"></i></div>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       8. JAVASCRIPT GAME ENGINE, AUDIO SYNTHESIZER & WEATHER ENGINE
-       ========================================================================== -->
-  <script>
-    /* --------------------------------------------------------------------------
-       8.1 Web Audio Synthesizer (Zero External File Dependencies)
-       -------------------------------------------------------------------------- */
-    class RetroAudioEngine {
-      constructor() {
-        this.ctx = null;
-        this.bgmEnabled = true;
-        this.sfxEnabled = true;
-        this.bgmInterval = null;
-      }
-
-      init() {
-        if (!this.ctx) {
-          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-      }
-
-      playTone(freq, type, duration, vol = 0.1) {
-        if (!this.sfxEnabled || !this.ctx) return;
-        try {
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-          gain.gain.setValueAtTime(vol, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.start();
-          osc.stop(this.ctx.currentTime + duration);
-        } catch(e) {}
-      }
-
-      playCoinSound() {
-        this.playTone(987.77, 'sine', 0.08, 0.15);
-        setTimeout(() => this.playTone(1318.51, 'sine', 0.25, 0.15), 80);
-      }
-
-      playJumpSound() {
-        if (!this.sfxEnabled || !this.ctx) return;
-        try {
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.type = 'square';
-          osc.frequency.setValueAtTime(150, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.15);
-          gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.start();
-          osc.stop(this.ctx.currentTime + 0.15);
-        } catch(e) {}
-      }
-
-      playPowerUpSound() {
-        const notes = [330, 392, 659, 523, 587, 784];
-        notes.forEach((freq, i) => {
-          setTimeout(() => this.playTone(freq, 'square', 0.1, 0.12), i * 60);
-        });
-      }
-
-      startBGM() {
-        if (!this.bgmEnabled || this.bgmInterval) return;
-        this.init();
-        const melody = [261.63, 261.63, 0, 261.63, 0, 207.65, 261.63, 0, 329.63];
-        let step = 0;
-        this.bgmInterval = setInterval(() => {
-          if (melody[step] > 0) {
-            this.playTone(melody[step], 'triangle', 0.15, 0.03);
-          }
-          step = (step + 1) % melody.length;
-        }, 220);
-      }
-
-      stopBGM() {
-        if (this.bgmInterval) {
-          clearInterval(this.bgmInterval);
-          this.bgmInterval = null;
-        }
-      }
-    }
-
-    const audio = new RetroAudioEngine();
-
-    /* --------------------------------------------------------------------------
-       8.2 Weather Engine (Procedural Clouds, Leaves, Wind)
-       -------------------------------------------------------------------------- */
-    const weatherCanvas = document.getElementById('weatherCanvas');
-    const wCtx = weatherCanvas.getContext('2d');
-    let particles = [];
-
-    function resizeWeather() {
-      weatherCanvas.width = window.innerWidth;
-      weatherCanvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeWeather);
-    resizeWeather();
-
-    for (let i = 0; i < 25; i++) {
-      particles.push({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        size: Math.random() * 4 + 2,
-        speedX: Math.random() * 1 + 0.5,
-        speedY: Math.random() * 0.5 + 0.2
-      });
-    }
-
-    function animateWeather() {
-      wCtx.clearRect(0, 0, weatherCanvas.width, weatherCanvas.height);
-      wCtx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-      particles.forEach(p => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-        if (p.x > weatherCanvas.width) p.x = -10;
-        if (p.y > weatherCanvas.height) p.y = -10;
-        wCtx.beginPath();
-        wCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        wCtx.fill();
-      });
-      requestAnimationFrame(animateWeather);
-    }
-    animateWeather();
-
-    /* --------------------------------------------------------------------------
-       8.3 Playable 2D Physics Engine (Mario Controls, Blocks, Coins, Goomba)
-       -------------------------------------------------------------------------- */
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-
-    function resizeCanvas() {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = 480;
-    }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Engine State
-    let coinCount = parseInt(localStorage.getItem('mario_coins') || '0');
-    document.getElementById('hudCoinCount').textContent = coinCount;
-
-    const mario = {
-      x: 80,
-      y: 300,
-      width: 32,
-      height: 40,
-      vx: 0,
-      vy: 0,
-      speed: 4.5,
-      gravity: 0.5,
-      jumpPower: -11,
-      grounded: false,
-      poweredUp: false
-    };
-
-    const keys = {};
-
-    // Interactive Stage Elements
-    const groundHeight = 60;
-    const blocks = [
-      { x: 220, y: 280, width: 36, height: 36, hit: false, content: 'coin' },
-      { x: 260, y: 280, width: 36, height: 36, hit: false, content: 'mushroom' },
-      { x: 300, y: 280, width: 36, height: 36, hit: false, content: 'coin' },
-      { x: 500, y: 220, width: 36, height: 36, hit: false, content: 'coin' }
-    ];
-
-    const coinsList = [
-      { x: 380, y: 340, collected: false },
-      { x: 420, y: 340, collected: false },
-      { x: 460, y: 340, collected: false }
-    ];
-
-    const goomba = { x: 600, y: 380, width: 32, height: 32, vx: -1.2, alive: true };
-
-    // Input Events
-    window.addEventListener('keydown', e => {
-      keys[e.code] = true;
-      if (['Space', 'ArrowUp', 'KeyW'].includes(e.code) && mario.grounded) {
-        mario.vy = mario.jumpPower;
-        mario.grounded = false;
-        audio.playJumpSound();
-      }
-    });
-
-    window.addEventListener('keyup', e => { keys[e.code] = false; });
-
-    // Touch Controller Handlers
-    document.getElementById('btnLeft').addEventListener('touchstart', (e) => { e.preventDefault(); keys['ArrowLeft'] = true; });
-    document.getElementById('btnLeft').addEventListener('touchend', (e) => { e.preventDefault(); keys['ArrowLeft'] = false; });
-    document.getElementById('btnRight').addEventListener('touchstart', (e) => { e.preventDefault(); keys['ArrowRight'] = true; });
-    document.getElementById('btnRight').addEventListener('touchend', (e) => { e.preventDefault(); keys['ArrowRight'] = false; });
-    document.getElementById('btnJump').addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      if (mario.grounded) {
-        mario.vy = mario.jumpPower;
-        mario.grounded = false;
-        audio.playJumpSound();
-      }
-    });
-
-    // Main Game Loop
-    function updateGame() {
-      // Horizontal Controls
-      if (keys['ArrowRight'] || keys['KeyD']) mario.vx = mario.speed;
-      else if (keys['ArrowLeft'] || keys['KeyA']) mario.vx = -mario.speed;
-      else mario.vx = 0;
-
-      // Apply Gravity
-      mario.vy += mario.gravity;
-
-      // Update Movement
-      mario.x += mario.vx;
-      mario.y += mario.vy;
-
-      // Canvas Boundary Collision
-      if (mario.x < 0) mario.x = 0;
-      if (mario.x + mario.width > canvas.width) mario.x = canvas.width - mario.width;
-
-      // Ground Collision
-      const floorY = canvas.height - groundHeight - mario.height;
-      if (mario.y >= floorY) {
-        mario.y = floorY;
-        mario.vy = 0;
-        mario.grounded = true;
-      }
-
-      // Block Head-Bumping Collision
-      blocks.forEach(b => {
-        if (
-          mario.x < b.x + b.width &&
-          mario.x + mario.width > b.x &&
-          mario.y < b.y + b.height &&
-          mario.y + mario.height > b.y
-        ) {
-          // Bumping bottom of block
-          if (mario.vy < 0 && mario.y >= b.y + b.height - 10) {
-            mario.vy = 2;
-            if (!b.hit) {
-              b.hit = true;
-              if (b.content === 'coin') {
-                audio.playCoinSound();
-                addCoins(1);
-              } else if (b.content === 'mushroom') {
-                audio.playPowerUpSound();
-                mario.poweredUp = true;
-                mario.height = 52;
-              }
-            }
-          }
-        }
-      });
-
-      // Coin Pickups
-      coinsList.forEach(c => {
-        if (!c.collected && Math.abs(mario.x - c.x) < 24 && Math.abs(mario.y - c.y) < 24) {
-          c.collected = true;
-          audio.playCoinSound();
-          addCoins(1);
-        }
-      });
-
-      // Goomba Logic
-      if (goomba.alive) {
-        goomba.x += goomba.vx;
-        if (goomba.x < 450 || goomba.x > 700) goomba.vx *= -1;
-
-        // Player collision with Goomba
-        if (
-          mario.x < goomba.x + goomba.width &&
-          mario.x + mario.width > goomba.x &&
-          mario.y < goomba.y + goomba.height &&
-          mario.y + mario.height > goomba.y
-        ) {
-          if (mario.vy > 0 && mario.y < goomba.y) {
-            // Stomp Goomba
-            goomba.alive = false;
-            mario.vy = -6;
-            audio.playJumpSound();
-          }
-        }
-      }
-    }
-
-    function renderGame() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Render Ground
-      ctx.fillStyle = '#C84C0C';
-      ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
-      ctx.fillStyle = '#43B047';
-      ctx.fillRect(0, canvas.height - groundHeight, canvas.width, 12);
-
-      // Render Question / Hit Blocks
-      blocks.forEach(b => {
-        ctx.fillStyle = b.hit ? '#885522' : '#FBD000';
-        ctx.fillRect(b.x, b.y, b.width, b.height);
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(b.x, b.y, b.width, b.height);
-
-        if (!b.hit) {
-          ctx.fillStyle = '#000';
-          ctx.font = '16px "Press Start 2P"';
-          ctx.fillText('?', b.x + 10, b.y + 26);
-        }
-      });
-
-      // Render Collectible Coins
-      coinsList.forEach(c => {
-        if (!c.collected) {
-          ctx.fillStyle = '#FBD000';
-          ctx.beginPath();
-          ctx.arc(c.x, c.y, 10, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.strokeStyle = '#000';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-        }
-      });
-
-      // Render Goomba
-      if (goomba.alive) {
-        ctx.fillStyle = '#773311';
-        ctx.fillRect(goomba.x, goomba.y, goomba.width, goomba.height);
-        ctx.fillStyle = '#FFF';
-        ctx.fillRect(goomba.x + 4, goomba.y + 8, 6, 8);
-        ctx.fillRect(goomba.x + 20, goomba.y + 8, 6, 8);
-      }
-
-      // Render Mario Character
-      ctx.fillStyle = mario.poweredUp ? '#E52521' : '#E52521';
-      ctx.fillRect(mario.x, mario.y, mario.width, mario.height);
-      ctx.fillStyle = '#002395';
-      ctx.fillRect(mario.x, mario.y + mario.height / 2, mario.width, mario.height / 2);
-
-      // Cap
-      ctx.fillStyle = '#E52521';
-      ctx.fillRect(mario.x - 2, mario.y, mario.width + 4, 10);
-    }
-
-    function gameLoop() {
-      updateGame();
-      renderGame();
-      requestAnimationFrame(gameLoop);
-    }
-    gameLoop();
-
-    /* --------------------------------------------------------------------------
-       8.4 GLOBAL UI INTERACTION & SAVED PROGRESS HANDLERS
-       -------------------------------------------------------------------------- */
-    function addCoins(num) {
-      coinCount += num;
-      document.getElementById('hudCoinCount').textContent = coinCount;
-      localStorage.setItem('mario_coins', coinCount);
-    }
-
-    function startGameEngine() {
-      audio.init();
-      audio.startBGM();
-      document.getElementById('startMenuModal').classList.add('hidden');
-    }
-
-    function toggleBGM() {
-      audio.bgmEnabled = !audio.bgmEnabled;
-      const btn = document.getElementById('bgmToggleBtn');
-      if (audio.bgmEnabled) {
-        audio.startBGM();
-        btn.style.color = '#FFF';
-      } else {
-        audio.stopBGM();
-        btn.style.color = '#777';
-      }
-    }
-
-    function toggleSFX() {
-      audio.sfxEnabled = !audio.sfxEnabled;
-      const btn = document.getElementById('sfxToggleBtn');
-      btn.style.color = audio.sfxEnabled ? '#FFF' : '#777';
-    }
-
-    function toggleNightMode() {
-      document.getElementById('nightFilter').classList.toggle('active');
-    }
-
-    function openSettings() {
-      document.getElementById('settingsModal').classList.add('active');
-    }
-
-    function closeSettings() {
-      document.getElementById('settingsModal').classList.remove('active');
-    }
-
-    function openEducationCard() {
-      audio.playPowerUpSound();
-      alert("ACADEMIC RECORD:\n• National Academy of Art & Design\n• B.A. in Visual Communication & UI/UX Design\n• Magna Cum Laude Honors");
-    }
-
-    function triggerLevelCaseStudy(levelId) {
-      audio.playPowerUpSound();
-      alert("LOADING CASE STUDY LEVEL " + levelId + "\n\nOverview -> Research -> Design -> Prototype -> Results");
-    }
-
-    function upgradeSkill(skillName) {
-      audio.playCoinSound();
-      alert("SKILL UPGRADE: " + skillName + " +100 XP!");
-    }
-
-    function downloadResume() {
-      audio.playPowerUpSound();
-      alert("Downloading Piggy_Ang_Resume_2026.pdf");
-    }
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
