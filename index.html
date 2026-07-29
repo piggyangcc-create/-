@@ -3,335 +3,352 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>杨楚楚 - 视觉设计师 | Picontier 像素小镇作品集</title>
+  <title>Picontier 像素小镇作品集</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
     /* ==========================================
-       1. PICONTIER TOWN COLOR PALETTE & SYSTEM
+       1. PICONTIER PALETTE & GLOBAL STYLES
        ========================================== */
     :root {
-      --town-sky: #70c0ff;
-      --town-grass: #58b038;
-      --town-grass-dark: #388020;
-      --roof-red: #d84830;
-      --roof-blue: #3868c0;
-      --roof-yellow: #e8a020;
-      --wall-cream: #f8f0d8;
-      --wood-dark: #583018;
-      --wood-light: #a06030;
+      --sky-top: #88c8f8;
+      --sky-bottom: #c0e8ff;
+      --grass-main: #58b038;
+      --grass-dark: #388020;
+      --path-color: #d8a060;
+      --wood-dark: #402818;
+      --wood-light: #885028;
+      --gold-accent: #f8c030;
       
-      --card-bg: rgba(26, 32, 44, 0.94);
-      --card-border: #f8a020;
-      --text-main: #ffffff;
-      --text-muted: #a0aec0;
-      
+      --ui-bg: rgba(20, 24, 38, 0.95);
+      --ui-border: #f8c030;
       --font-pixel: 'Press Start 2P', cursive, monospace;
       --font-retro: 'Silkscreen', sans-serif;
-      --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
     
     html, body {
-      width: 100%;
-      height: 100%;
-      overflow-x: auto;
-      background: var(--town-sky);
-      font-family: var(--font-ui);
-      color: var(--text-main);
+      width: 100%; height: 100%; overflow-x: auto; overflow-y: hidden;
+      background: var(--sky-top); font-family: var(--font-main); color: #fff;
+      image-rendering: pixelated;
     }
 
-    /* 复古 CRT 滤镜 */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.12) 50%);
-      background-size: 100% 4px;
-      z-index: 998;
-      pointer-events: none;
+    /* 复古 CRT 电视扫描线 */
+    body::after {
+      content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%);
+      background-size: 100% 4px; z-index: 998; pointer-events: none;
     }
 
     /* ==========================================
-       2. HUD TOP NAVBAR & CONTROLS
+       2. HUD TOP NAVBAR
        ========================================== */
     .hud-header {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 60px;
-      background: #181c24;
-      border-bottom: 4px solid #383848;
+      position: fixed; top: 0; left: 0; width: 100%; height: 56px;
+      background: #181424; border-bottom: 4px solid var(--gold-accent);
       display: flex; justify-content: space-between; align-items: center;
-      padding: 0 20px; z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      padding: 0 20px; z-index: 1000; box-shadow: 0 6px 0 rgba(0,0,0,0.4);
     }
 
-    .brand-logo {
-      display: flex; align-items: center; gap: 10px;
-      color: var(--card-border);
-      font-family: var(--font-pixel); font-size: 0.75rem;
-      text-shadow: 2px 2px #583018; cursor: pointer;
+    .brand-title {
+      font-family: var(--font-pixel); font-size: 0.8rem; color: var(--gold-accent);
+      text-shadow: 2px 2px #000; display: flex; align-items: center; gap: 8px;
     }
 
-    .controls-hint {
-      font-family: var(--font-retro); font-size: 0.8rem;
-      background: #282c38; padding: 6px 14px; border: 2px solid #484c58;
-      border-radius: 4px; color: #70c0ff;
+    .controls-badge {
+      font-family: var(--font-retro); font-size: 0.85rem; background: #282038;
+      border: 2px solid #584870; color: #a0e0ff; padding: 6px 14px; border-radius: 4px;
     }
 
-    .sound-group { display: flex; gap: 8px; }
-    .sound-toggle {
-      background: #2a2038; border: 3px solid #7848a0; color: #f0c0ff;
-      padding: 6px 12px; font-family: var(--font-retro); font-size: 0.8rem;
-      cursor: pointer; box-shadow: 0 4px 0 #000;
+    .sound-btn {
+      background: #382848; border: 2px solid var(--gold-accent); color: #f8e080;
+      font-family: var(--font-retro); font-size: 0.8rem; padding: 6px 12px;
+      cursor: pointer; box-shadow: 0 3px 0 #000; transition: transform 0.1s;
     }
-    .sound-toggle:hover { background: #482c60; border-color: #d080ff; }
+    .sound-btn:active { transform: translateY(3px); box-shadow: none; }
 
     /* ==========================================
-       3. PICONTIER MAP & HOUSES
+       3. MAP SCENERY & ANIMATED ELEMENTS
        ========================================== */
     .town-viewport {
-      position: relative;
-      min-width: 3800px;
-      height: 100vh;
-      background: linear-gradient(to bottom, #70c0ff 0%, #a0d8ff 60%, var(--town-grass) 60%, var(--town-grass-dark) 100%);
+      position: relative; min-width: 3800px; height: 100vh;
+      background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-bottom) 55%, var(--grass-main) 55%, var(--grass-dark) 100%);
       overflow: hidden;
     }
 
-    /* 装饰：树木与小花 */
-    .pixel-tree {
-      position: absolute; bottom: 120px; width: 64px; height: 96px;
-      background: #287818; border: 4px solid #000; border-radius: 32px 32px 8px 8px;
-      box-shadow: inset -8px -8px 0 #185010;
+    /* 飘动的像素云朵 */
+    .pixel-cloud {
+      position: absolute; background: #fff; border-radius: 8px;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.1); opacity: 0.9;
+      animation: floatCloud linear infinite;
     }
-    .pixel-tree::after {
-      content: ""; position: absolute; bottom: -24px; left: 24px;
-      width: 16px; height: 28px; background: var(--wood-dark); border: 3px solid #000;
+    @keyframes floatCloud {
+      from { transform: translateX(-200px); }
+      to { transform: translateX(3900px); }
     }
 
-    /* 房屋建筑（Picontier 房屋系统） */
-    .house-module {
-      position: absolute;
-      bottom: 120px;
-      width: 320px;
-      background: var(--wall-cream);
-      border: 4px solid #000;
-      box-shadow: 8px 12px 0 rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    /* 烟囱飘烟效果 */
+    .smoke-particle {
+      position: absolute; width: 10px; height: 10px; background: rgba(255,255,255,0.7);
+      border-radius: 50%; animation: smokeRise 2s infinite ease-out;
+    }
+    @keyframes smokeRise {
+      0% { transform: translateY(0) scale(0.8); opacity: 0.8; }
+      100% { transform: translateY(-40px) scale(2); opacity: 0; }
+    }
+
+    /* 远景山峦剪影 */
+    .distant-mountains {
+      position: absolute; bottom: 45%; left: 0; width: 100%; height: 120px;
+      background: repeating-linear-gradient(90deg, #68a8e0 0px, #68a8e0 100px, #5898d0 100px, #5898d0 200px);
+      clip-path: polygon(0% 100%, 5% 40%, 12% 80%, 20% 30%, 28% 90%, 35% 20%, 45% 70%, 55% 10%, 65% 80%, 75% 30%, 85% 90%, 92% 20%, 100% 100%);
+      opacity: 0.5; pointer-events: none;
+    }
+
+    /* 地面与步道 */
+    .ground-layer {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 140px;
+      background: #805028; border-top: 10px solid var(--grass-dark);
+      background-image: radial-gradient(#603818 20%, transparent 20%); background-size: 16px 16px;
       cursor: pointer;
-      transition: transform 0.2s ease;
     }
-    .house-module:hover { transform: translateY(-6px); }
-
-    .house-roof {
-      position: absolute; top: -70px; width: 350px; height: 70px;
-      background: var(--roof-red); border: 4px solid #000;
-      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-    }
-
-    .house-sign {
-      position: absolute; top: -105px;
-      background: var(--wood-light); border: 3px solid #000;
-      color: #fff; font-family: var(--font-pixel); font-size: 0.65rem;
-      padding: 6px 12px; box-shadow: 0 4px 0 #000; text-align: center;
-    }
-
-    .house-door {
-      position: absolute; bottom: 0; width: 60px; height: 90px;
-      background: var(--wood-dark); border: 4px solid #000;
-      border-radius: 8px 8px 0 0;
-      box-shadow: inset -4px 0 0 var(--wood-light);
-    }
-    .house-door::after {
-      content: ""; position: absolute; top: 42px; right: 8px;
-      width: 8px; height: 8px; background: #f8a020; border-radius: 50%;
-    }
-
-    .house-window {
-      width: 50px; height: 50px; background: #80e0ff;
-      border: 4px solid #000; margin-top: 30px;
-      box-shadow: inset 4px 4px 0 #fff;
-    }
-
-    .house-title-label {
-      font-family: var(--font-retro); font-size: 1.1rem;
-      color: var(--wood-dark); font-weight: bold; margin-top: 20px;
-    }
-
-    /* 地面与小路 */
-    .ground-path {
-      position: absolute; bottom: 0; left: 0; width: 100%; height: 120px;
-      background: #a07040; border-top: 8px solid var(--town-grass-dark);
-      background-image: radial-gradient(#784820 15%, transparent 16%);
-      background-size: 24px 24px;
+    .cobble-path {
+      position: absolute; bottom: 120px; left: 0; width: 100%; height: 20px;
+      background: var(--path-color); border-top: 3px solid #b07840; border-bottom: 3px solid #805028;
+      background-image: linear-gradient(90deg, #c08848 50%, transparent 50%); background-size: 20px 100%;
     }
 
     /* ==========================================
-       4. CHARACTER & POPUP MODAL
+       4. HOUSE MODULES (PICONTIER STYLE)
        ========================================== */
-    #hero-character-container {
-      position: absolute; bottom: 120px; left: 150px;
-      width: 64px; height: 84px; z-index: 500;
-      pointer-events: none; transform: translateX(-50%);
-      transition: bottom 0.15s ease;
+    .house-container {
+      position: absolute; bottom: 135px;
+      display: flex; flex-direction: column; align-items: center;
+      cursor: pointer; transition: filter 0.2s, transform 0.2s;
+    }
+    .house-container:hover {
+      filter: drop-shadow(0 0 10px rgba(248, 192, 48, 0.8));
+      transform: translateY(-4px);
+    }
+
+    /* 挂链标牌 */
+    .signboard {
+      background: #583018; border: 3px solid #000; color: #f8c030;
+      font-family: var(--font-pixel); font-size: 0.6rem; padding: 6px 12px;
+      border-radius: 4px; box-shadow: 0 4px 0 #000; margin-bottom: 8px;
+      text-align: center; position: relative;
+    }
+    .signboard::before, .signboard::after {
+      content: ""; position: absolute; bottom: -8px; width: 2px; height: 8px; background: #000;
+    }
+    .signboard::before { left: 12px; } .signboard::after { right: 12px; }
+
+    /* 建筑 SVG 外壳 */
+    .building-svg { filter: drop-shadow(4px 6px 0px rgba(0,0,0,0.3)); }
+
+    /* ==========================================
+       5. CHARACTER & RPG DIALOG MODAL
+       ========================================== */
+    #hero-sprite {
+      position: absolute; bottom: 135px; left: 150px; width: 56px; height: 72px;
+      z-index: 500; pointer-events: none; transform: translateX(-50%);
+      transition: bottom 0.1s ease;
     }
 
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.75);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 2000; opacity: 0; pointer-events: none;
-      transition: opacity 0.25s ease;
+      background: rgba(10, 12, 20, 0.82); display: flex; align-items: center; justify-content: center;
+      z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
     }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
-    .modal-card {
-      background: var(--card-bg); border: 4px solid #000;
-      outline: 4px solid var(--card-border); border-radius: 8px;
-      padding: 32px; max-width: 720px; width: 90%;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.8);
-      max-height: 85vh; overflow-y: auto; position: relative;
+    /* JRPG 经典金框对话框 */
+    .jrpg-dialog-box {
+      background: var(--ui-bg); border: 4px solid #000;
+      outline: 4px solid var(--ui-border); border-radius: 6px;
+      padding: 28px; max-width: 680px; width: 90%;
+      box-shadow: 0 16px 32px rgba(0,0,0,0.9), inset 0 0 0 2px #384058;
+      position: relative; max-height: 80vh; overflow-y: auto;
     }
+
+    /* 对话框角饰 */
+    .dialog-corner {
+      position: absolute; width: 12px; height: 12px; background: var(--ui-border);
+      border: 2px solid #000;
+    }
+    .top-left { top: -6px; left: -6px; } .top-right { top: -6px; right: -6px; }
+    .bottom-left { bottom: -6px; left: -6px; } .bottom-right { bottom: -6px; right: -6px; }
 
     .close-btn {
-      position: absolute; top: 16px; right: 16px;
-      background: #e52521; color: #fff; border: 3px solid #000;
-      font-family: var(--font-pixel); padding: 6px 10px; cursor: pointer;
+      position: absolute; top: 14px; right: 14px; background: #d83838;
+      color: #fff; border: 2px solid #000; font-family: var(--font-pixel);
+      font-size: 0.7rem; padding: 4px 8px; cursor: pointer; box-shadow: 0 3px 0 #000;
     }
+    .close-btn:hover { background: #ff4848; }
 
     .pixel-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: 8px; background: #e52521; color: #fff;
-      font-family: var(--font-retro); font-weight: 700; font-size: 0.9rem;
-      padding: 10px 18px; border: 3px solid #000; border-radius: 4px;
-      cursor: pointer; box-shadow: 0 4px 0 #000; margin: 6px 4px;
-      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px; background: #2868c0;
+      color: #fff; font-family: var(--font-retro); font-size: 0.85rem; font-weight: bold;
+      padding: 10px 16px; border: 2px solid #000; border-radius: 4px;
+      cursor: pointer; box-shadow: 0 4px 0 #000; text-decoration: none; margin: 8px 4px 0 0;
     }
-    .pixel-btn:hover { background: #ff3b30; transform: translateY(-2px); }
-    .pixel-btn.secondary { background: #0058d8; }
+    .pixel-btn:hover { background: #3880e0; transform: translateY(-2px); }
   </style>
 </head>
 <body>
 
-  <!-- HUD 顶栏 -->
+  <!-- 1. HUD 顶栏 -->
   <header class="hud-header">
-    <div class="brand-logo" onclick="walkToX(150)">
-      <span>🏡 YANG CHUCHU PICONTIER TOWN</span>
+    <div class="brand-title" onclick="walkToX(150)">
+      <span>🏡 PICONTIER TOWN PORTFOLIO</span>
     </div>
-    <div class="controls-hint">
-      🎮 控制：键盘 [A / D / 👈 👉] 行走，[Space / W] 跳跃 | 点击地面/房子可直接走去
+    <div class="controls-badge">
+      🎮 控制：[A / D / 👈 👉] 行走 | [Space / W] 跳跃 | 点击地面或房子直接到达
     </div>
-    <div class="sound-group">
-      <button class="sound-toggle" id="bgm-btn">🎵 BGM: OFF</button>
-      <button class="sound-toggle" id="sound-btn">🔊 SFX: OFF</button>
+    <div style="display: flex; gap: 10px;">
+      <button class="sound-btn" id="bgm-btn">🎵 BGM: OFF</button>
+      <button class="sound-btn" id="sfx-btn">🔊 SFX: OFF</button>
     </div>
   </header>
 
-  <!-- 地图主场景 -->
+  <!-- 2. 主场景地图 -->
   <div class="town-viewport" id="town-viewport">
     
-    <!-- 装饰树木 -->
-    <div class="pixel-tree" style="left: 80px;"></div>
-    <div class="pixel-tree" style="left: 650px;"></div>
-    <div class="pixel-tree" style="left: 130px;"></div>
-    <div class="pixel-tree" style="left: 2000px;"></div>
-    <div class="pixel-tree" style="left: 2700px;"></div>
+    <!-- 远景山脉与飘云 -->
+    <div class="distant-mountains"></div>
+    <div class="pixel-cloud" style="top: 80px; width: 140px; height: 30px; animation-duration: 45s;"></div>
+    <div class="pixel-cloud" style="top: 140px; width: 200px; height: 40px; animation-duration: 65s; animation-delay: -20s;"></div>
 
-    <!-- 1. HOME 房子 -->
-    <div class="house-module" style="left: 250px; height: 210px;" onclick="interactWithHouse('home', 410)">
-      <div class="house-roof"></div>
-      <div class="house-sign">WORLD 1-1<br>HOME</div>
-      <div class="house-window"></div>
-      <div class="house-title-label">楚楚的小屋</div>
-      <div class="house-door"></div>
+    <!-- 1. HOME 房子 (柴火小屋) -->
+    <div class="house-container" style="left: 280px;" onclick="interactWithHouse('home', 410)">
+      <div class="signboard">WORLD 1-1<br>HOME</div>
+      <!-- 烟囱飘烟点 -->
+      <div class="smoke-particle" style="top: 10px; left: 185px;"></div>
+      <svg class="building-svg" width="220" height="180" viewBox="0 0 220 180">
+        <!-- 红色瓦片屋顶 -->
+        <path d="M 10,80 L 110,10 L 210,80 Z" fill="#d84030" stroke="#000" stroke-width="4"/>
+        <path d="M 25,70 L 110,20 L 195,70 Z" fill="#eb5848"/>
+        <rect x="170" y="20" width="20" height="40" fill="#884020" stroke="#000" stroke-width="3"/>
+        <!-- 米白砖墙 -->
+        <rect x="30" y="80" width="160" height="100" fill="#f8f0d8" stroke="#000" stroke-width="4"/>
+        <!-- 发光窗户 -->
+        <rect x="50" y="100" width="36" height="36" fill="#f8d030" stroke="#000" stroke-width="3"/>
+        <line x1="68" y1="100" x2="68" y2="136" stroke="#000" stroke-width="3"/>
+        <line x1="50" y1="118" x2="86" y2="118" stroke="#000" stroke-width="3"/>
+        <!-- 木门 -->
+        <rect x="120" y="110" width="40" height="70" fill="#583018" stroke="#000" stroke-width="3"/>
+        <circle cx="152" cy="148" r="3" fill="#f8c030"/>
+      </svg>
     </div>
 
-    <!-- 2. ABOUT 房子 -->
-    <div class="house-module" style="left: 850px; height: 220px;" onclick="interactWithHouse('about', 1010)">
-      <div class="house-roof" style="background: var(--roof-blue);"></div>
-      <div class="house-sign">WORLD 1-2<br>ABOUT</div>
-      <div class="house-window"></div>
-      <div class="house-title-label">个人档案馆</div>
-      <div class="house-door"></div>
+    <!-- 2. ABOUT 房子 (蓝顶工作坊) -->
+    <div class="house-container" style="left: 880px;" onclick="interactWithHouse('about', 1030)">
+      <div class="signboard">WORLD 1-2<br>ABOUT</div>
+      <svg class="building-svg" width="240" height="190" viewBox="0 0 240 190">
+        <path d="M 10,85 L 120,15 L 230,85 Z" fill="#2868c0" stroke="#000" stroke-width="4"/>
+        <rect x="35" y="85" width="170" height="105" fill="#eae8e0" stroke="#000" stroke-width="4"/>
+        <rect x="60" y="105" width="40" height="40" fill="#70d0f8" stroke="#000" stroke-width="3"/>
+        <rect x="140" y="115" width="42" height="75" fill="#402818" stroke="#000" stroke-width="3"/>
+      </svg>
     </div>
 
-    <!-- 3. SKILLS 房子 -->
-    <div class="house-module" style="left: 1500px; height: 230px;" onclick="interactWithHouse('skills', 1660)">
-      <div class="house-roof" style="background: var(--roof-yellow);"></div>
-      <div class="house-sign">WORLD 1-3<br>SKILLS</div>
-      <div style="display: flex; gap: 12px;">
-        <div class="house-window"></div>
-        <div class="house-window"></div>
-      </div>
-      <div class="house-title-label">技能装备库</div>
-      <div class="house-door"></div>
+    <!-- 3. SKILLS 房子 (黄瓦风车实验室) -->
+    <div class="house-container" style="left: 1520px;" onclick="interactWithHouse('skills', 1680)">
+      <div class="signboard">WORLD 1-3<br>SKILLS</div>
+      <svg class="building-svg" width="230" height="200" viewBox="0 0 230 200">
+        <path d="M 15,75 L 115,10 L 215,75 Z" fill="#e8a020" stroke="#000" stroke-width="4"/>
+        <rect x="35" y="75" width="160" height="125" fill="#f0e8d0" stroke="#000" stroke-width="4"/>
+        <circle cx="115" cy="45" r="12" fill="#583018"/>
+        <rect x="55" y="95" width="34" height="34" fill="#70f8d0" stroke="#000" stroke-width="3"/>
+        <rect x="141" y="95" width="34" height="34" fill="#70f8d0" stroke="#000" stroke-width="3"/>
+        <rect x="95" y="130" width="40" height="70" fill="#583018" stroke="#000" stroke-width="3"/>
+      </svg>
     </div>
 
-    <!-- 4. PROJECTS 房子 -->
-    <div class="house-module" style="left: 2150px; height: 240px;" onclick="interactWithHouse('projects', 2310)">
-      <div class="house-roof" style="background: #288050;"></div>
-      <div class="house-sign">WORLD 1-4<br>PROJECTS</div>
-      <div class="house-window"></div>
-      <div class="house-title-label">爆款作品工坊</div>
-      <div class="house-door"></div>
+    <!-- 4. PROJECTS 房子 (绿意作品城堡) -->
+    <div class="house-container" style="left: 2180px;" onclick="interactWithHouse('projects', 2340)">
+      <div class="signboard">WORLD 1-4<br>PROJECTS</div>
+      <svg class="building-svg" width="250" height="210" viewBox="0 0 250 210">
+        <path d="M 10,90 L 125,15 L 240,90 Z" fill="#288048" stroke="#000" stroke-width="4"/>
+        <rect x="30" y="90" width="190" height="120" fill="#e0dac8" stroke="#000" stroke-width="4"/>
+        <rect x="55" y="110" width="45" height="45" fill="#f8c030" stroke="#000" stroke-width="3"/>
+        <rect x="150" y="110" width="45" height="45" fill="#f8c030" stroke="#000" stroke-width="3"/>
+        <rect x="105" y="140" width="40" height="70" fill="#402010" stroke="#000" stroke-width="3"/>
+      </svg>
     </div>
 
-    <!-- 5. EXPERIENCE 城堡 -->
-    <div class="house-module" style="left: 2800px; height: 260px; background: #a0a8b8;" onclick="interactWithHouse('experience', 2960)">
-      <div class="house-roof" style="background: #484860; clip-path: none; top: -40px; height: 40px; width: 330px;"></div>
-      <div class="house-sign">WORLD 1-5<br>EXPERIENCE</div>
-      <div class="house-window" style="background: #f8e070;"></div>
-      <div class="house-title-label">职业历程城堡</div>
-      <div class="house-door"></div>
+    <!-- 5. EXPERIENCE 城堡 (复古石砌古堡) -->
+    <div class="house-container" style="left: 2840px;" onclick="interactWithHouse('experience', 3000)">
+      <div class="signboard">WORLD 1-5<br>EXPERIENCE</div>
+      <svg class="building-svg" width="260" height="220" viewBox="0 0 260 220">
+        <rect x="20" y="40" width="220" height="180" fill="#8890a0" stroke="#000" stroke-width="4"/>
+        <path d="M 10,40 L 40,40 L 40,10 L 70,10 L 70,40 L 100,40 L 100,10 L 130,10 L 130,40 L 160,40 L 160,10 L 190,10 L 190,40 L 220,40 L 220,10 L 250,10 L 250,40" fill="#687080" stroke="#000" stroke-width="3"/>
+        <rect x="110" y="80" width="40" height="50" rx="20" fill="#f8e070" stroke="#000" stroke-width="3"/>
+        <rect x="105" y="150" width="50" height="70" fill="#382010" stroke="#000" stroke-width="4"/>
+      </svg>
     </div>
 
-    <!-- 6. CONTACT 终点旗帜小屋 -->
-    <div class="house-module" style="left: 3400px; height: 210px;" onclick="interactWithHouse('contact', 3560)">
-      <div class="house-roof" style="background: #803090;"></div>
-      <div class="house-sign">FINAL STAGE<br>CONTACT</div>
-      <div class="house-window"></div>
-      <div class="house-title-label">联系驿站</div>
-      <div class="house-door"></div>
+    <!-- 6. CONTACT 终点驿站 -->
+    <div class="house-container" style="left: 3450px;" onclick="interactWithHouse('contact', 3610)">
+      <div class="signboard">FINAL STAGE<br>CONTACT</div>
+      <svg class="building-svg" width="210" height="180" viewBox="0 0 210 180">
+        <path d="M 10,75 L 105,10 L 200,75 Z" fill="#803090" stroke="#000" stroke-width="4"/>
+        <rect x="30" y="75" width="150" height="105" fill="#f0e0f8" stroke="#000" stroke-width="4"/>
+        <circle cx="105" cy="110" r="20" fill="#f8c030" stroke="#000" stroke-width="3"/>
+        <rect x="85" y="135" width="40" height="45" fill="#401848" stroke="#000" stroke-width="3"/>
+      </svg>
     </div>
 
-    <!-- 人物 Vector SVG -->
-    <div id="hero-character-container">
-      <svg viewBox="0 0 76 100" style="width:100%; height:100%;">
-        <g id="char-root">
-          <path d="M 18,16 L 58,16 L 64,28 L 12,28 Z" fill="#e52521" stroke="#000" stroke-width="2"/>
-          <path d="M 8,28 L 68,28 L 68,34 L 8,34 Z" fill="#b81810" stroke="#000" stroke-width="2"/>
-          <rect x="14" y="34" width="48" height="28" rx="4" fill="#ffcca0" stroke="#000" stroke-width="2"/>
-          <ellipse cx="28" cy="44" rx="4" ry="7" fill="#000"/><circle cx="27" cy="42" r="2" fill="#fff"/>
-          <ellipse cx="48" cy="44" rx="4" ry="7" fill="#000"/><circle cx="47" cy="42" r="2" fill="#fff"/>
-          <path d="M 20,52 Q 38,62 56,52 Q 38,56 20,52 Z" fill="#3a1d00" stroke="#000" stroke-width="2"/>
-          <rect x="22" y="62" width="32" height="16" fill="#e52521" stroke="#000" stroke-width="2"/>
-          <path d="M 24,66 L 52,66 L 54,82 L 22,82 Z" fill="#0038d8" stroke="#000" stroke-width="2"/>
-          <g id="leg-l"><path d="M 16,90 L 34,90 L 34,96 L 16,96 Z" fill="#682800" stroke="#000" stroke-width="2"/></g>
-          <g id="leg-r"><path d="M 42,90 L 60,90 L 60,96 L 42,96 Z" fill="#682800" stroke="#000" stroke-width="2"/></g>
+    <!-- 3. 精致角色 (Pixel Character SVG) -->
+    <div id="hero-sprite">
+      <svg viewBox="0 0 60 80" style="width:100%; height:100%;">
+        <g id="hero-body">
+          <!-- 红帽子 -->
+          <rect x="12" y="8" width="36" height="12" fill="#e52521" stroke="#000" stroke-width="2"/>
+          <rect x="6" y="20" width="48" height="6" fill="#b81810" stroke="#000" stroke-width="2"/>
+          <!-- 脸部与大眼睛 -->
+          <rect x="12" y="26" width="36" height="22" fill="#ffcca0" stroke="#000" stroke-width="2"/>
+          <rect x="20" y="32" width="6" height="10" fill="#000"/>
+          <rect x="34" y="32" width="6" height="10" fill="#000"/>
+          <rect x="20" y="32" width="2" height="4" fill="#fff"/>
+          <rect x="34" y="32" width="2" height="4" fill="#fff"/>
+          <!-- 衣服与背带裤 -->
+          <rect x="16" y="48" width="28" height="14" fill="#e52521" stroke="#000" stroke-width="2"/>
+          <rect x="18" y="52" width="24" height="16" fill="#0038d8" stroke="#000" stroke-width="2"/>
+          <!-- 双脚 -->
+          <rect id="foot-l" x="14" y="68" width="12" height="8" fill="#502800" stroke="#000" stroke-width="2"/>
+          <rect id="foot-r" x="34" y="68" width="12" height="8" fill="#502800" stroke="#000" stroke-width="2"/>
         </g>
       </svg>
     </div>
 
-    <div class="ground-path" id="ground-path"></div>
+    <!-- 地面与石子路 -->
+    <div class="cobble-path"></div>
+    <div class="ground-layer" id="ground-layer"></div>
   </div>
 
-  <!-- 房子详情弹窗（Modal） -->
+  <!-- 4. JRPG 对话框 (Modal Window) -->
   <div class="modal-overlay" id="modal-overlay">
-    <div class="modal-card">
-      <button class="close-btn" onclick="closeModal()">X</button>
-      <div id="modal-content"></div>
+    <div class="jrpg-dialog-box">
+      <div class="dialog-corner top-left"></div>
+      <div class="dialog-corner top-right"></div>
+      <div class="dialog-corner bottom-left"></div>
+      <div class="dialog-corner bottom-right"></div>
+      
+      <button class="close-btn" onclick="closeModal()">✕ CLOSE</button>
+      <div id="modal-content" style="line-height: 1.7; color: #e0e8f8;"></div>
     </div>
   </div>
 
   <!-- ==========================================
-       5. GAME ENGINE & LONG BGM SYSTEM
+       6. AUDIO ENGINE & GAME LOGIC
        ========================================== -->
   <script>
-    /* 1. 音效与 Picontier 风长乐曲合成器 */
+    /* 1. 音效与 Picontier 舒缓治愈长音轨 */
     let audioCtx = null;
     let sfxOn = false;
     let bgmOn = false;
@@ -354,83 +371,69 @@
 
       if (type === 'jump') {
         osc.type = 'square';
-        osc.frequency.setValueAtTime(150, t);
-        osc.frequency.exponentialRampToValueAtTime(600, t + 0.15);
-        gain.gain.setValueAtTime(0.1, t);
-        gain.gain.linearRampToValueAtTime(0.01, t + 0.15);
-        osc.start(t); osc.stop(t + 0.15);
+        osc.frequency.setValueAtTime(180, t);
+        osc.frequency.exponentialRampToValueAtTime(520, t + 0.12);
+        gain.gain.setValueAtTime(0.08, t);
+        gain.gain.linearRampToValueAtTime(0.01, t + 0.12);
+        osc.start(t); osc.stop(t + 0.12);
       } else if (type === 'open') {
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(300, t);
-        osc.frequency.setValueAtTime(600, t + 0.08);
-        gain.gain.setValueAtTime(0.1, t);
-        gain.gain.linearRampToValueAtTime(0.01, t + 0.2);
-        osc.start(t); osc.stop(t + 0.2);
+        osc.frequency.setValueAtTime(320, t);
+        osc.frequency.setValueAtTime(640, t + 0.08);
+        gain.gain.setValueAtTime(0.08, t);
+        gain.gain.linearRampToValueAtTime(0.01, t + 0.18);
+        osc.start(t); osc.stop(t + 0.18);
       }
     }
 
-    /* 包含 A/B 段舒缓悠扬的 8-Bit Picontier 治愈小镇长乐曲 */
-    const longTownMelody = [
-      // Section A
-      {f: 523.25, d: 0.25}, {f: 659.25, d: 0.25}, {f: 783.99, d: 0.25}, {f: 1046.50, d: 0.5},
-      {f: 880.00, d: 0.25}, {f: 783.99, d: 0.5}, {f: 659.25, d: 0.5},
-      {f: 587.33, d: 0.25}, {f: 659.25, d: 0.25}, {f: 698.46, d: 0.5}, {f: 659.25, d: 0.25}, {f: 587.33, d: 0.5},
-      {f: 523.25, d: 0.75}, {f: 0, d: 0.25},
-      
-      // Section A'
-      {f: 523.25, d: 0.25}, {f: 659.25, d: 0.25}, {f: 783.99, d: 0.25}, {f: 1046.50, d: 0.5},
-      {f: 1174.66, d: 0.25}, {f: 1046.50, d: 0.5}, {f: 880.00, d: 0.5},
-      {f: 783.99, d: 0.25}, {f: 880.00, d: 0.25}, {f: 783.99, d: 0.25}, {f: 659.25, d: 0.25}, {f: 587.33, d: 0.5},
-      {f: 523.25, d: 0.75}, {f: 0, d: 0.25},
-
-      // Section B (副歌升调)
-      {f: 880.00, d: 0.35}, {f: 987.77, d: 0.2}, {f: 1046.50, d: 0.35}, {f: 880.00, d: 0.35},
-      {f: 783.99, d: 0.35}, {f: 659.25, d: 0.35}, {f: 523.25, d: 0.5},
-      {f: 698.46, d: 0.35}, {f: 783.99, d: 0.35}, {f: 880.00, d: 0.35}, {f: 698.46, d: 0.35},
-      {f: 659.25, d: 0.75}, {f: 0, d: 0.25}
+    /* Picontier 调性长乐曲 (包含多乐句循环，低倦怠感) */
+    const townMelody = [
+      {f: 523.25, d: 0.3}, {f: 659.25, d: 0.3}, {f: 783.99, d: 0.3}, {f: 1046.50, d: 0.6},
+      {f: 880.00, d: 0.3}, {f: 783.99, d: 0.6}, {f: 659.25, d: 0.6},
+      {f: 587.33, d: 0.3}, {f: 659.25, d: 0.3}, {f: 698.46, d: 0.6}, {f: 587.33, d: 0.6},
+      {f: 523.25, d: 0.9}, {f: 0, d: 0.3},
+      {f: 587.33, d: 0.3}, {f: 698.46, d: 0.3}, {f: 880.00, d: 0.3}, {f: 1046.50, d: 0.6},
+      {f: 987.77, d: 0.3}, {f: 880.00, d: 0.6}, {f: 783.99, d: 0.6},
+      {f: 659.25, d: 0.4}, {f: 587.33, d: 0.4}, {f: 523.25, d: 0.8}, {f: 0, d: 0.4}
     ];
 
     let noteIdx = 0;
-    function playNextTownNote() {
+    function playBGM() {
       if (!bgmOn || !audioCtx) return;
-      const note = longTownMelody[noteIdx];
+      const note = townMelody[noteIdx];
       if (note.f > 0) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        osc.type = 'triangle'; // 选用温暖柔和的三角波
+        osc.type = 'triangle';
         osc.frequency.setValueAtTime(note.f, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.025, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + note.d);
         osc.connect(gain); gain.connect(audioCtx.destination);
         osc.start(); osc.stop(audioCtx.currentTime + note.d);
       }
-      noteIdx = (noteIdx + 1) % longTownMelody.length;
-      bgmTimer = setTimeout(playNextTownNote, note.d * 1000);
+      noteIdx = (noteIdx + 1) % townMelody.length;
+      bgmTimer = setTimeout(playBGM, note.d * 1000);
     }
 
     document.getElementById('bgm-btn').addEventListener('click', () => {
       initAudio();
       bgmOn = !bgmOn;
       document.getElementById('bgm-btn').textContent = bgmOn ? '🎵 BGM: ON' : '🎵 BGM: OFF';
-      if (bgmOn) {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        playNextTownNote();
-      } else {
-        clearTimeout(bgmTimer);
-      }
+      if (bgmOn) { if (audioCtx.state === 'suspended') audioCtx.resume(); playBGM(); }
+      else { clearTimeout(bgmTimer); }
     });
 
-    document.getElementById('sound-btn').addEventListener('click', () => {
+    document.getElementById('sfx-btn').addEventListener('click', () => {
       initAudio();
       sfxOn = !sfxOn;
-      document.getElementById('sound-btn').textContent = sfxOn ? '🔊 SFX: ON' : '🔇 SFX: OFF';
+      document.getElementById('sfx-btn').textContent = sfxOn ? '🔊 SFX: ON' : '🔇 SFX: OFF';
     });
 
-    /* 2. 人物物理与小镇行走引擎 */
-    const hero = document.getElementById('hero-character-container');
+    /* 2. 角色移动与物理引擎 */
+    const hero = document.getElementById('hero-sprite');
     let heroX = 150;
     let targetX = 150;
-    let heroPosY = 0; // 跳跃高度
+    let heroPosY = 0;
     let velocityY = 0;
     let isJumping = false;
     let facingRight = true;
@@ -439,108 +442,81 @@
     window.addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; });
     window.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
 
-    document.getElementById('ground-path').addEventListener('click', (e) => {
+    document.getElementById('ground-layer').addEventListener('click', (e) => {
       const rect = e.currentTarget.getBoundingClientRect();
-      const clickXOnMap = e.clientX - rect.left;
-      targetX = clickXOnMap;
+      targetX = e.clientX - rect.left;
     });
 
     function walkToX(x) { targetX = x; }
 
     function updatePhysics() {
-      // 键盘优先
-      if (keys['a'] || keys['arrowleft']) {
-        targetX = heroX - 6;
-        facingRight = false;
-      } else if (keys['d'] || keys['arrowright']) {
-        targetX = heroX + 6;
-        facingRight = true;
-      }
+      if (keys['a'] || keys['arrowleft']) { targetX = heroX - 6; facingRight = false; }
+      else if (keys['d'] || keys['arrowright']) { targetX = heroX + 6; facingRight = true; }
 
       if ((keys['w'] || keys[' '] || keys['arrowup']) && !isJumping) {
-        isJumping = true;
-        velocityY = 12;
-        playSfx('jump');
+        isJumping = true; velocityY = 11; playSfx('jump');
       }
 
-      // 跳跃物理
       if (isJumping) {
-        heroPosY += velocityY;
-        velocityY -= 0.8;
-        if (heroPosY <= 0) {
-          heroPosY = 0;
-          isJumping = false;
-        }
+        heroPosY += velocityY; velocityY -= 0.75;
+        if (heroPosY <= 0) { heroPosY = 0; isJumping = false; }
       }
 
-      // 平滑步行
       const dx = targetX - heroX;
       if (Math.abs(dx) > 2) {
         facingRight = dx > 0;
         heroX += Math.sign(dx) * Math.min(Math.abs(dx), 5);
       }
 
-      // 保持坐标范围
-      heroX = Math.max(50, Math.min(3700, heroX));
+      heroX = Math.max(50, Math.min(3720, heroX));
 
-      // 更新 DOM
       hero.style.left = `${heroX}px`;
-      hero.style.bottom = `${120 + heroPosY}px`;
+      hero.style.bottom = `${135 + heroPosY}px`;
       hero.style.transform = `translateX(-50%) scaleX(${facingRight ? 1 : -1})`;
 
-      // 镜头平滑跟随小人
-      const screenWidth = window.innerWidth;
-      const scrollLeft = heroX - screenWidth / 2;
+      // 镜头跟随
+      const scrollLeft = heroX - window.innerWidth / 2;
       window.scrollTo({ left: Math.max(0, scrollLeft), behavior: 'auto' });
 
       requestAnimationFrame(updatePhysics);
     }
     requestAnimationFrame(updatePhysics);
 
-    /* 3. 房子交互与简历 Modal 详情[cite: 3] */
+    /* 3. 对话框弹窗数据 */
     const modalData = {
       home: `
-        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🏡 杨楚楚 | 视觉设计师</h2>
-        <p style="color: var(--text-muted); margin-bottom: 16px;">3.5年跨境电商视觉设计经验 / AIGC工具提效 / 离职随时到岗[cite: 3]</p>
-        <p style="line-height: 1.6; color: #d0d8e8;">熟练掌握国外电商平台风格（Amazon、eBay、Walmart、美客多、速卖通、独立站等），能独立完成产品全链路视觉设计与爆款打造。[cite: 3]</p>
+        <h3 style="font-family: var(--font-pixel); color: var(--gold-accent); margin-bottom: 12px;">🏡 WORLD 1-1: WELCOME TO MY TOWN</h3>
+        <p style="font-size: 1.05rem; margin-bottom: 12px;">你好！欢迎来到我的 Picontier 像素小镇个人作品集！</p>
+        <p style="color: #a0b0d0;">在这里，你可以控制主角自由探索每个模块建筑，点击或靠近房屋即可解锁我的个人履历与作品展示。</p>
       `,
       about: `
-        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🍄 个人档案与综合素质[cite: 3]</h2>
-        <p style="line-height: 1.6; margin-bottom: 12px; color: #d0d8e8;"><b>【学历背景】</b> 闽南理工学院 - 全日制本科 (视觉传达设计专业)[cite: 3]</p>
-        <p style="line-height: 1.6; color: #d0d8e8;"><b>【核心优势】</b> 拥有黑五、Prime Day 等大型电商活动设计经验，掌握跨境电商视觉创意方法论[cite: 3]。精通 PS、AI、Procreate、Keyshot 等设计软件，擅长运用 AIGC 工具辅助项目设计，显著提升视觉吸引力与效率[cite: 3]。</p>
+        <h3 style="font-family: var(--font-pixel); color: var(--gold-accent); margin-bottom: 12px;">🍄 WORLD 1-2: ABOUT ME</h3>
+        <p><b>【专业岗位】</b> 视觉设计师 / UI设计师</p>
+        <p><b>【核心特长】</b> 擅长 16-Bit 像素艺术风、游戏 UI 界面设计、品牌视觉规范建设与 AIGC 辅助图像生成。</p>
       `,
       skills: `
-        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">⭐ 技能装备库[cite: 3]</h2>
-        <ul style="line-height: 1.8; color: #d0d8e8; margin-left: 20px;">
-          <li><b>🤖 AIGC 工具:</b> ChatGPT 4o, Midjourney, Stable Diffusion[cite: 3]</li>
-          <li><b>🎨 视觉平面:</b> Photoshop, Adobe Illustrator, CorelDraw, Procreate[cite: 3]</li>
-          <li><b>💎 3D 渲染:</b> Keyshot 场景建模与产品质感精修[cite: 3]</li>
-          <li><b>🌐 电商全栈:</b> Amazon Listing 套图、高级 A+ 页面、独立站组件库[cite: 3]</li>
+        <h3 style="font-family: var(--font-pixel); color: var(--gold-accent); margin-bottom: 12px;">⭐ WORLD 1-3: SKILLS & TOOLS</h3>
+        <ul style="margin-left: 20px;">
+          <li>🎨 <b>视觉传达：</b> Photoshop, Illustrator, Procreate</li>
+          <li>🎮 <b>UI / 像素绘图：</b> Figma, Aseprite, Pixel Art UI</li>
+          <li>🤖 <b>AIGC 提效：</b> ChatGPT, Midjourney, Stable Diffusion</li>
         </ul>
       `,
       projects: `
-        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🔥 爆款作品工坊[cite: 3]</h2>
-        <p style="line-height: 1.6; margin-bottom: 8px;"><b>🚀 iscooter / Circooter 品牌视觉:</b> 独立完成自营品牌 Listing 套图与高级 A+ 页面，<b>推动 CTR 提升 30%-50%</b>[cite: 3]。</p>
-        <p style="line-height: 1.6; margin-bottom: 8px;"><b>🚗 汽配全渠道独立站:</b> 建立多平台设计规范与组件库，参与 50+ 次新品上市，15 天完成多品类上新[cite: 3]。</p>
-        <p style="line-height: 1.6;"><b>🏆 A-PREMIUM 核心类目精修:</b> 主导新品精修与橱窗 2000+ 款，基于 A/B 测试数据优化转化率[cite: 3]。</p>
+        <h3 style="font-family: var(--font-pixel); color: var(--gold-accent); margin-bottom: 12px;">🔥 WORLD 1-4: FEATURED PROJECTS</h3>
+        <p><b>🎮 像素风格庭院 UI 小游戏：</b> 独立设计 16-bit 房屋、庭院与泳池视觉元素。</p>
+        <p><b>🎨 品牌视觉与 Pop-up 快闪店概念：</b> 打造高辨识度品牌的线下与线上视觉体验。</p>
       `,
       experience: `
-        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🏰 职业历程城堡[cite: 3]</h2>
-        <div style="line-height: 1.6; color: #d0d8e8;">
-          <p style="color: var(--card-border);"><b>深圳市信诚未来科技有限公司</b> (2025.04 - 2025.07)[cite: 3]</p>
-          <p style="margin-bottom: 10px; font-size: 0.85rem;">平面设计师 (品牌中心) - 负责 3C、智能硬件及自营品牌全套视觉建设[cite: 3]。</p>
-          <p style="color: var(--card-border);"><b>深圳思未永续科技发展有限公司</b> (2024.03 - 2025.03)[cite: 3]</p>
-          <p style="margin-bottom: 10px; font-size: 0.85rem;">视觉设计师 - 建立品牌多平台组件库，输出 100+ 详情页规范[cite: 3]。</p>
-          <p style="color: var(--card-border);"><b>福建扬腾集团</b> (2022.08 - 2024.03)[cite: 3]</p>
-          <p style="font-size: 0.85rem;">视觉设计师 (亚马逊 TOP 前三) - 负责核心类目精修 2000+ 款[cite: 3]。</p>
-        </div>
+        <h3 style="font-family: var(--font-pixel); color: var(--gold-accent); margin-bottom: 12px;">🏰 WORLD 1-5: CAREER JOURNEY</h3>
+        <p><b>品牌视觉设计师：</b> 负责 DTC 部门品牌视觉优化、营销组件库建立与爆款视觉打造。</p>
       `,
       contact: `
-        <h2 style="font-family: var(--font-retro); color: var(--card-border); margin-bottom: 10px;">🚩 联系驿站[cite: 3]</h2>
-        <p style="margin-bottom: 16px;">感谢探索小镇！随时欢迎联系：[cite: 3]</p>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <a href="tel:18596773812" class="pixel-btn"><span>📞 电话/微信: 18596773812</span></a>[cite: 3]
-          <a href="mailto:906745060@qq.com" class="pixel-btn secondary"><span>✉️ 邮箱: 906745060@qq.com</span></a>[cite: 3]
+        <h3 style="font-family: var(--font-pixel); color: var(--gold-accent); margin-bottom: 12px;">🚩 FINAL STAGE: CONTACT ME</h3>
+        <p>非常期待与您交流合作！</p>
+        <div style="margin-top: 14px;">
+          <a href="#" class="pixel-btn"><span>✉️ 发送邮件</span></a>
+          <a href="#" class="pixel-btn"><span>💬 微信 / 电话联系</span></a>
         </div>
       `
     };
@@ -551,7 +527,7 @@
         playSfx('open');
         document.getElementById('modal-content').innerHTML = modalData[key];
         document.getElementById('modal-overlay').classList.add('active');
-      }, Math.min(Math.abs(heroX - targetWalkX) * 10, 400));
+      }, Math.min(Math.abs(heroX - targetWalkX) * 8, 400));
     }
 
     function closeModal() {
