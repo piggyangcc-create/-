@@ -1547,5 +1547,22 @@
       alert("Downloading Yang_Chuchu_Resume_2026.pdf");
     }
   </script>
+  // 1. 禁止浏览器记住并恢复上一次的滚动位置
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
+  // 2. 页面加载时强行滚动到最顶部
+  window.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo(0, 0);
+  });
+
+  // 3. 兜底处理：资源完全加载后再次确保置顶
+  window.onload = function() {
+    setTimeout(function() {
+      window.scrollTo(0, 0);
+    }, 0);
+  };
+</script>
 </body>
 </html>
