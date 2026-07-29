@@ -6,7 +6,498 @@
     <title>Yang Chuchu | Cross-border Visual Designer - Mario Interactive Portfolio</title>
     <!-- Pixel Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ==========================================================================
+           MARIO PIXEL ENGINE THEME & STYLES
+           ========================================================================== */
+
+        :root {
+            --mario-red: #E52521;
+            --mario-blue: #00247D;
+            --mario-sky: #5C94FC;
+            --mario-yellow: #F8B800;
+            --mario-green: #00A800;
+            --mario-brick: #C84C0C;
+            --mario-bg-dark: #0f172a;
+            --pixel-font: 'Press Start 2P', cursive;
+            --text-font: 'VT323', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            background-color: var(--mario-bg-dark);
+            color: #ffffff;
+            font-family: var(--text-font);
+            font-size: 20px;
+            overflow-x: hidden;
+        }
+
+        /* HUD Header */
+        .hud-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 4px solid var(--mario-yellow);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-family: var(--pixel-font);
+            font-size: 11px;
+        }
+
+        .hud-left {
+            display: flex;
+            gap: 20px;
+        }
+
+        .hud-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .hud-label {
+            color: var(--mario-yellow);
+        }
+
+        .hud-btn {
+            background: var(--mario-red);
+            color: #fff;
+            border: 2px solid #fff;
+            padding: 6px 12px;
+            font-family: var(--pixel-font);
+            font-size: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 2px 2px 0px #000;
+            transition: transform 0.1s;
+        }
+
+        .hud-btn:hover {
+            transform: scale(1.05);
+            background: var(--mario-yellow);
+            color: #000;
+        }
+
+        /* Canvas Hero Section */
+        .game-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 500px;
+            padding-top: 60px;
+            background: var(--mario-sky);
+            overflow: hidden;
+        }
+
+        .game-instructions {
+            position: absolute;
+            top: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.75);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: var(--pixel-font);
+            font-size: 10px;
+            color: #fff;
+            z-index: 10;
+            pointer-events: none;
+            border: 2px solid var(--mario-yellow);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        #mario-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: var(--mario-sky);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .hero-card {
+            pointer-events: auto;
+            background: rgba(0, 0, 0, 0.85);
+            border: 4px solid var(--mario-yellow);
+            padding: 20px;
+            max-width: 500px;
+            box-shadow: 6px 6px 0px #000;
+        }
+
+        .hero-card h1 {
+            font-family: var(--pixel-font);
+            font-size: 16px;
+            color: var(--mario-yellow);
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+
+        .hero-card h2 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            background: var(--mario-green);
+            color: #fff;
+            font-family: var(--pixel-font);
+            font-size: 9px;
+            padding: 4px 8px;
+            display: inline-block;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Pixel Buttons */
+        .pixel-btn {
+            font-family: var(--pixel-font);
+            font-size: 10px;
+            padding: 8px 14px;
+            border: 3px solid #fff;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s ease;
+            color: #fff;
+        }
+
+        .pixel-btn.primary { background: var(--mario-red); }
+        .pixel-btn.secondary { background: var(--mario-blue); }
+        .pixel-btn.accent { background: var(--mario-green); }
+        .pixel-btn.small { font-size: 9px; padding: 6px 10px; }
+
+        .pixel-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000;
+            filter: brightness(1.2);
+        }
+
+        /* Navigation Bar */
+        .main-nav {
+            position: sticky;
+            top: 60px;
+            z-index: 900;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--mario-brick);
+            padding: 10px 0;
+        }
+
+        .main-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            font-family: var(--pixel-font);
+            font-size: 10px;
+            color: #fff;
+            text-decoration: none;
+            padding: 6px 10px;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--mario-yellow);
+            background: rgba(248, 184, 0, 0.15);
+            border-radius: 4px;
+        }
+
+        /* Main Content Layout */
+        .content-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .pixel-section {
+            margin-bottom: 60px;
+            background: rgba(30, 41, 59, 0.9);
+            border: 4px solid var(--mario-brick);
+            padding: 25px;
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title h2 {
+            font-family: var(--pixel-font);
+            color: var(--mario-yellow);
+            font-size: 18px;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .section-title .subtitle {
+            color: #94a3b8;
+            margin-top: 6px;
+            font-size: 18px;
+        }
+
+        /* About Me (NPC Dialogue) */
+        .npc-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            background: #000;
+            border: 3px solid #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .npc-sprite {
+            font-size: 40px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        .dialogue-box { flex: 1; }
+        .dialogue-speaker {
+            font-family: var(--pixel-font);
+            color: var(--mario-yellow);
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        .dialogue-text { font-size: 20px; line-height: 1.4; }
+        .dialogue-action { margin-top: 10px; text-align: right; }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+        }
+
+        .about-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--mario-sky);
+            padding: 15px;
+        }
+
+        .about-card h3 { color: var(--mario-sky); margin-bottom: 8px; }
+
+        /* Education */
+        .school-building-wrapper { display: flex; flex-direction: column; gap: 15px; }
+        .pixel-school {
+            background: var(--mario-red);
+            border: 4px solid #fff;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        .school-roof { font-family: var(--pixel-font); font-size: 12px; margin-bottom: 8px; }
+        .school-door {
+            background: var(--mario-yellow);
+            color: #000;
+            display: inline-block;
+            padding: 6px 12px;
+            font-family: var(--pixel-font);
+            font-size: 9px;
+        }
+
+        .education-card {
+            background: #0f172a;
+            border: 3px solid var(--mario-yellow);
+            padding: 20px;
+        }
+
+        .edu-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px dashed #334155;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .edu-date { color: var(--mario-yellow); font-family: var(--pixel-font); font-size: 11px; }
+
+        .edu-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 12px;
+        }
+
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+        .tag { background: var(--mario-blue); border: 1px solid var(--mario-sky); padding: 3px 6px; font-size: 16px; }
+
+        /* Experience Timeline */
+        .mario-map-timeline { display: flex; flex-direction: column; gap: 20px; }
+        .timeline-node { background: #0f172a; border: 3px solid var(--mario-green); padding: 18px; }
+        .node-flag { font-family: var(--pixel-font); color: var(--mario-yellow); font-size: 11px; margin-bottom: 8px; }
+        .company-badge {
+            display: inline-block;
+            background: var(--mario-brick);
+            padding: 2px 6px;
+            font-family: var(--pixel-font);
+            font-size: 9px;
+            margin-bottom: 8px;
+        }
+
+        .metrics-grid { display: flex; gap: 15px; margin-top: 12px; }
+        .metric {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            text-align: center;
+            flex: 1;
+            border: 1px solid var(--mario-yellow);
+        }
+
+        .metric .num { display: block; font-family: var(--pixel-font); font-size: 14px; color: var(--mario-yellow); }
+
+        /* Skills Tree */
+        .skill-tree-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .skill-branch h3 { font-family: var(--pixel-font); font-size: 11px; color: var(--mario-sky); margin-bottom: 12px; }
+        .skills-group { display: flex; flex-direction: column; gap: 8px; }
+        .skill-node {
+            background: #0f172a;
+            border: 2px solid #334155;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .skill-node:hover { border-color: var(--mario-yellow); transform: translateX(4px); }
+        .skill-node .level { margin-left: auto; font-family: var(--pixel-font); font-size: 9px; color: var(--mario-green); }
+
+        .skill-detail-box {
+            margin-top: 20px;
+            background: #000;
+            border: 2px solid var(--mario-yellow);
+            padding: 12px;
+            font-family: var(--pixel-font);
+            font-size: 10px;
+            color: var(--mario-yellow);
+            text-align: center;
+        }
+
+        /* Project Doors */
+        .project-doors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+        .project-door-card {
+            background: var(--mario-brick);
+            border: 4px solid #fff;
+            padding: 18px;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 4px 4px 0px #000;
+            transition: transform 0.2s;
+        }
+
+        .project-door-card:hover { transform: translateY(-4px); background: var(--mario-red); }
+        .door-frame { font-family: var(--pixel-font); font-size: 11px; color: var(--mario-yellow); margin-bottom: 8px; }
+        .door-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
+        .door-tags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+        .door-tags span { background: rgba(0,0,0,0.5); font-size: 13px; padding: 2px 6px; }
+
+        /* Achievements */
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+        .achievement-card { background: #0f172a; border: 3px solid var(--mario-yellow); padding: 15px; text-align: center; }
+        .trophy-icon { font-size: 32px; margin-bottom: 8px; }
+        .achieve-num { font-family: var(--pixel-font); font-size: 14px; color: var(--mario-yellow); }
+        .achieve-text { font-size: 16px; margin-top: 4px; color: #94a3b8; }
+
+        /* Contact Castle */
+        .castle-wrapper { background: #000; border: 4px solid var(--mario-red); padding: 25px; text-align: center; }
+        .castle-header { font-family: var(--pixel-font); color: var(--mario-red); font-size: 14px; margin-bottom: 12px; }
+        .contact-buttons { display: flex; justify-content: center; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+
+        /* Case Study Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: #1e293b;
+            border: 4px solid var(--mario-yellow);
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 25px;
+            position: relative;
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--mario-red);
+            color: #fff;
+            border: 2px solid #fff;
+            font-family: var(--pixel-font);
+            font-size: 9px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .mario-footer {
+            background: #000;
+            border-top: 4px solid var(--mario-yellow);
+            padding: 25px;
+            text-align: center;
+            font-family: var(--pixel-font);
+            font-size: 10px;
+        }
+
+        .mario-footer h3 { color: var(--mario-yellow); margin-bottom: 8px; }
+        .mario-footer p { color: #64748b; margin-bottom: 12px; }
+    </style>
 </head>
 <body>
 
@@ -20,14 +511,14 @@
         </div>
         <div class="hud-right">
             <button id="audio-toggle-btn" class="hud-btn" title="Toggle Sound/Music">🔊 MUSIC: ON</button>
-            <a href="#contact" class="hud-btn highlight">START GAME</a>
+            <a href="#contact" class="hud-btn">START GAME</a>
         </div>
     </header>
 
     <!-- Canvas Game Engine Container for Hero Level -->
     <section id="hero-game" class="game-section">
         <div class="game-instructions">
-            <span>[A] [D] 或 [←] [→] 移动 | [SPACE] 或 [W] 跳跃 | [E] 与 NPC 交互</span>
+            <span>[A] [D] 或 [←] [→] 移动 | [SPACE] 或 [W] 跳跃 | 点击下方关卡开始探索</span>
         </div>
         <canvas id="mario-canvas"></canvas>
         <div class="hero-overlay">
@@ -45,7 +536,7 @@
         </div>
     </section>
 
-    <!-- Navigation Bar (Glassmorphism) -->
+    <!-- Navigation Bar -->
     <nav class="main-nav">
         <ul>
             <li><a href="#about" class="nav-link">About Me</a></li>
@@ -61,22 +552,22 @@
     <!-- Main Scrollable Content -->
     <main class="content-wrapper">
 
-        <!-- ABOUT ME (NPC Dialogue Quest) -->
-        <section id="about" class="pixel-section scroll-reveal">
+        <!-- ABOUT ME -->
+        <section id="about" class="pixel-section">
             <div class="section-title">
                 <h2>WORLD 1: ABOUT ME</h2>
                 <p class="subtitle">[ Talk to NPC Toad to get details ]</p>
             </div>
             
             <div class="npc-container">
-                <div class="npc-sprite" id="toad-npc">🍄</div>
+                <div class="npc-sprite">🍄</div>
                 <div class="dialogue-box">
                     <div class="dialogue-speaker">Toad the Guide:</div>
                     <div class="dialogue-text" id="dialogue-content">
                         “你好！我是杨楚楚 (Yang Chuchu)，一位拥有 3.5 年经验的跨境视觉设计师。毕业于闽南理工学院视觉传达设计专业（艺术学学士）。熟练驾驭 Amazon, eBay, Walmart 以及独立站的全套视觉设计，并深耕 Prime Day 与 Black Friday 大促视觉突破！”
                     </div>
                     <div class="dialogue-action">
-                        <button class="pixel-btn small" id="next-dialogue-btn">Next [E]</button>
+                        <button class="pixel-btn small" id="next-dialogue-btn">Next Dialogue</button>
                     </div>
                 </div>
             </div>
@@ -97,8 +588,8 @@
             </div>
         </section>
 
-        <!-- EDUCATION (School Station) -->
-        <section id="education" class="pixel-section scroll-reveal">
+        <!-- EDUCATION -->
+        <section id="education" class="pixel-section">
             <div class="section-title">
                 <h2>WORLD 2: ACADEMIC HOUSE</h2>
                 <p class="subtitle">[ Education & Fundamentals ]</p>
@@ -110,7 +601,7 @@
                     <div class="school-door">ENTER CLASSROOM</div>
                 </div>
 
-                <div class="education-card" id="edu-card">
+                <div class="education-card">
                     <div class="edu-header">
                         <h3>闽南理工学院 (Minnan University of Technology)</h3>
                         <span class="edu-date">2018 - 2022</span>
@@ -120,12 +611,7 @@
                     <div class="edu-details">
                         <div class="edu-column">
                             <h4>核心课程</h4>
-                            <ul>
-                                <li>信息可视化设计</li>
-                                <li>商业包装设计</li>
-                                <li>品牌与插画设计</li>
-                                <li>摄影与后期精修</li>
-                            </ul>
+                            <p style="margin-top: 6px;">信息可视化设计 / 商业包装设计 / 品牌与插画设计 / 摄影与后期精修</p>
                         </div>
                         <div class="edu-column">
                             <h4>设计软件栈</h4>
@@ -142,193 +628,116 @@
             </div>
         </section>
 
-        <!-- EXPERIENCE (World Map Timeline) -->
-        <section id="experience" class="pixel-section scroll-reveal">
+        <!-- EXPERIENCE -->
+        <section id="experience" class="pixel-section">
             <div class="section-title">
                 <h2>WORLD 3: CAREER MAP</h2>
                 <p class="subtitle">[ Timeline Journey ]</p>
             </div>
 
             <div class="mario-map-timeline">
-                
-                <!-- Stage 1 -->
                 <div class="timeline-node">
                     <div class="node-flag">🚩 Stage 1</div>
-                    <div class="node-content">
-                        <div class="company-badge">2022 - 2024</div>
-                        <h3>福建扬腾集团 (Yingteng Group)</h3>
-                        <p class="role">设计部 · 汽车零配件 Amazon TOP 品牌视觉设计</p>
-                        <div class="metrics-grid">
-                            <div class="metric"><span class="num">2000+</span><span class="lbl">产品精修图</span></div>
-                            <div class="metric"><span class="num">100+</span><span class="lbl">彩盒包装升级</span></div>
-                            <div class="metric"><span class="num">400+</span><span class="lbl">主图/橱窗优化</span></div>
-                        </div>
+                    <div class="company-badge">2022 - 2024</div>
+                    <h3>福建扬腾集团 (Yingteng Group)</h3>
+                    <p style="color: #94a3b8; margin: 4px 0 10px 0;">设计部 · 汽车零配件 Amazon TOP 品牌视觉设计</p>
+                    <div class="metrics-grid">
+                        <div class="metric"><span class="num">2000+</span><span>产品精修图</span></div>
+                        <div class="metric"><span class="num">100+</span><span>彩盒包装升级</span></div>
+                        <div class="metric"><span class="num">400+</span><span>主图/橱窗优化</span></div>
                     </div>
                 </div>
 
-                <!-- Stage 2 -->
                 <div class="timeline-node">
                     <div class="node-flag">🚩 Stage 2</div>
-                    <div class="node-content">
-                        <div class="company-badge">2024 - 2025</div>
-                        <h3>深圳思未永续 (Siwei Tech)</h3>
-                        <p class="role">视觉设计师 · Amazon / eBay / 独立站</p>
-                        <ul class="task-list">
-                            <li>主导品牌独立站前端 UI 视觉与整体风格组件库构建。</li>
-                            <li>负责 Listing A+ 页面设计，实现点击率与转化率提升。</li>
-                            <li>制定多平台规范化的视觉设计组件化流程。</li>
-                        </ul>
-                    </div>
+                    <div class="company-badge">2024 - 2025</div>
+                    <h3>深圳思未永续 (Siwei Tech)</h3>
+                    <p style="color: #94a3b8; margin: 4px 0 10px 0;">视觉设计师 · Amazon / eBay / 独立站</p>
+                    <p style="font-size: 18px; line-height: 1.5;">主导品牌独立站前端 UI 视觉与整体风格组件库构建；负责 Listing A+ 页面设计，实现点击率与转化率提升。</p>
                 </div>
 
-                <!-- Stage 3 -->
                 <div class="timeline-node">
                     <div class="node-flag">🚩 Stage 3 (Current)</div>
-                    <div class="node-content">
-                        <div class="company-badge">2025 - NOW</div>
-                        <h3>深圳信诚未来 (Xincheng Future)</h3>
-                        <p class="role">品牌中心 · 3C 智能硬件 & AIGC 视觉研发</p>
-                        <ul class="task-list">
-                            <li>全面引入 Midjourney / Stable Diffusion 全流向辅助视觉生成。</li>
-                            <li>打造 3C 智能产品的高端视觉组图与高转化 Listing A+ 结构。</li>
-                            <li>深度参与 Prime Day / Black Friday 等海外大促大屏与全套营销海报设计。</li>
-                        </ul>
-                    </div>
+                    <div class="company-badge">2025 - NOW</div>
+                    <h3>深圳信诚未来 (Xincheng Future)</h3>
+                    <p style="color: #94a3b8; margin: 4px 0 10px 0;">品牌中心 · 3C 智能硬件 & AIGC 视觉研发</p>
+                    <p style="font-size: 18px; line-height: 1.5;">全面引入 Midjourney / Stable Diffusion 全流向辅助视觉生成，深度参与 Prime Day / Black Friday 海外大促营销设计。</p>
                 </div>
-
             </div>
         </section>
 
-        <!-- SKILLS TREE (RPG Skill Trees) -->
-        <section id="skills" class="pixel-section scroll-reveal">
+        <!-- SKILLS TREE -->
+        <section id="skills" class="pixel-section">
             <div class="section-title">
                 <h2>WORLD 4: SKILL TREE</h2>
                 <p class="subtitle">[ Click skills to UPGRADE ]</p>
             </div>
 
             <div class="skill-tree-container">
-                <!-- Branch 1 -->
                 <div class="skill-branch">
                     <h3>🎨 Design & Visual</h3>
                     <div class="skills-group">
-                        <div class="skill-node" data-skill="Photoshop">
-                            <span class="icon">🖼️</span>
-                            <span class="name">Photoshop</span>
-                            <span class="level">LV.99</span>
-                        </div>
-                        <div class="skill-node" data-skill="Illustrator">
-                            <span class="icon">✏️</span>
-                            <span class="name">Illustrator</span>
-                            <span class="level">LV.90</span>
-                        </div>
-                        <div class="skill-node" data-skill="Figma">
-                            <span class="icon">📐</span>
-                            <span class="name">Figma</span>
-                            <span class="level">LV.85</span>
-                        </div>
-                        <div class="skill-node" data-skill="Keyshot">
-                            <span class="icon">💎</span>
-                            <span class="name">Keyshot 3D</span>
-                            <span class="level">LV.80</span>
-                        </div>
+                        <div class="skill-node" data-skill="Photoshop"><span>🖼️ Photoshop</span><span class="level">LV.99</span></div>
+                        <div class="skill-node" data-skill="Illustrator"><span>✏️ Illustrator</span><span class="level">LV.90</span></div>
+                        <div class="skill-node" data-skill="Figma"><span>📐 Figma</span><span class="level">LV.85</span></div>
+                        <div class="skill-node" data-skill="Keyshot"><span>💎 Keyshot 3D</span><span class="level">LV.80</span></div>
                     </div>
                 </div>
 
-                <!-- Branch 2 -->
                 <div class="skill-branch">
                     <h3>🤖 AIGC & Future</h3>
                     <div class="skills-group">
-                        <div class="skill-node" data-skill="Midjourney">
-                            <span class="icon">🌌</span>
-                            <span class="name">Midjourney</span>
-                            <span class="level">LV.95</span>
-                        </div>
-                        <div class="skill-node" data-skill="Stable Diffusion">
-                            <span class="icon">🎨</span>
-                            <span class="name">Stable Diffusion</span>
-                            <span class="level">LV.88</span>
-                        </div>
-                        <div class="skill-node" data-skill="ChatGPT">
-                            <span class="icon">🧠</span>
-                            <span class="name">ChatGPT / Claude</span>
-                            <span class="level">LV.92</span>
-                        </div>
+                        <div class="skill-node" data-skill="Midjourney"><span>🌌 Midjourney</span><span class="level">LV.95</span></div>
+                        <div class="skill-node" data-skill="Stable Diffusion"><span>🎨 Stable Diffusion</span><span class="level">LV.88</span></div>
+                        <div class="skill-node" data-skill="ChatGPT"><span>🧠 ChatGPT / Claude</span><span class="level">LV.92</span></div>
                     </div>
                 </div>
 
-                <!-- Branch 3 -->
                 <div class="skill-branch">
                     <h3>💻 Web & Frontend</h3>
                     <div class="skills-group">
-                        <div class="skill-node" data-skill="HTML5">
-                            <span class="icon">🌐</span>
-                            <span class="name">HTML5</span>
-                            <span class="level">LV.85</span>
-                        </div>
-                        <div class="skill-node" data-skill="CSS3">
-                            <span class="icon">🎨</span>
-                            <span class="name">CSS3 / Flex</span>
-                            <span class="level">LV.85</span>
-                        </div>
-                        <div class="skill-node" data-skill="JavaScript">
-                            <span class="icon">⚡</span>
-                            <span class="name">JavaScript</span>
-                            <span class="level">LV.75</span>
-                        </div>
+                        <div class="skill-node" data-skill="HTML5"><span>🌐 HTML5</span><span class="level">LV.85</span></div>
+                        <div class="skill-node" data-skill="CSS3"><span>🎨 CSS3 / Flex</span><span class="level">LV.85</span></div>
+                        <div class="skill-node" data-skill="JavaScript"><span>⚡ JavaScript</span><span class="level">LV.75</span></div>
                     </div>
                 </div>
             </div>
             
             <div id="skill-detail-box" class="skill-detail-box">
-                点击上方技能节点，扣除金币进行 LEVEL UP 并解锁能力详情！
+                点击上方技能节点，解锁能力强化详情！
             </div>
         </section>
 
-        <!-- PROJECTS (Mario Castle Doors / Case Studies) -->
-        <section id="projects" class="pixel-section scroll-reveal">
+        <!-- PROJECTS -->
+        <section id="projects" class="pixel-section">
             <div class="section-title">
                 <h2>WORLD 5: PROJECT DOORS</h2>
                 <p class="subtitle">[ Select a Door for Case Study ]</p>
             </div>
 
             <div class="project-doors-grid">
-                <!-- Project 1 -->
                 <div class="project-door-card" onclick="openProjectModal('p1')">
                     <div class="door-frame">🚪 Door 01</div>
                     <div class="door-title">3C 智能硬件海外 Listing 重构</div>
-                    <div class="door-tags">
-                        <span>AIGC</span>
-                        <span>Amazon A+</span>
-                        <span>3D精修</span>
-                    </div>
+                    <div class="door-tags"><span>AIGC</span><span>Amazon A+</span><span>3D精修</span></div>
                 </div>
 
-                <!-- Project 2 -->
                 <div class="project-door-card" onclick="openProjectModal('p2')">
                     <div class="door-frame">🚪 Door 02</div>
                     <div class="door-title">汽配 TOP 品牌包装与视觉标准化</div>
-                    <div class="door-tags">
-                        <span>Packaging</span>
-                        <span>2000+ 精修</span>
-                        <span>组件库</span>
-                    </div>
+                    <div class="door-tags"><span>Packaging</span><span>2000+ 精修</span><span>组件库</span></div>
                 </div>
 
-                <!-- Project 3 -->
                 <div class="project-door-card" onclick="openProjectModal('p3')">
                     <div class="door-frame">🚪 Door 03</div>
                     <div class="door-title">Prime Day / 黑五全套营销视觉大屏</div>
-                    <div class="door-tags">
-                        <span>大促视觉</span>
-                        <span>独立站</span>
-                        <span>Banner组</span>
-                    </div>
+                    <div class="door-tags"><span>大促视觉</span><span>独立站</span><span>Banner组</span></div>
                 </div>
             </div>
         </section>
 
-        <!-- ACHIEVEMENTS (Mario Trophies) -->
-        <section id="achievements" class="pixel-section scroll-reveal">
+        <!-- ACHIEVEMENTS -->
+        <section id="achievements" class="pixel-section">
             <div class="section-title">
                 <h2>WORLD 6: TROPHY ROOM</h2>
                 <p class="subtitle">[ Game Career Milestones ]</p>
@@ -358,12 +767,12 @@
             </div>
         </section>
 
-        <!-- CONTACT (Final Bowser Castle) -->
-        <section id="contact" class="pixel-section scroll-reveal">
+        <!-- CONTACT -->
+        <section id="contact" class="pixel-section">
             <div class="castle-wrapper">
                 <div class="castle-header">🏰 FINAL CASTLE</div>
-                <h2>LET'S BUILD SOMETHING GREAT TOGETHER!</h2>
-                <p>感谢通关！我正在寻找优秀的跨境电商与视觉设计岗位机会，随时欢迎沟通。</p>
+                <h2 style="font-size: 24px; margin-bottom: 10px;">LET'S BUILD SOMETHING GREAT TOGETHER!</h2>
+                <p style="font-size: 18px;">感谢通关！我正在寻找优秀的跨境电商与视觉设计岗位机会，随时欢迎沟通。</p>
 
                 <div class="contact-buttons">
                     <a href="mailto:example@gmail.com" class="pixel-btn primary">✉️ Email Me</a>
@@ -379,10 +788,8 @@
     <!-- Modal for Case Study -->
     <div id="project-modal" class="modal-overlay">
         <div class="modal-card">
-            <button class="modal-close" onclick="closeProjectModal()">✕ CLOSE [ESC]</button>
-            <div id="modal-body-content">
-                <!-- Injected via JavaScript -->
-            </div>
+            <button class="modal-close" onclick="closeProjectModal()">✕ CLOSE</button>
+            <div id="modal-body-content"></div>
         </div>
     </div>
 
@@ -390,11 +797,415 @@
     <footer class="mario-footer">
         <div class="footer-content">
             <h3>🎉 CONGRATULATIONS! MISSION COMPLETE!</h3>
-            <p>Designed & Developed with HTML5, CSS3, JavaScript & Web Audio API (Mario Engine v2.0)</p>
+            <p>Designed & Developed with HTML5, CSS3 & JavaScript (Mario Game Engine)</p>
             <button class="pixel-btn small" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">⬆ BACK TO TOP</button>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- Combined JavaScript Engine -->
+    <script>
+        // Storage Safetys
+        function safeGetStorage(key, def) {
+            try { return localStorage.getItem(key) || def; } catch(e) { return def; }
+        }
+        function safeSetStorage(key, val) {
+            try { localStorage.setItem(key, val); } catch(e) {}
+        }
+
+        // Web Audio Synthesizer
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.muted = false;
+            }
+            init() {
+                if (!this.ctx) {
+                    try {
+                        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    } catch(e) {}
+                }
+            }
+            playNote(freq, type, duration, delay = 0) {
+                if (this.muted || !this.ctx) return;
+                setTimeout(() => {
+                    try {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = type;
+                        osc.frequency.value = freq;
+                        gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+                        osc.start();
+                        osc.stop(this.ctx.currentTime + duration);
+                    } catch(e) {}
+                }, delay * 1000);
+            }
+            playJump() { this.init(); this.playNote(150, 'square', 0.1, 0); this.playNote(300, 'square', 0.15, 0.05); }
+            playCoin() { this.init(); this.playNote(987, 'sine', 0.08, 0); this.playNote(1318, 'sine', 0.25, 0.08); }
+            playPowerUp() {
+                this.init();
+                [330, 392, 659, 523, 587, 784].forEach((n, idx) => this.playNote(n, 'triangle', 0.1, idx * 0.05));
+            }
+            playStomp() { this.init(); this.playNote(80, 'sawtooth', 0.1, 0); }
+            toggleAudio() {
+                this.muted = !this.muted;
+                if (!this.muted) this.init();
+                return !this.muted;
+            }
+        }
+
+        const audioEngine = new SoundEngine();
+
+        // Canvas Game Engine
+        class MarioGame {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                if (!this.canvas) return;
+                this.ctx = this.canvas.getContext('2d');
+                this.coins = parseInt(safeGetStorage('mario_coins', '0'));
+                this.score = 0;
+                this.gravity = 0.5;
+                this.cameraX = 0;
+                
+                this.player = {
+                    x: 100, y: 200, width: 28, height: 28,
+                    vx: 0, vy: 0, speed: 4, jumpPower: -10, grounded: false, isBig: false
+                };
+
+                this.keys = { left: false, right: false, jump: false };
+
+                this.platforms = [
+                    { x: 0, y: 360, width: 3000, height: 100, type: 'ground' },
+                    { x: 300, y: 250, width: 90, height: 30, type: 'brick' },
+                    { x: 500, y: 210, width: 120, height: 30, type: 'platform' },
+                    { x: 800, y: 230, width: 90, height: 30, type: 'brick' }
+                ];
+
+                this.questionBlocks = [
+                    { x: 330, y: 250, width: 30, height: 30, hit: false, hasMushroom: true },
+                    { x: 830, y: 230, width: 30, height: 30, hit: false, hasMushroom: false }
+                ];
+
+                this.coinsList = [
+                    { x: 400, y: 210, width: 16, height: 16, collected: false },
+                    { x: 430, y: 210, width: 16, height: 16, collected: false },
+                    { x: 460, y: 210, width: 16, height: 16, collected: false }
+                ];
+
+                this.enemies = [
+                    { x: 600, y: 336, width: 24, height: 24, vx: -1, alive: true },
+                    { x: 950, y: 336, width: 24, height: 24, vx: -1, alive: true }
+                ];
+
+                this.particles = [];
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                this.bindInput();
+                this.updateHUD();
+                requestAnimationFrame(() => this.loop());
+            }
+
+            resize() {
+                const parent = this.canvas.parentElement;
+                this.canvas.width = parent ? parent.clientWidth : window.innerWidth;
+                this.canvas.height = parent ? parent.clientHeight : window.innerHeight;
+            }
+
+            bindInput() {
+                window.addEventListener('keydown', (e) => {
+                    if (['KeyA', 'ArrowLeft'].includes(e.code)) this.keys.left = true;
+                    if (['KeyD', 'ArrowRight'].includes(e.code)) this.keys.right = true;
+                    if (['Space', 'KeyW', 'ArrowUp'].includes(e.code)) {
+                        if (!this.keys.jump && this.player.grounded) {
+                            this.player.vy = this.player.jumpPower;
+                            this.player.grounded = false;
+                            audioEngine.playJump();
+                        }
+                        this.keys.jump = true;
+                    }
+                });
+
+                window.addEventListener('keyup', (e) => {
+                    if (['KeyA', 'ArrowLeft'].includes(e.code)) this.keys.left = false;
+                    if (['KeyD', 'ArrowRight'].includes(e.code)) this.keys.right = false;
+                    if (['Space', 'KeyW', 'ArrowUp'].includes(e.code)) this.keys.jump = false;
+                });
+            }
+
+            updateHUD() {
+                const coinEl = document.getElementById('coin-display');
+                const scoreEl = document.getElementById('score-display');
+                if (coinEl) coinEl.innerText = `🪙 x${String(this.coins).padStart(2, '0')}`;
+                if (scoreEl) scoreEl.innerText = String(this.score).padStart(6, '0');
+                safeSetStorage('mario_coins', this.coins);
+            }
+
+            update() {
+                const p = this.player;
+                if (this.keys.left) p.vx = -p.speed;
+                else if (this.keys.right) p.vx = p.speed;
+                else p.vx = 0;
+
+                p.x += p.vx;
+                p.vy += this.gravity;
+                p.y += p.vy;
+                p.grounded = false;
+
+                // Platforms Collision
+                for (let plat of this.platforms) {
+                    if (p.x < plat.x + plat.width && p.x + p.width > plat.x &&
+                        p.y < plat.y + plat.height && p.y + p.height > plat.y) {
+                        if (p.vy > 0 && p.y + p.height - p.vy <= plat.y + 12) {
+                            p.y = plat.y - p.height;
+                            p.vy = 0;
+                            p.grounded = true;
+                        }
+                    }
+                }
+
+                // Question Blocks Collision
+                for (let q of this.questionBlocks) {
+                    if (p.x < q.x + q.width && p.x + p.width > q.x &&
+                        p.y < q.y + q.height && p.y + p.height > q.y) {
+                        if (p.vy < 0 && p.y >= q.y + q.height - 10) {
+                            p.vy = 2;
+                            p.y = q.y + q.height;
+                            if (!q.hit) {
+                                q.hit = true;
+                                if (q.hasMushroom) {
+                                    p.isBig = true;
+                                    p.height = 42;
+                                    p.y -= 14;
+                                    audioEngine.playPowerUp();
+                                } else {
+                                    this.coins++;
+                                    this.score += 200;
+                                    audioEngine.playCoin();
+                                    this.updateHUD();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Coins Collection
+                for (let c of this.coinsList) {
+                    if (!c.collected && p.x < c.x + c.width && p.x + p.width > c.x &&
+                        p.y < c.y + c.height && p.y + p.height > c.y) {
+                        c.collected = true;
+                        this.coins++;
+                        this.score += 100;
+                        audioEngine.playCoin();
+                        this.updateHUD();
+                    }
+                }
+
+                // Enemies Logic
+                for (let e of this.enemies) {
+                    if (!e.alive) continue;
+                    e.x += e.vx;
+                    if (e.x < 500 || e.x > 1000) e.vx *= -1;
+
+                    if (p.x < e.x + e.width && p.x + p.width > e.x &&
+                        p.y < e.y + e.height && p.y + p.height > e.y) {
+                        if (p.vy > 0 && p.y + p.height - p.vy <= e.y + 10) {
+                            e.alive = false;
+                            p.vy = -6;
+                            this.score += 400;
+                            audioEngine.playStomp();
+                            this.updateHUD();
+                        } else if (p.isBig) {
+                            p.isBig = false;
+                            p.height = 28;
+                            e.vx *= -1;
+                        }
+                    }
+                }
+
+                this.cameraX = p.x - this.canvas.width / 3;
+                if (this.cameraX < 0) this.cameraX = 0;
+            }
+
+            draw() {
+                this.ctx.fillStyle = '#5C94FC';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                this.ctx.save();
+                this.ctx.translate(-this.cameraX, 0);
+
+                // Sky Clouds
+                this.ctx.fillStyle = '#ffffff';
+                this.ctx.beginPath();
+                this.ctx.arc(200, 80, 25, 0, Math.PI * 2);
+                this.ctx.arc(225, 70, 35, 0, Math.PI * 2);
+                this.ctx.arc(250, 80, 25, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Platforms
+                for (let plat of this.platforms) {
+                    if (plat.type === 'ground') {
+                        this.ctx.fillStyle = '#00A800';
+                        this.ctx.fillRect(plat.x, plat.y, plat.width, 18);
+                        this.ctx.fillStyle = '#C84C0C';
+                        this.ctx.fillRect(plat.x, plat.y + 18, plat.width, plat.height - 18);
+                    } else {
+                        this.ctx.fillStyle = '#C84C0C';
+                        this.ctx.fillRect(plat.x, plat.y, plat.width, plat.height);
+                    }
+                }
+
+                // Question Blocks
+                for (let q of this.questionBlocks) {
+                    this.ctx.fillStyle = q.hit ? '#888888' : '#F8B800';
+                    this.ctx.fillRect(q.x, q.y, q.width, q.height);
+                    this.ctx.strokeStyle = '#000';
+                    this.ctx.strokeRect(q.x, q.y, q.width, q.height);
+                    if (!q.hit) {
+                        this.ctx.fillStyle = '#000';
+                        this.ctx.font = '12px "Press Start 2P"';
+                        this.ctx.fillText('?', q.x + 8, q.y + 20);
+                    }
+                }
+
+                // Coins
+                for (let c of this.coinsList) {
+                    if (!c.collected) {
+                        this.ctx.fillStyle = '#F8B800';
+                        this.ctx.beginPath();
+                        this.ctx.arc(c.x + 8, c.y + 8, 7, 0, Math.PI * 2);
+                        this.ctx.fill();
+                    }
+                }
+
+                // Enemies
+                for (let e of this.enemies) {
+                    if (e.alive) {
+                        this.ctx.fillStyle = '#C84C0C';
+                        this.ctx.fillRect(e.x, e.y, e.width, e.height);
+                        this.ctx.fillStyle = '#FFF';
+                        this.ctx.fillRect(e.x + 3, e.y + 4, 4, 6);
+                        this.ctx.fillRect(e.x + 15, e.y + 4, 4, 6);
+                    }
+                }
+
+                // Mario
+                const p = this.player;
+                this.ctx.fillStyle = '#E52521';
+                this.ctx.fillRect(p.x, p.y, p.width, p.height);
+                this.ctx.fillStyle = '#00247D';
+                this.ctx.fillRect(p.x + 3, p.y + p.height - 10, p.width - 6, 10);
+
+                this.ctx.restore();
+            }
+
+            loop() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.loop());
+            }
+        }
+
+        // Case Studies Data
+        const caseStudies = {
+            p1: {
+                title: "3C 智能硬件海外 Listing 重构与 AIGC 落地",
+                overview: "针对海外 Amazon TOP 级 3C 智能硬件，运用 Midjourney + KeyShot 进行场景重新建构与极简风格 Listing 重组。",
+                problem: "原有产品 Listing 主图同质化严重，转化率（CVR）达到瓶颈，且拍摄场景成本极高。",
+                solution: "1. 使用 KeyShot 导出高精度 3D 白模；2. 通过 Midjourney 进行场景材质融合；3. 重新编排 A+ 视觉流向。",
+                result: "上线后 CVR 提升 18%，大促期间单品日销量突破 2,000 件，设计渲染周期缩短 60%。"
+            },
+            p2: {
+                title: "汽配 TOP 品牌包装升级与视觉标准化",
+                overview: "为福建扬腾集团旗下 Amazon TOP 汽车零部件品牌构建全套视觉系统与彩盒包装升级规范。",
+                problem: "产品线超过 2,000+，包装风格不统一，品牌溢价低。",
+                solution: "1. 规范化 100+ 彩盒包装；2. 制定图层模块化精修规范；3. 优化 400+ 橱窗主图信息表达。",
+                result: "品牌整体好评率显著提升，打造出标准化视觉设计资产库。"
+            },
+            p3: {
+                title: "Prime Day / 黑五大促全套视觉大屏与营销方案",
+                overview: "主导深圳信诚未来海外 Prime Day / Black Friday 全套品牌营销 Banner、落地页与视觉大屏设计。",
+                problem: "多终端（PC/Mobile/Social）视觉尺寸与促销氛围传达要求极高。",
+                solution: "建立模块化组件库，快速适配 Amazon、eBay、独立站等多渠道尺寸。",
+                result: "大促期间全网曝光突破千万人次，助力品牌达成年度销售指标。"
+            }
+        };
+
+        function openProjectModal(id) {
+            const data = caseStudies[id];
+            if (!data) return;
+            audioEngine.playPowerUp();
+            const modal = document.getElementById('project-modal');
+            const content = document.getElementById('modal-body-content');
+            
+            content.innerHTML = `
+                <h2 style="color: var(--mario-yellow); font-family: var(--pixel-font); font-size: 14px; margin-bottom: 12px;">${data.title}</h2>
+                <div style="margin-bottom: 12px; font-size: 18px;"><strong>Overview:</strong> ${data.overview}</div>
+                <div style="margin-bottom: 12px; font-size: 18px;"><strong>Problem:</strong> ${data.problem}</div>
+                <div style="margin-bottom: 12px; font-size: 18px;"><strong>Solution:</strong> ${data.solution}</div>
+                <div style="background: rgba(0,168,0,0.2); border: 1px solid var(--mario-green); padding: 10px; font-size: 18px;"><strong>Result:</strong> ${data.result}</div>
+            `;
+            modal.style.display = 'flex';
+        }
+
+        function closeProjectModal() {
+            document.getElementById('project-modal').style.display = 'none';
+        }
+
+        // Initialize on DOM Ready
+        window.addEventListener('DOMContentLoaded', () => {
+            const game = new MarioGame('mario-canvas');
+
+            const audioBtn = document.getElementById('audio-toggle-btn');
+            if (audioBtn) {
+                audioBtn.addEventListener('click', () => {
+                    const active = audioEngine.toggleAudio();
+                    audioBtn.innerText = active ? "🔊 MUSIC: ON" : "🔇 MUSIC: OFF";
+                });
+            }
+
+            const dialogues = [
+                "“你好！我是杨楚楚 (Yang Chuchu)，一位拥有 3.5 年经验的跨境视觉设计师。”",
+                "“我擅长 Amazon, eBay, Walmart 与品牌独立站的全套视觉设计，并精通 Prime Day 与黑五大促视觉重构！”",
+                "“同时我深入融入 AIGC (Midjourney / SD / ChatGPT) 工作流，极大地提升了设计效率与视觉表现力。”",
+                "“继续向下滚动页面，查看我的 Skill Tree 与项目 Level 吧！”"
+            ];
+            let diagIdx = 0;
+            const diagBtn = document.getElementById('next-dialogue-btn');
+            const diagContent = document.getElementById('dialogue-content');
+
+            if (diagBtn && diagContent) {
+                diagBtn.addEventListener('click', () => {
+                    diagIdx = (diagIdx + 1) % dialogues.length;
+                    diagContent.innerText = dialogues[diagIdx];
+                    audioEngine.playCoin();
+                });
+            }
+
+            document.querySelectorAll('.skill-node').forEach(node => {
+                node.addEventListener('click', () => {
+                    audioEngine.playPowerUp();
+                    const skill = node.getAttribute('data-skill');
+                    const detailBox = document.getElementById('skill-detail-box');
+                    if (detailBox) {
+                        detailBox.innerText = `LEVEL UP! 技能 [${skill}] 已强化！商业转化率与交付效率提升！`;
+                    }
+                });
+            });
+
+            const school = document.getElementById('school-trigger');
+            if (school) {
+                school.addEventListener('click', () => {
+                    audioEngine.playJump();
+                    alert("🏫 欢迎来到闽南理工学院！视觉传达设计专业，艺术学学士 (2018-2022)");
+                });
+            }
+        });
+    </script>
 </body>
 </html>
